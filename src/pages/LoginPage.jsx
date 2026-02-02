@@ -3,14 +3,28 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Card from '../components/Card';
 
-function LoginPage() {
+// onLogin is provided by App.js for fake auth (admin / intern)
+function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('admin'); // 'admin' | 'intern'
   const [errors, setErrors] = useState({});
 
   const handleLogin = () => {
-    // Validation will be added by Person A
-    console.log('Login attempt:', { email, password });
+    // Simple front-end-only fake login so both admin and intern devs can work
+    if (!email || !password) {
+      setErrors({
+        email: !email ? 'Email is required' : undefined,
+        password: !password ? 'Password is required' : undefined,
+      });
+      return;
+    }
+
+    setErrors({});
+
+    if (onLogin) {
+      onLogin({ email, role });
+    }
   };
 
   return (
@@ -42,6 +56,32 @@ function LoginPage() {
           error={errors.password}
           required
         />
+
+        <div className="mb-4">
+          <p className="block text-gray-700 font-medium mb-2">Login as</p>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === 'admin'}
+                onChange={() => setRole('admin')}
+              />
+              <span>Admin</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="role"
+                value="intern"
+                checked={role === 'intern'}
+                onChange={() => setRole('intern')}
+              />
+              <span>Intern</span>
+            </label>
+          </div>
+        </div>
         
         <Button 
           text="Login" 
