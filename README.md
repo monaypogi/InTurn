@@ -14,8 +14,8 @@ Frontend application for managing interns and tasks.
 - **Person C**: Intern Dashboard
 
 ## Required Versions
-- Node.js: v[YOUR_VERSION] (check with `node -v`)
-- npm: v[YOUR_VERSION] (check with `npm -v`)
+- Node.js: v22.16.0(check with `node -v`)
+- npm: 10.9.2 (check with `npm -v`)
 
 ## Setup Instructions
 
