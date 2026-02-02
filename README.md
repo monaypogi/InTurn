@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# InTurn - Intern Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend application for managing interns and tasks.
+
+## Tech Stack
+- React.js
+- Tailwind CSS
+- React Router
+- Axios
+
+## Team
+- **Person A**: Authentication + Form Validation
+- **Person B**: Admin Dashboard
+- **Person C**: Intern Dashboard
+
+## Required Versions
+- Node.js: v[YOUR_VERSION] (check with `node -v`)
+- npm: v[YOUR_VERSION] (check with `npm -v`)
+
+## Setup Instructions
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/YOUR_USERNAME/InTurn.git
+cd InTurn
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Run Development Server
+```bash
+npm start
+```
+
+Application will open at `http://localhost:3000`
+
+## Project Structure
+```
+src/
+├── components/     # Reusable UI components (Button, Input, Card)
+├── pages/          # Full page views (LoginPage, AdminDashboard, InternDashboard)
+├── hooks/          # Custom React hooks
+├── utils/          # Helper functions (validation, formatting)
+├── services/       # API calls (api.js)
+├── assets/         # Images, icons, files
+└── App.js          # Main routing
+```
 
 ## Available Scripts
+- `npm start` - Run development server
+- `npm build` - Build for production
+- `npm test` - Run tests
 
-In the project directory, you can run:
+## Git Workflow
 
-### `npm start`
+### Branch Naming
+- `feature/feature-name` - New features
+- `fix/bug-name` - Bug fixes
+- `docs/description` - Documentation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Development Process
+1. Pull latest main: `git checkout main && git pull origin main`
+2. Create feature branch: `git checkout -b feature/your-feature`
+3. Make changes and commit: `git add . && git commit -m "Description"`
+4. Push branch: `git push origin feature/your-feature`
+5. Create Pull Request on GitHub
+6. Wait for code review
+7. Merge after approval
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## API Configuration
+Backend API runs on `http://localhost:5000/api`
 
-### `npm test`
+Make sure backend server is running before testing API calls.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Common Commands
+```bash
+# Check current branch
+git branch
 
-### `npm run build`
+# Switch branch
+git checkout branch-name
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# See changes
+git status
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Pull latest changes
+git pull origin main
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Need Help?
+Contact team members or check documentation in `/docs` folder.
