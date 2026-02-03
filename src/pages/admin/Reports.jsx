@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search,
   ChevronDown,
@@ -105,7 +106,7 @@ const rowToneStyles = {
   danger: 'bg-red-500/20 hover:bg-red-500/30',
 };
 
-function SummaryCard({ title, summary }) {
+function SummaryCard({ title, summary, onViewAll }) {
   return (
     <div className="rounded-xl border border-slate-600 bg-slate-800 p-5">
       <h3 className="text-lg font-semibold text-white">{title}</h3>
@@ -129,6 +130,7 @@ function SummaryCard({ title, summary }) {
       </div>
       <button
         type="button"
+        onClick={onViewAll}
         className="mt-4 w-full rounded-lg bg-amber-500/80 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-500"
       >
         View All
@@ -255,6 +257,7 @@ function VerificationPanel({ requests }) {
 }
 
 function Reports() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [internFilter] = useState('All Interns');
   const [typeFilter] = useState('Daily Report');
@@ -282,9 +285,17 @@ function Reports() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <SummaryCard title="Documents" summary={DOCUMENT_SUMMARY} />
-        <SummaryCard title="Daily Reports" summary={REPORT_SUMMARY} />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <SummaryCard
+          title="Documents"
+          summary={DOCUMENT_SUMMARY}
+          onViewAll={() => navigate('/admin/reports/documents')}
+        />
+        <SummaryCard
+          title="Daily Reports"
+          summary={REPORT_SUMMARY}
+          onViewAll={() => navigate('/admin/reports/daily')}
+        />
         <VerificationPanel requests={PENDING_VERIFICATIONS} />
       </div>
 

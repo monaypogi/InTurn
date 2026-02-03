@@ -7,6 +7,9 @@ import InternManagement from './InternManagement';
 import AttendanceMonitoring from './AttendanceMonitoring';
 import Notifications from './Notifications';
 import Reports from './Reports';
+import ViewDocuments from './ViewDocuments';
+import ViewDailyReports from './ViewDailyReports';
+import DocumentUpload from './DocumentUpload';
 
 // Mock data
 const MOCK_INTERNS = [
@@ -41,6 +44,12 @@ function AdminLayout() {
     mainContent = <AttendanceMonitoring />;
   } else if (pathname.startsWith('/admin/notifications')) {
     mainContent = <Notifications />;
+  } else if (pathname.startsWith('/admin/reports/documents/upload')) {
+    mainContent = <DocumentUpload />;
+  } else if (pathname.startsWith('/admin/reports/documents')) {
+    mainContent = <ViewDocuments />;
+  } else if (pathname.startsWith('/admin/reports/daily')) {
+    mainContent = <ViewDailyReports />;
   } else if (pathname.startsWith('/admin/reports')) {
     mainContent = <Reports />;
   } else {
