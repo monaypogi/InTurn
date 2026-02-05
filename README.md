@@ -21,7 +21,7 @@ Frontend application for managing interns and tasks.
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/InTurn.git
+git clone https://github.com/monaypogi/InTurn.git
 cd InTurn
 ```
 
