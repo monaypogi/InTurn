@@ -98,20 +98,20 @@ function FilterSelect({ label, value, options, onChange }) {
   return (
     <div className="flex flex-col gap-1 text-slate-900">
       <span className="text-[12px] uppercase tracking-wide text-white font-bold">{label}</span>
-      <label className="relative rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 transition-colors hover:bg-slate-200">
+      <div className="relative">
         <select
-          className="w-full appearance-none rounded-md bg-transparent py-1 pl-2 pr-8 text-base font-medium text-slate-900 focus:outline-none"
+          className="w-full appearance-none rounded-lg border border-slate-300 bg-slate-200 py-3 pl-4 pr-10 text-base font-medium text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           value={value}
           onChange={(event) => onChange(event.target.value)}
         >
           {options.map((option) => (
-            <option key={option} value={option} className="bg-slate-200 pl-2 text-slate-900">
+            <option key={option} value={option} className="bg-slate-200 text-slate-900">
               {option}
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-      </label>
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+      </div>
     </div>
   );
 }
