@@ -1,0 +1,159 @@
+.documents-page {
+  padding: 24px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #08121B;
+  overflow-x: hidden;
+}
+
+/* Page header */
+.documents-header {
+  margin-bottom: 20px;
+}
+
+.documents-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.documents-header p {
+  margin-top: 4px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Card */
+.documents-card {
+  background: linear-gradient(180deg, #1d546d 0%, #061e29 100%);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Card header */
+.documents-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(243, 244, 244, 0.12);
+}
+
+.documents-card-header h3 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.documents-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Search */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 6px 10px;
+  border-radius: 8px;
+  max-width: 220px;
+  width: 100%;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f3f4f4;
+  font-size: 14px;
+}
+
+/* ===== DOCUMENTS TABLE (Same as Reports) ===== */
+
+.documents-table {
+  width: 100%;
+  min-width: 720px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 14px;
+}
+
+.documents-table thead {
+  background-color: rgba(255, 255, 255, 0.04);
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.documents-table th,
+.documents-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(243, 244, 244, 0.12);
+  white-space: nowrap;
+}
+
+.documents-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.doc-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.doc-name svg {
+  font-size: 18px;
+}
+
+/* Download button */
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #5f9598;
+  border: none;
+  color: #061e29;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  opacity: 0.9;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.pagination button {
+  background-color: #5f9598;
+  border: none;
+  color: #061e29;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
