@@ -1,0 +1,183 @@
+body {
+  margin: 0;
+  background-color: #08121B;
+  color: #F3F4F4;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  height: 100px;
+  background-color: #0e2935;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo {
+  height: 65px;
+  margin-right: 10px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-icon {
+  margin-left: 20px;
+  font-size: 30px;
+  cursor: pointer;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0px; 
+}
+
+.menu-icon {
+  margin-right: 14px;
+}
+
+.menu-icon {
+  font-size: 22px;
+}
+
+
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 64px); /* header height if you have one */
+}
+
+.content {
+  flex: 1;              /* 🔴 THIS is critical */
+  width: 100%;
+  padding: 24px;
+  overflow-x: hidden;
+   transition: all 0.3s ease-in-out;
+}
+.sidebar {
+  width: 220px;
+
+  background: linear-gradient(
+    180deg,
+    #163846 0%,
+    #0b222c 100%
+  );
+
+  border-right: 1px solid rgba(255,255,255,0.08);
+
+  min-height: calc(100vh - 60px);
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+}
+
+.sidebar-menu a.active-link {
+  background-color: #5F9598;
+  color: #061E29;
+}
+
+.sidebar-menu a {
+  display: flex;
+  width: 100%;
+  padding: 14px 20px;
+
+  color: rgba(243,244,244,0.85);
+  text-decoration: none;
+
+  align-items: center;
+  gap: 14px;
+
+  margin: 0px 0px;
+
+  transition: all 0.25s ease;
+}
+
+
+.sidebar li.active,
+.sidebar li:hover {
+  background-color: #5F9598;
+}
+
+
+.sidebar-menu a.active {
+  background-color: #5F9598;
+  color: #061E29;
+}
+
+
+.sidebar-collapsed .content {
+  width: 100%;
+}
+
+/* Optional: smooth animation */
+.sidebar {
+  transition: width 0.25s ease;
+}
+
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  min-width: 160px;
+  background-color: #1D546D;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  z-index: 999;
+}
+
+.profile-dropdown button {
+  width: 100%;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  color: #F3F4F4;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-dropdown button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-collapsed .sidebar {
+  width: 0px;
+}
+
+.sidebar span {
+  transition: opacity 0.2s ease, margin 0.2s ease;
+  white-space: nowrap;
+}
+
+.sidebar-collapsed .sidebar span {
+  opacity: 0;
+  margin-left: -10px;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-menu a {
+  justify-content: center;
+}
+

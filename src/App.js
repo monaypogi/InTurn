@@ -3,6 +3,14 @@ import { useEffect, useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import InternDashboard from './pages/InternDashboard';
+import InternAttendance from './pages/InternAttendance';
+import InternReports from './pages/InternReports';
+import InternLayout from './layouts/InternLayout';
+import InternNotifications from './pages/InternNotifications';
+import InternDocuments from './pages/InternDocuments';
+import { AttendanceProvider } from './context/AttendanceContext';
+import { DocumentsProvider } from './context/DocumentsContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 function App() {
   // Temporary fake authentication state (frontend-only)
@@ -33,33 +41,60 @@ function App() {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route 
-          path="/" 
-          element={<Navigate to="/login" />} 
-        />
+    <NotificationProvider>
+      <DocumentsProvider>
+        <AttendanceProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" />} />
 
-        <Route 
-          path="/login" 
-          element={
-            isAuthenticated && userRole
-              ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
-              : <LoginPage onLogin={handleFakeLogin} />
-          } 
-        />
-        
-        {/* Protected routes - Person A will add proper auth later */}
-        <Route 
-          path="/admin/*" 
-          element={isAuthenticated && userRole === 'admin' ? <AdminDashboard /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/intern/*" 
-          element={isAuthenticated && userRole === 'intern' ? <InternDashboard /> : <Navigate to="/login" />} 
-        />
-      </Routes>
-    </Router>
+              <Route
+                path="/login"
+                element={
+                  isAuthenticated && userRole
+                    ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
+                    : <LoginPage onLogin={handleFakeLogin} />
+                }
+              />
+
+              {/* Protected routes - Person A will add proper auth later */}
+              <Route
+                path="/admin/*"
+                element={
+                  isAuthenticated && userRole === 'admin'
+                    ? <AdminDashboard />
+                    : <Navigate to="/login" />
+                }
+              />
+
+              <Route
+                path="/intern/*"
+                element={
+                  isAuthenticated && userRole === 'intern'
+                    ? <InternLayout />
+                    : <Navigate to="/login" />
+                }
+              >
+                <Route index element={<InternDashboard />} />
+                <Route path="reports" element={<InternReports />} />
+                <Route path="attendance" element={<InternAttendance />} />
+                <Route path="notifications" element={<InternNotifications />} />
+                <Route path="documents" element={<InternDocuments />} />
+              </Route>
+
+              <Route
+                path="*"
+                element={
+                  isAuthenticated && userRole
+                    ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
+                    : <Navigate to="/login" />
+                }
+              />
+            </Routes>
+          </Router>
+        </AttendanceProvider>
+      </DocumentsProvider>
+    </NotificationProvider>
   );
 }
 
