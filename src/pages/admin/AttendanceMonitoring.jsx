@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { ChevronDown, Calendar } from 'lucide-react';
 import MetricCard from '../../components/MetricCard';
+import Avatar from '../../components/Avatar';
+import StatusBadge from '../../components/StatusBadge';
+import Pagination from '../../components/Pagination';
+import DataTable from '../../components/DataTable';
 
 const ATTENDANCE_ROWS = [
   { id: 1, name: 'John Doe', team: 'UI/UX Designer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
@@ -10,25 +14,26 @@ const ATTENDANCE_ROWS = [
   { id: 5, name: 'Liam Carter', team: 'Frontend Developer', timeIn: '09:05 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
 ];
 
-const statusTextClass = {
-  present: 'text-green-400',
-  late: 'text-amber-400',
-  absent: 'text-red-400',
-};
-
-function Avatar({ name }) {
-  const initial = name.charAt(0).toUpperCase();
-  return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold text-amber-400">
-      {initial}
-    </div>
-  );
-}
-
 function AttendanceMonitoring() {
   const [startDate, setStartDate] = useState('04 / 21 / 2026');
   const [endDate, setEndDate] = useState('06 / 24 / 2026');
   const [reportType, setReportType] = useState('Present - On Time');
+  const reportTypeOptions = [
+    'All',
+    'Present - On Time',
+    'Present - Late',
+    'Present - Undertime',
+    'Absent',
+  ];
+  const [statusFilter, setStatusFilter] = useState('All');
+  const statusOptions = ['All', 'Present - On Time', 'Present - Late', 'Present - Undertime', 'Absent'];
+
+  const filteredRows = ATTENDANCE_ROWS.filter((row) => {
+    if (statusFilter === 'All') {
+      return true;
+    }
+    return row.status.toLowerCase() === statusFilter.toLowerCase();
+  });
 
   return (
     <div className="space-y-6">
@@ -59,76 +64,73 @@ function AttendanceMonitoring() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left: Intern Attendance table */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-semibold text-white">Intern Attendance</h2>
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
-            >
-              Filter <ChevronDown className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="rounded-xl border border-slate-600 bg-slate-800 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-700">
-                <thead className="bg-slate-700/60">
-                  <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
-                    <th className="px-4 py-3">Intern</th>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Time In</th>
-                    <th className="px-4 py-3">Time Out</th>
-                    <th className="px-4 py-3">Hours Rendered</th>
-                    <th className="px-4 py-3">Attendance Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                  {ATTENDANCE_ROWS.map((row) => (
-                    <tr key={row.id} className="hover:bg-slate-700/40">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <Avatar name={row.name} />
-                          <span className="font-medium text-white">{row.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="inline-block rounded-full bg-slate-600 px-2.5 py-0.5 text-xs text-slate-200">
-                          {row.team}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">{row.timeIn}</td>
-                      <td className="px-4 py-3">{row.timeOut}</td>
-                      <td className="px-4 py-3">{row.hours}</td>
-                      <td className={`px-4 py-3 font-medium ${statusTextClass[row.statusType] || 'text-slate-300'}`}>
-                        {row.status}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <footer className="flex flex-col gap-3 border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-              <span>Page 1 of 100</span>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
-                      p === 1 ? 'bg-teal-500 text-white' : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  className="rounded-lg bg-teal-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-600"
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-white">Filter:</span>
+              <label className="relative">
+                <select
+                  className="appearance-none rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 pr-9 text-sm text-slate-200 hover:bg-slate-700 focus:outline-none"
+                  value={statusFilter}
+                  onChange={(event) => setStatusFilter(event.target.value)}
                 >
-                  Next &gt;
-                </button>
-              </div>
-            </footer>
+                  {statusOptions.map((option) => (
+                    <option key={option} value={option} className="bg-slate-800 text-slate-200">
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              </label>
+            </div>
           </div>
+          <DataTable
+            footer={
+              <Pagination
+                currentPage={1}
+                totalPages={100}
+                variant="teal"
+                nextLabel="Next >"
+                className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+              />
+            }
+          >
+            <table className="min-w-full divide-y divide-slate-700">
+              <thead className="bg-slate-700/60">
+                <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-3">Intern</th>
+                  <th className="px-4 py-3">Team</th>
+                  <th className="px-4 py-3">Time In</th>
+                  <th className="px-4 py-3">Time Out</th>
+                  <th className="px-4 py-3">Hours Rendered</th>
+                  <th className="px-4 py-3">Attendance Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
+                {filteredRows.map((row) => (
+                  <tr key={row.id} className="hover:bg-slate-700/40">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Avatar name={row.name} size="h-9 w-9" />
+                        <span className="font-medium text-white">{row.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="inline-block rounded-full bg-slate-600 px-2.5 py-0.5 text-xs text-slate-200">
+                        {row.team}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{row.timeIn}</td>
+                    <td className="px-4 py-3">{row.timeOut}</td>
+                    <td className="px-4 py-3">{row.hours}</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge label={row.status} tone={row.statusType} variant="text" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </DataTable>
         </div>
 
         {/* Right: Generate Reports + Attendance Summary */}
@@ -168,13 +170,20 @@ function AttendanceMonitoring() {
                 <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400">
                   Type
                 </label>
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between rounded-lg border border-slate-600 bg-slate-700 px-3 py-2.5 text-left text-slate-200"
-                >
-                  {reportType}
-                  <ChevronDown className="h-4 w-4 text-slate-400" />
-                </button>
+                <label className="relative block">
+                  <select
+                    className="w-full appearance-none rounded-lg border border-slate-600 bg-slate-700 px-3 py-2.5 text-left text-slate-200"
+                    value={reportType}
+                    onChange={(event) => setReportType(event.target.value)}
+                  >
+                    {reportTypeOptions.map((option) => (
+                      <option key={option} value={option} className="bg-slate-800 text-slate-200">
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                </label>
               </div>
               <button
                 type="button"

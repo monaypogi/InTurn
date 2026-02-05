@@ -8,6 +8,7 @@ import {
   FileX2,
   X,
 } from 'lucide-react';
+import Pagination from '../../components/Pagination';
 
 const FILTERS = [
   { id: 'all', label: 'All', count: 6, pillClass: 'bg-slate-500/30 text-slate-300' },
@@ -160,28 +161,12 @@ function Notifications() {
         ))}
       </div>
 
-      <footer className="flex flex-col gap-3 border-t border-slate-700 pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-sm text-slate-400">Page 1 of 1</span>
-        <div className="flex items-center gap-2">
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              type="button"
-              className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
-                page === 1 ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button
-            type="button"
-            className="rounded-lg bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-600"
-          >
-            Next
-          </button>
-        </div>
-      </footer>
+      <Pagination
+        currentPage={1}
+        totalPages={1}
+        variant="slate"
+        className="border-t border-slate-700 pt-4 text-sm text-slate-400"
+      />
     </div>
   );
 }

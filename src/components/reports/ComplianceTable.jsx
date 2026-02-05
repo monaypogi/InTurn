@@ -1,4 +1,5 @@
 import { UserCircle } from 'lucide-react';
+import Pagination from '../Pagination';
 
 function ComplianceTable({ title, rows, dateLabel = 'Date Submitted' }) {
   return (
@@ -29,43 +30,31 @@ function ComplianceTable({ title, rows, dateLabel = 'Date Submitted' }) {
                 </td>
                 <td className="px-4 py-3">{row.date}</td>
                 <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      row.status === 'Verified'
-                        ? 'bg-emerald-500/20 text-emerald-300'
-                        : 'bg-amber-500/20 text-amber-300'
-                    }`}
-                  >
-                    {row.status}
-                  </span>
+                  {row.statusNode ? (
+                    row.statusNode
+                  ) : (
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        row.status === 'Verified'
+                          ? 'bg-emerald-500/20 text-emerald-300'
+                          : 'bg-amber-500/20 text-amber-300'
+                      }`}
+                    >
+                      {row.status}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <footer className="flex flex-col gap-3 border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-        <span>Page 1 of 100</span>
-        <div className="flex items-center gap-2">
-          {[1, 2, 3, 4, 5].map((p) => (
-            <button
-              key={p}
-              type="button"
-              className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
-                p === 1 ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-          <button
-            type="button"
-            className="rounded-lg bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-600"
-          >
-            Next
-          </button>
-        </div>
-      </footer>
+      <Pagination
+        currentPage={1}
+        totalPages={100}
+        variant="slate"
+        className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+      />
     </div>
   );
 }

@@ -9,6 +9,8 @@ import {
   FileText,
   UserCircle,
 } from 'lucide-react';
+import DataTable from '../../components/DataTable';
+import Pagination from '../../components/Pagination';
 
 const DOCUMENT_SUMMARY = {
   submitted: 48,
@@ -154,9 +156,9 @@ function VerificationPanel({ requests }) {
 
   if (!hasRequests) {
     return (
-      <div className="rounded-xl border border-slate-600 bg-slate-800 p-6">
+      <div className="flex min-h-[420px] flex-col rounded-xl border border-slate-600 bg-slate-800 p-6">
         <h3 className="text-lg font-semibold text-white">Document Verification</h3>
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate-600 bg-slate-700/40 p-6 text-center">
+        <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate-600 bg-slate-700/40 p-6 text-center">
           <FileText className="h-8 w-8 text-slate-400" />
           <p className="text-sm text-slate-400">No pending document verification requests.</p>
         </div>
@@ -165,7 +167,7 @@ function VerificationPanel({ requests }) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-600 bg-slate-800 p-6">
+    <div className="min-h-[420px] rounded-xl border border-slate-600 bg-slate-800 p-6">
       <h3 className="text-lg font-semibold text-white">Document Verification</h3>
       <div className="mt-4 flex items-center gap-3">
         <UserCircle className="h-10 w-10 text-amber-400" />
@@ -219,15 +221,15 @@ function VerificationPanel({ requests }) {
       <div className="mt-4 flex items-center gap-3">
         <button
           type="button"
-          className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
-        >
-          Approve
-        </button>
-        <button
-          type="button"
           className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500"
         >
           Reject
+        </button>
+        <button
+          type="button"
+          className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
+        >
+          Approve
         </button>
       </div>
 
@@ -260,17 +262,21 @@ function Reports() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [internFilter] = useState('All Interns');
-  const [typeFilter] = useState('Daily Report');
+  const [typeFilter, setTypeFilter] = useState('All');
+  const typeOptions = ['All', 'Daily Report', 'Documents'];
 
   const filteredRows = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return REPORT_ROWS;
-    return REPORT_ROWS.filter((row) =>
-      [row.name, row.team, row.type, row.status].some((field) =>
-        field.toLowerCase().includes(query)
-      )
-    );
-  }, [search]);
+    return REPORT_ROWS.filter((row) => {
+      const matchesQuery =
+        query.length === 0 ||
+        [row.name, row.team, row.type, row.status].some((field) =>
+          field.toLowerCase().includes(query)
+        );
+      const matchesType = typeFilter === 'All' || row.type === typeFilter;
+      return matchesQuery && matchesType;
+    });
+  }, [search, typeFilter]);
 
   return (
     <div className="space-y-6">
@@ -285,22 +291,22 @@ function Reports() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <SummaryCard
-          title="Documents"
-          summary={DOCUMENT_SUMMARY}
-          onViewAll={() => navigate('/admin/reports/documents')}
-        />
-        <SummaryCard
-          title="Daily Reports"
-          summary={REPORT_SUMMARY}
-          onViewAll={() => navigate('/admin/reports/daily')}
-        />
-        <VerificationPanel requests={PENDING_VERIFICATIONS} />
-      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <SummaryCard
+              title="Documents"
+              summary={DOCUMENT_SUMMARY}
+              onViewAll={() => navigate('/admin/reports/documents')}
+            />
+            <SummaryCard
+              title="Daily Reports"
+              summary={REPORT_SUMMARY}
+              onViewAll={() => navigate('/admin/reports/daily')}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-4">
+          <div className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative w-full sm:max-w-xs">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -312,83 +318,72 @@ function Reports() {
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 py-2 pl-9 pr-3 text-sm text-slate-200"
               />
             </div>
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm text-slate-200"
-              >
-                {internFilter} <ChevronDown className="h-4 w-4 text-slate-400" />
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm text-slate-200"
-              >
-                {typeFilter} <ChevronDown className="h-4 w-4 text-slate-400" />
-              </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="relative">
+                <span className="mr-2 text-sm font-semibold text-white">Type:</span>
+                <select
+                  className="appearance-none rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 pr-9 text-sm text-slate-200"
+                  value={typeFilter}
+                  onChange={(event) => setTypeFilter(event.target.value)}
+                >
+                  {typeOptions.map((option) => (
+                    <option key={option} value={option} className="bg-slate-800 text-slate-200">
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              </label>
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-600 bg-slate-800 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-700">
-                <thead className="bg-slate-700/60">
-                  <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
-                    <th className="px-4 py-3">Intern</th>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Time</th>
-                    <th className="px-4 py-3">Type</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Remarks</th>
+          <DataTable
+            footer={
+              <Pagination
+                currentPage={1}
+                totalPages={100}
+                variant="slate"
+                className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+              />
+            }
+          >
+            <table className="min-w-full divide-y divide-slate-700">
+              <thead className="bg-slate-700/60">
+                <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-3">Intern</th>
+                  <th className="px-4 py-3">Team</th>
+                  <th className="px-4 py-3">Time</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Remarks</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
+                {filteredRows.map((row) => (
+                  <tr key={row.id} className={rowToneStyles[row.rowTone]}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <UserCircle className="h-8 w-8 text-amber-400" />
+                        <span className="font-medium text-white">{row.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="inline-block rounded-full bg-slate-600 px-2.5 py-0.5 text-xs text-slate-200">
+                        {row.team}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{row.time}</td>
+                    <td className="px-4 py-3">{row.type}</td>
+                    <td className="px-4 py-3">{row.status}</td>
+                    <td className="px-4 py-3 text-slate-300">{row.remarks}</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                  {filteredRows.map((row) => (
-                    <tr key={row.id} className={rowToneStyles[row.rowTone]}>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <UserCircle className="h-8 w-8 text-amber-400" />
-                          <span className="font-medium text-white">{row.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="inline-block rounded-full bg-slate-600 px-2.5 py-0.5 text-xs text-slate-200">
-                          {row.team}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">{row.time}</td>
-                      <td className="px-4 py-3">{row.type}</td>
-                      <td className="px-4 py-3">{row.status}</td>
-                      <td className="px-4 py-3 text-slate-300">{row.remarks}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <footer className="flex flex-col gap-3 border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-              <span>Page 1 of 100</span>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
-                      p === 1 ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                    }`}
-                  >
-                    {p}
-                  </button>
                 ))}
-                <button
-                  type="button"
-                  className="rounded-lg bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-600"
-                >
-                  Next
-                </button>
-              </div>
-            </footer>
-          </div>
+              </tbody>
+            </table>
+          </DataTable>
         </div>
-        <div className="hidden lg:block" />
+        </div>
+        <VerificationPanel requests={PENDING_VERIFICATIONS} />
       </div>
     </div>
   );

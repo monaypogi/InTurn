@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FileText, User, Users, CheckCircle } from 'lucide-react';
 import AdminHeader from '../../components/AdminHeader';
 import MetricCard from '../../components/MetricCard';
+import Avatar from '../../components/Avatar';
 import InternManagement from './InternManagement';
 import AttendanceMonitoring from './AttendanceMonitoring';
 import Notifications from './Notifications';
@@ -10,6 +11,7 @@ import Reports from './Reports';
 import ViewDocuments from './ViewDocuments';
 import ViewDailyReports from './ViewDailyReports';
 import DocumentUpload from './DocumentUpload';
+import Profile from './Profile';
 
 // Mock data
 const MOCK_INTERNS = [
@@ -19,7 +21,7 @@ const MOCK_INTERNS = [
 ];
 const MOCK_SUBMISSIONS = [
   { id: 1, name: 'John Doe', time: '2 hours ago', type: 'Documents', status: 'Pending Applicant' },
-  { id: 2, name: 'Jane Smith', time: '2 hours ago', type: 'Daily Reports', status: 'Pending Applicant' },
+  { id: 2, name: 'Jane Smith', time: '2 hours ago', type: 'Daily Reports', status: 'Frontend - AVAA' },
   { id: 3, name: 'Bob Wilson', time: '2 hours ago', type: 'Documents', status: 'Pending Applicant' },
 ];
 
@@ -52,6 +54,8 @@ function AdminLayout() {
     mainContent = <ViewDailyReports />;
   } else if (pathname.startsWith('/admin/reports')) {
     mainContent = <Reports />;
+  } else if (pathname.startsWith('/admin/profile')) {
+    mainContent = <Profile />;
   } else {
     mainContent = <DashboardHome currentTime={currentTime} />;
   }
@@ -132,9 +136,9 @@ function ManageInternsCard({ interns }) {
           <li key={intern.id} className="px-6 py-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-amber-400">
+                <Avatar size="h-10 w-10">
                   <User className="w-5 h-5" />
-                </div>
+                </Avatar>
                 <div className="min-w-0">
                   <p className="font-medium text-white truncate">{intern.name}</p>
                   <p className="text-slate-400 text-sm">{intern.time}</p>
@@ -173,9 +177,9 @@ function RecentSubmissionsCard({ submissions }) {
           <li key={sub.id} className="px-6 py-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-amber-400">
+                <Avatar size="h-10 w-10">
                   <User className="w-5 h-5" />
-                </div>
+                </Avatar>
                 <div className="min-w-0">
                   <p className="font-medium text-white truncate">{sub.name}</p>
                   <p className="text-slate-400 text-sm">{sub.time}</p>
@@ -200,21 +204,16 @@ function RecentSubmissionsCard({ submissions }) {
 
 function AttendanceSummaryCard({ present, late, absent }) {
   return (
-    <div className="bg-slate-800 border border-slate-600 rounded-xl overflow-hidden">
-      <h2 className="px-6 py-4 text-lg font-semibold border-b border-slate-600">Attendance</h2>
-      <div className="p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-green-400 font-medium">Present</span>
-          <span className="text-xl font-bold text-white">{present}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-amber-400 font-medium">Late</span>
-          <span className="text-xl font-bold text-white">{late}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-red-400 font-medium">Absent</span>
-          <span className="text-xl font-bold text-white">{absent}</span>
-        </div>
+    <div className="bg-slate-800 border border-slate-600 rounded-xl p-6 h-full">
+      <div className="flex h-full flex-col items-center justify-center text-center text-2xl">
+        <span className="font-semibold text-green-400">Present</span>
+        <span className="mt-2 text-base text-white text-xl">{present}</span>
+        <span className="my-4 h-px w-full bg-slate-600" />
+        <span className="font-semibold text-amber-400">Late</span>
+        <span className="mt-2 text-base text-white text-xl">{late}</span>
+        <span className="my-4 h-px w-full bg-slate-600" />
+        <span className="font-semibold text-red-400">Absent</span>
+        <span className="mt-2 text-base text-white text-xl">{absent}</span>
       </div>
     </div>
   );

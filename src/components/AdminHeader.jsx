@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Briefcase, Calendar, FileText, Bell, User, Menu, X } from 'lucide-react';
 import LogoutButton from './LogoutButton';
+import logo from '../assets/Logo.png';
 
-// Custom logo – replace later
 const LogoIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-8 h-8" fill="currentColor">
-    <path d="M16 2L4 10v12l12 8 12-8V10L16 2zm0 2.5L22 9v11l-6 4-6-4V9l6-4.5z" />
-  </svg>
+  <img
+    src={logo}
+    alt="InTurn logo"
+    className="h-12 sm:h-16 lg:h-19 w-48 sm:w-56 lg:w-64 object-contain"
+  />
 );
 
 function AdminHeader() {
@@ -24,10 +26,6 @@ function AdminHeader() {
           <div className="flex items-center gap-3">
             <div className="text-amber-400">
               <LogoIcon />
-            </div>
-            <div>
-              <span className="font-bold text-lg tracking-tight">INTURN</span>
-              <p className="text-xs text-slate-400">Internship Monitoring System</p>
             </div>
           </div>
 
@@ -69,6 +67,17 @@ function AdminHeader() {
               aria-label="Notifications"
             >
               <Bell className="w-5 h-5" />
+            </NavLink>
+            <NavLink
+              to="/admin/profile"
+              className={({ isActive }) =>
+                `flex items-center justify-center p-2 rounded-lg transition-colors ${
+                  isActive ? 'bg-slate-600 text-amber-400' : 'text-amber-400 hover:bg-slate-700'
+                }`
+              }
+              aria-label="Profile"
+            >
+              <User className="w-5 h-5" />
             </NavLink>
             <LogoutButton />
           </div>
