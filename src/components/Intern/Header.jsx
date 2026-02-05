@@ -61,11 +61,14 @@ export default function Header({ toggleSidebar }) {
                 <button
                   onClick={() => {
                     setShowDropdown(false);
-                    navigate("/login");
+
+                    localStorage.removeItem("auth"); 
+                    window.location.href = "/login"; 
                   }}
                 >
                   Logout
                 </button>
+
               </div>
             )}
           </div>
