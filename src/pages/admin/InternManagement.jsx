@@ -21,6 +21,8 @@ import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
+import useFormValidation from '../../hooks/useFormValidation';
+import { maxLength, oneOf, required } from '../../utils/validation';
 
 const interns = [
   {
@@ -94,7 +96,7 @@ const modalStatusStyles = {
   Pending: 'bg-amber-100 text-amber-600',
 };
 
-function FilterSelect({ label, value, options, onChange }) {
+function FilterSelect({ label, value, options, onChange, onBlur, error }) {
   return (
     <div className="flex flex-col gap-1 text-slate-900">
       <span className="text-[12px] uppercase tracking-wide text-white font-bold">{label}</span>
@@ -103,6 +105,7 @@ function FilterSelect({ label, value, options, onChange }) {
           className="w-full appearance-none rounded-lg border border-slate-300 bg-slate-200 py-3 pl-4 pr-10 text-base font-medium text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          onBlur={onBlur}
         >
           {options.map((option) => (
             <option key={option} value={option} className="bg-slate-200 text-slate-900">
@@ -112,11 +115,12 @@ function FilterSelect({ label, value, options, onChange }) {
         </select>
         <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
       </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
 
-function ModalSelect({ label, value, options, onChange }) {
+function ModalSelect({ label, value, options, onChange, onBlur, error }) {
   return (
     <label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
       <span>{label}</span>
@@ -125,6 +129,7 @@ function ModalSelect({ label, value, options, onChange }) {
           className="appearance-none rounded-md border border-slate-300 bg-slate-100 py-0.5 pl-2 pr-6 text-xs font-semibold text-slate-700 focus:outline-none"
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          onBlur={onBlur}
         >
           {options.map((option) => (
             <option key={option} value={option} className="bg-white text-slate-700">
@@ -134,6 +139,7 @@ function ModalSelect({ label, value, options, onChange }) {
         </select>
         <ChevronDown className="pointer-events-none absolute right-1 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
       </span>
+      {error && <span className="text-[10px] text-red-500">{error}</span>}
     </label>
   );
 }
@@ -185,9 +191,6 @@ function InternManagement() {
     { type: 'Document', file: 'Wilson_ID.pdf', submitted: '2026-01-21', status: 'Verified' },
     { type: 'Document', file: 'Wilson_MOA.pdf', submitted: '2026-01-22', status: 'Verified' },
   ];
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [departmentFilter, setDepartmentFilter] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeIntern, setActiveIntern] = useState(null);
   const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
@@ -195,13 +198,45 @@ function InternManagement() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [evaluationIntern, setEvaluationIntern] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [selectedSupervisor, setSelectedSupervisor] = useState(supervisorOptions[0]);
-  const [selectedDepartment, setSelectedDepartment] = useState(modalDepartmentOptions[0]);
+  const filterForm = useFormValidation(
+    {
+      searchTerm: '',
+      statusFilter: 'All',
+      departmentFilter: 'All',
+    },
+    {
+      searchTerm: [maxLength(100)],
+      statusFilter: [oneOf(statusOptions)],
+      departmentFilter: [oneOf(departmentOptions)],
+    }
+  );
+  const profileForm = useFormValidation(
+    {
+      department: modalDepartmentOptions[0],
+      supervisor: supervisorOptions[0],
+    },
+    {
+      department: [required(), oneOf(modalDepartmentOptions)],
+      supervisor: [required(), oneOf(supervisorOptions)],
+    }
+  );
+  const evaluationForm = useFormValidation(
+    {
+      evaluationPeriod: 'Weekly',
+      selectedPeriod: 'Week 1 - January 2024',
+      adminComments: '',
+    },
+    {
+      evaluationPeriod: [required()],
+      selectedPeriod: [required()],
+      adminComments: [maxLength(1000)],
+    }
+  );
 
   const filteredInterns = interns.filter((intern) => {
-    const normalizedStatus = statusFilter.toLowerCase();
-    const normalizedDepartment = departmentFilter.toLowerCase();
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const normalizedStatus = filterForm.values.statusFilter.toLowerCase();
+    const normalizedDepartment = filterForm.values.departmentFilter.toLowerCase();
+    const normalizedSearch = filterForm.values.searchTerm.trim().toLowerCase();
     const matchesStatus =
       normalizedStatus === 'all' || intern.status.toLowerCase() === normalizedStatus;
     const matchesDepartment =
@@ -216,13 +251,16 @@ function InternManagement() {
 
   const handleOpenProfile = (intern) => {
     setActiveIntern(intern);
-    setSelectedSupervisor(intern.supervisor || supervisorOptions[0]);
-    setSelectedDepartment(intern.department || modalDepartmentOptions[0]);
+    profileForm.resetForm({
+      supervisor: intern.supervisor || supervisorOptions[0],
+      department: intern.department || modalDepartmentOptions[0],
+    });
     setIsProfileOpen(true);
   };
 
   const handleCloseProfile = () => {
     setIsProfileOpen(false);
+    profileForm.resetForm();
   };
 
   const handleOpenPerformance = (intern) => {
@@ -237,10 +275,12 @@ function InternManagement() {
   const handleOpenEvaluation = (intern) => {
     setEvaluationIntern(intern);
     setIsEvaluationOpen(true);
+    evaluationForm.resetForm();
   };
 
   const handleCloseEvaluation = () => {
     setIsEvaluationOpen(false);
+    evaluationForm.resetForm();
   };
 
   const handleOpenHistory = () => {
@@ -250,6 +290,19 @@ function InternManagement() {
 
   const handleCloseHistory = () => {
     setIsHistoryOpen(false);
+  };
+  const handleSaveProfile = () => {
+    const nextErrors = profileForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsProfileOpen(false);
+  };
+  const handleSaveEvaluation = () => {
+    const nextErrors = evaluationForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
   };
 
   return (
@@ -297,9 +350,11 @@ function InternManagement() {
                     <Briefcase className="h-4 w-4 text-slate-400" />
                     <ModalSelect
                       label="Department:"
-                      value={selectedDepartment}
+                    value={profileForm.values.department}
                       options={modalDepartmentOptions}
-                      onChange={setSelectedDepartment}
+                    onChange={(value) => profileForm.handleChange('department', value)}
+                    onBlur={() => profileForm.handleBlur('department')}
+                    error={profileForm.errors.department}
                     />
                   </div>
                 </div>
@@ -310,9 +365,11 @@ function InternManagement() {
                   <User className="h-4 w-4 text-slate-400" />
                   <ModalSelect
                     label="Supervisor:"
-                    value={selectedSupervisor}
+                    value={profileForm.values.supervisor}
                     options={supervisorOptions}
-                    onChange={setSelectedSupervisor}
+                    onChange={(value) => profileForm.handleChange('supervisor', value)}
+                    onBlur={() => profileForm.handleBlur('supervisor')}
+                    error={profileForm.errors.supervisor}
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -385,7 +442,7 @@ function InternManagement() {
               <button
                 type="button"
                 className="rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"
-                onClick={handleCloseProfile}
+                onClick={handleSaveProfile}
               >
                 Save Profile
               </button>
@@ -581,19 +638,34 @@ function InternManagement() {
                 <div className="flex flex-wrap items-center gap-4">
                   <label className="flex items-center gap-2">
                     Evaluation Period
-                    <select className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700">
+                    <select
+                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
+                      value={evaluationForm.values.evaluationPeriod}
+                      onChange={(event) => evaluationForm.handleChange('evaluationPeriod', event.target.value)}
+                      onBlur={() => evaluationForm.handleBlur('evaluationPeriod')}
+                    >
                       <option>Weekly</option>
                       <option>Monthly</option>
                     </select>
                   </label>
                   <label className="flex items-center gap-2">
                     Select Period
-                    <select className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700">
+                    <select
+                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
+                      value={evaluationForm.values.selectedPeriod}
+                      onChange={(event) => evaluationForm.handleChange('selectedPeriod', event.target.value)}
+                      onBlur={() => evaluationForm.handleBlur('selectedPeriod')}
+                    >
                       <option>Week 1 - January 2024</option>
                       <option>Week 2 - January 2024</option>
                     </select>
                   </label>
                 </div>
+                {(evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod) && (
+                  <p className="text-xs text-red-500">
+                    {evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod}
+                  </p>
+                )}
 
                 <div className="space-y-4">
                   {['Technical Skills', 'Communication', 'Professionalism', 'Technical Skills', 'Technical Skills'].map(
@@ -623,12 +695,19 @@ function InternManagement() {
                     rows={3}
                     className="mt-2 w-full rounded-md border border-slate-300 p-3 text-sm text-slate-700"
                     placeholder="Add feedback..."
+                    value={evaluationForm.values.adminComments}
+                    onChange={(event) => evaluationForm.handleChange('adminComments', event.target.value)}
+                    onBlur={() => evaluationForm.handleBlur('adminComments')}
                   />
+                  {evaluationForm.errors.adminComments && (
+                    <p className="mt-2 text-xs text-red-500">{evaluationForm.errors.adminComments}</p>
+                  )}
                 </div>
 
                 <div className="flex justify-end">
                   <button
                     type="button"
+                    onClick={handleSaveEvaluation}
                     className="rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white"
                   >
                     Save Evaluation
@@ -798,23 +877,31 @@ function InternManagement() {
                 type="text"
                 placeholder="Search by name or email..."
                 className="w-full rounded-lg border border-slate-300 bg-slate-200 py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
+                value={filterForm.values.searchTerm}
+                onChange={(event) => filterForm.handleChange('searchTerm', event.target.value)}
+                onBlur={() => filterForm.handleBlur('searchTerm')}
               />
+              {filterForm.errors.searchTerm && (
+                <p className="mt-1 text-xs text-red-500">{filterForm.errors.searchTerm}</p>
+              )}
             </div>
           </div>
           <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
             <FilterSelect
               label="Status"
-              value={statusFilter}
+              value={filterForm.values.statusFilter}
               options={statusOptions}
-              onChange={setStatusFilter}
+              onChange={(value) => filterForm.handleChange('statusFilter', value)}
+              onBlur={() => filterForm.handleBlur('statusFilter')}
+              error={filterForm.errors.statusFilter}
             />
             <FilterSelect
               label="Department"
-              value={departmentFilter}
+              value={filterForm.values.departmentFilter}
               options={departmentOptions}
-              onChange={setDepartmentFilter}
+              onChange={(value) => filterForm.handleChange('departmentFilter', value)}
+              onBlur={() => filterForm.handleBlur('departmentFilter')}
+              error={filterForm.errors.departmentFilter}
             />
           </div>
         </div>

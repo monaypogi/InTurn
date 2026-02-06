@@ -6,6 +6,8 @@ import ReportStatsGrid from '../../components/reports/ReportStatsGrid';
 import ComplianceTable from '../../components/reports/ComplianceTable';
 import MissingSubmissionsTable from '../../components/reports/MissingSubmissionsTable';
 import Modal from '../../components/Modal';
+import useFormValidation from '../../hooks/useFormValidation';
+import { maxLength } from '../../utils/validation';
 
 const STATS = [
   { id: 'submitted', label: 'Submitted', value: 48, icon: CheckSquare, tone: 'text-emerald-400' },
@@ -37,6 +39,13 @@ function ViewDocuments() {
   const navigate = useNavigate();
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [activeRequest, setActiveRequest] = useState(null);
+  const { values, errors, handleChange, handleBlur, validateForm, resetForm } = useFormValidation(
+    { message: '', remarks: '' },
+    {
+      message: [maxLength(500)],
+      remarks: [maxLength(1000)],
+    }
+  );
   const openVerification = (row) => {
     setActiveRequest({
       name: row.name,
@@ -45,10 +54,18 @@ function ViewDocuments() {
       documents: PENDING_DOCUMENTS,
     });
     setIsVerificationOpen(true);
+    resetForm();
   };
   const closeVerification = () => {
     setIsVerificationOpen(false);
     setActiveRequest(null);
+    resetForm();
+  };
+  const handleDecision = () => {
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
   };
 
   const complianceRows = useMemo(
@@ -150,7 +167,11 @@ function ViewDocuments() {
               className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
               rows={2}
               placeholder="message..."
+              value={values.message}
+              onChange={(event) => handleChange('message', event.target.value)}
+              onBlur={() => handleBlur('message')}
             />
+            {errors.message && <p className="mt-2 text-xs text-red-400">{errors.message}</p>}
           </div>
 
           <div className="mt-4">
@@ -158,18 +179,24 @@ function ViewDocuments() {
             <textarea
               className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
               rows={3}
+              value={values.remarks}
+              onChange={(event) => handleChange('remarks', event.target.value)}
+              onBlur={() => handleBlur('remarks')}
             />
+            {errors.remarks && <p className="mt-2 text-xs text-red-400">{errors.remarks}</p>}
           </div>
 
           <div className="mt-4 flex items-center gap-3">
             <button
               type="button"
+              onClick={handleDecision}
               className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500"
             >
               Reject
             </button>
             <button
               type="button"
+              onClick={handleDecision}
               className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
             >
               Approve

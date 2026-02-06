@@ -5,6 +5,8 @@ import Avatar from '../../components/Avatar';
 import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
+import useFormValidation from '../../hooks/useFormValidation';
+import { date, dateAfter, dateBefore, oneOf, required } from '../../utils/validation';
 
 const ATTENDANCE_ROWS = [
   { id: 1, name: 'John Doe', team: 'UI/UX Designer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
@@ -15,9 +17,6 @@ const ATTENDANCE_ROWS = [
 ];
 
 function AttendanceMonitoring() {
-  const [startDate, setStartDate] = useState('04 / 21 / 2026');
-  const [endDate, setEndDate] = useState('06 / 24 / 2026');
-  const [reportType, setReportType] = useState('Present - On Time');
   const reportTypeOptions = [
     'All',
     'Present - On Time',
@@ -25,6 +24,24 @@ function AttendanceMonitoring() {
     'Present - Undertime',
     'Absent',
   ];
+  const {
+    values,
+    errors,
+    handleChange,
+    handleBlur,
+    validateForm,
+  } = useFormValidation(
+    {
+      startDate: '04 / 21 / 2026',
+      endDate: '06 / 24 / 2026',
+      reportType: 'Present - On Time',
+    },
+    {
+      startDate: [required(), date(), dateBefore('endDate')],
+      endDate: [required(), date(), dateAfter('startDate')],
+      reportType: [required(), oneOf(reportTypeOptions)],
+    }
+  );
   const [statusFilter, setStatusFilter] = useState('All');
   const statusOptions = ['All', 'Present - On Time', 'Present - Late', 'Present - Undertime', 'Absent'];
 
@@ -34,6 +51,13 @@ function AttendanceMonitoring() {
     }
     return row.status.toLowerCase() === statusFilter.toLowerCase();
   });
+
+  const handleGenerateReport = () => {
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -145,12 +169,14 @@ function AttendanceMonitoring() {
                 <div className="relative">
                   <input
                     type="text"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    value={values.startDate}
+                    onChange={(event) => handleChange('startDate', event.target.value)}
+                    onBlur={() => handleBlur('startDate')}
                     className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
                   />
                   <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
+                {errors.startDate && <p className="mt-1 text-xs text-red-400">{errors.startDate}</p>}
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -159,12 +185,14 @@ function AttendanceMonitoring() {
                 <div className="relative">
                   <input
                     type="text"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    value={values.endDate}
+                    onChange={(event) => handleChange('endDate', event.target.value)}
+                    onBlur={() => handleBlur('endDate')}
                     className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
                   />
                   <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
+                {errors.endDate && <p className="mt-1 text-xs text-red-400">{errors.endDate}</p>}
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -173,8 +201,9 @@ function AttendanceMonitoring() {
                 <label className="relative block">
                   <select
                     className="w-full appearance-none rounded-lg border border-slate-600 bg-slate-700 px-3 py-2.5 text-left text-slate-200"
-                    value={reportType}
-                    onChange={(event) => setReportType(event.target.value)}
+                    value={values.reportType}
+                    onChange={(event) => handleChange('reportType', event.target.value)}
+                    onBlur={() => handleBlur('reportType')}
                   >
                     {reportTypeOptions.map((option) => (
                       <option key={option} value={option} className="bg-slate-800 text-slate-200">
@@ -184,10 +213,12 @@ function AttendanceMonitoring() {
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </label>
+                {errors.reportType && <p className="mt-1 text-xs text-red-400">{errors.reportType}</p>}
               </div>
               <button
                 type="button"
                 className="w-full rounded-lg bg-teal-500 py-2.5 font-medium text-white hover:bg-teal-600"
+                onClick={handleGenerateReport}
               >
                 Generate Report
               </button>

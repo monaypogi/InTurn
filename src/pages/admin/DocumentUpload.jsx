@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import ReportPageHeader from '../../components/reports/ReportPageHeader';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
+import useFormValidation from '../../hooks/useFormValidation';
+import { fileRequired, fileSize, fileType } from '../../utils/validation';
 
 const DOCUMENTS = [
   { id: 1, name: 'Non-Disclosure Agreement (NDA)', uploadedAt: '2026-01-01' },
@@ -14,6 +16,29 @@ const DOCUMENTS = [
 function DocumentUpload() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { values, errors, setFieldValue, validateForm, handleBlur, resetForm } = useFormValidation(
+    { file: null },
+    {
+      file: [
+        fileRequired(),
+        fileType(['pdf', 'doc', 'docx']),
+        fileSize(100 * 1024 * 1024),
+      ],
+    }
+  );
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    resetForm();
+  };
+
+  const handleUpload = () => {
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    handleCloseModal();
+  };
 
   return (
     <div className="space-y-6">
@@ -73,7 +98,7 @@ function DocumentUpload() {
           <h3 className="text-base font-semibold text-white">Document Upload</h3>
           <button
             type="button"
-            onClick={() => setIsModalOpen(false)}
+            onClick={handleCloseModal}
             className="rounded-lg p-2 text-slate-300 hover:bg-slate-700"
             aria-label="Close"
           >
@@ -86,16 +111,30 @@ function DocumentUpload() {
             <p className="mt-3 text-sm text-slate-200">Click to upload or drag and drop</p>
             <p className="text-xs text-slate-400">PDF, DOC, DOCX (max. 100MB)</p>
           </div>
+          <div className="mt-4">
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={(event) => setFieldValue('file', event.target.files?.[0] || null)}
+              onBlur={() => handleBlur('file')}
+              className="w-full rounded-lg border border-slate-600 bg-slate-700/40 px-3 py-2 text-sm text-slate-200"
+            />
+            {values.file && (
+              <p className="mt-2 text-xs text-slate-300">Selected: {values.file.name}</p>
+            )}
+            {errors.file && <p className="mt-2 text-xs text-red-400">{errors.file}</p>}
+          </div>
           <div className="mt-5 flex gap-3">
             <button
               type="button"
-              onClick={() => setIsModalOpen(false)}
+              onClick={handleCloseModal}
               className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500"
             >
               Cancel
             </button>
             <button
               type="button"
+              onClick={handleUpload}
               className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
             >
               Upload
