@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Check,
   Clock,
@@ -11,12 +11,12 @@ import {
 import Pagination from '../../components/Pagination';
 
 const FILTERS = [
-  { id: 'all', label: 'All', count: 6, pillClass: 'bg-slate-500/30 text-slate-300' },
-  { id: 'unread', label: 'Unread', count: 2, pillClass: 'bg-slate-500/30 text-slate-300' },
-  { id: 'info', label: 'Info', count: 1, pillClass: 'bg-slate-500/30 text-slate-300' },
-  { id: 'warning', label: 'Warning', count: 2, pillClass: 'bg-amber-500/30 text-amber-300' },
-  { id: 'urgent', label: 'Urgent', count: 2, pillClass: 'bg-red-500/30 text-red-300' },
-  { id: 'success', label: 'Success', count: 1, pillClass: 'bg-green-500/30 text-green-300' },
+  { id: 'all', label: 'All', pillClass: 'bg-slate-500/30 text-slate-300' },
+  { id: 'unread', label: 'Unread', pillClass: 'bg-slate-500/30 text-slate-300' },
+  { id: 'info', label: 'Info', pillClass: 'bg-slate-500/30 text-slate-300' },
+  { id: 'warning', label: 'Warning', pillClass: 'bg-amber-500/30 text-amber-300' },
+  { id: 'urgent', label: 'Urgent', pillClass: 'bg-red-500/30 text-red-300' },
+  { id: 'success', label: 'Success', pillClass: 'bg-green-500/30 text-green-300' },
 ];
 
 const NOTIFICATIONS = [
@@ -28,6 +28,7 @@ const NOTIFICATIONS = [
     title: 'Missing Time Out',
     description: 'Emma Wilson has not recorded time-out for January 30, 2026',
     time: '2 hours ago',
+    unread: true,
   },
   {
     id: 2,
@@ -37,6 +38,7 @@ const NOTIFICATIONS = [
     title: 'Pending Daily Report',
     description: '4 interns have not submitted their daily reports today',
     time: '4 hours ago',
+    unread: true,
   },
   {
     id: 3,
@@ -46,6 +48,7 @@ const NOTIFICATIONS = [
     title: 'Document Verified',
     description: 'NDA for Emma Wilson has been verified',
     time: '1 day ago',
+    unread: false,
   },
   {
     id: 4,
@@ -55,6 +58,7 @@ const NOTIFICATIONS = [
     title: 'New Intern Added',
     description: 'Emma Wilson has been added to UI/UX department',
     time: '2 days ago',
+    unread: false,
   },
   {
     id: 5,
@@ -64,6 +68,7 @@ const NOTIFICATIONS = [
     title: 'Late Arrival',
     description: 'Emma Wilson arrived late on January 30, 2026',
     time: '3 days ago',
+    unread: false,
   },
   {
     id: 6,
@@ -73,6 +78,87 @@ const NOTIFICATIONS = [
     title: 'Document Rejected',
     description: 'MOA for Emma Wilson requires corrections',
     time: '3 days ago',
+    unread: true,
+  },
+  {
+    id: 7,
+    type: 'info',
+    icon: UserPlus,
+    iconBg: 'bg-sky-500/20 text-sky-400',
+    title: 'New Supervisor Assigned',
+    description: 'Jacob Kim has been assigned to Frontend interns',
+    time: '4 days ago',
+    unread: false,
+  },
+  {
+    id: 8,
+    type: 'success',
+    icon: FileCheck,
+    iconBg: 'bg-green-500/20 text-green-400',
+    title: 'Report Approved',
+    description: 'Daily report for Liam Carter has been approved',
+    time: '4 days ago',
+    unread: false,
+  },
+  {
+    id: 9,
+    type: 'warning',
+    icon: Clock,
+    iconBg: 'bg-amber-500/20 text-amber-400',
+    title: 'Missing Daily Report',
+    description: 'Sophia Clark has not submitted a daily report',
+    time: '5 days ago',
+    unread: true,
+  },
+  {
+    id: 10,
+    type: 'urgent',
+    icon: FileX2,
+    iconBg: 'bg-red-500/20 text-red-400',
+    title: 'Document Expiring',
+    description: 'Internship agreement for Noah Brown expires soon',
+    time: '6 days ago',
+    unread: false,
+  },
+  {
+    id: 11,
+    type: 'info',
+    icon: FileText,
+    iconBg: 'bg-sky-500/20 text-sky-400',
+    title: 'Policy Update',
+    description: 'Attendance policy has been updated for Q1 2026',
+    time: '1 week ago',
+    unread: false,
+  },
+  {
+    id: 12,
+    type: 'success',
+    icon: FileCheck,
+    iconBg: 'bg-green-500/20 text-green-400',
+    title: 'Document Verified',
+    description: 'MOA for Olivia Green has been verified',
+    time: '1 week ago',
+    unread: true,
+  },
+  {
+    id: 13,
+    type: 'warning',
+    icon: Clock,
+    iconBg: 'bg-amber-500/20 text-amber-400',
+    title: 'Late Submission',
+    description: 'Jackson Lee submitted a report late',
+    time: '1 week ago',
+    unread: false,
+  },
+  {
+    id: 14,
+    type: 'urgent',
+    icon: FileText,
+    iconBg: 'bg-red-500/20 text-red-400',
+    title: 'Verification Needed',
+    description: 'Pending verification for Ava Lopez documents',
+    time: '1 week ago',
+    unread: true,
   },
 ];
 
@@ -105,6 +191,40 @@ function NotificationCard({ notification, onDismiss }) {
 function Notifications() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [items, setItems] = useState(NOTIFICATIONS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 6;
+
+  const filteredItems = items.filter((item) => {
+    if (activeFilter === 'all') {
+      return true;
+    }
+    if (activeFilter === 'unread') {
+      return item.unread;
+    }
+    return item.type === activeFilter;
+  });
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / rowsPerPage));
+  const paginatedItems = filteredItems.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+  const filtersWithCounts = FILTERS.map((filter) => {
+    const count =
+      filter.id === 'all'
+        ? items.length
+        : filter.id === 'unread'
+          ? items.filter((item) => item.unread).length
+          : items.filter((item) => item.type === filter.id).length;
+    return { ...filter, count };
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, items.length]);
 
   const handleMarkAllRead = () => {
     // Placeholder: could set all as read in state/API
@@ -132,7 +252,7 @@ function Notifications() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
+        {filtersWithCounts.map((f) => (
           <button
             key={f.id}
             type="button"
@@ -152,7 +272,7 @@ function Notifications() {
       </div>
 
       <div className="space-y-3">
-        {items.map((notification) => (
+        {paginatedItems.map((notification) => (
           <NotificationCard
             key={notification.id}
             notification={notification}
@@ -162,10 +282,14 @@ function Notifications() {
       </div>
 
       <Pagination
-        currentPage={1}
-        totalPages={1}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pages={pageNumbers}
         variant="slate"
         className="border-t border-slate-700 pt-4 text-sm text-slate-400"
+        onPageChange={setCurrentPage}
+        onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
       />
     </div>
   );

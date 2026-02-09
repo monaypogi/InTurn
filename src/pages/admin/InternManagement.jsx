@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Search,
   ChevronDown,
-  Eye,
+  ClipboardPen,
+  UserPen,
   BarChart3,
   Edit3,
   Mail,
@@ -89,6 +90,123 @@ const interns = [
     supervisor: 'Anna Lee',
     status: 'Active',
     startDate: '2026-01-01',
+  },
+  {
+    id: 8,
+    name: 'Aiden Torres',
+    email: 'aiden.torres@gmail.com',
+    department: 'Backend Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-02',
+  },
+  {
+    id: 9,
+    name: 'Zoe Carter',
+    email: 'zoe.carter@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-03',
+  },
+  {
+    id: 10,
+    name: 'Caleb Price',
+    email: 'caleb.price@gmail.com',
+    department: 'Fullstack Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-03',
+  },
+  {
+    id: 11,
+    name: 'Harper Davis',
+    email: 'harper.davis@gmail.com',
+    department: 'UI/UX Designer',
+    supervisor: 'Anna Lee',
+    status: 'Inactive',
+    startDate: '2026-01-04',
+  },
+  {
+    id: 12,
+    name: 'Elijah Moore',
+    email: 'elijah.moore@gmail.com',
+    department: 'Backend Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-04',
+  },
+  {
+    id: 13,
+    name: 'Lily Bennett',
+    email: 'lily.bennett@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Active',
+    startDate: '2026-01-05',
+  },
+  {
+    id: 14,
+    name: 'Nathan Reed',
+    email: 'nathan.reed@gmail.com',
+    department: 'Data Analyst',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-05',
+  },
+  {
+    id: 15,
+    name: 'Aria Collins',
+    email: 'aria.collins@gmail.com',
+    department: 'Product Design',
+    supervisor: 'Anna Lee',
+    status: 'Active',
+    startDate: '2026-01-06',
+  },
+  {
+    id: 16,
+    name: 'Mason Ward',
+    email: 'mason.ward@gmail.com',
+    department: 'Marketing',
+    supervisor: 'Sofia Martinez',
+    status: 'Active',
+    startDate: '2026-01-06',
+  },
+  {
+    id: 17,
+    name: 'Ella Brooks',
+    email: 'ella.brooks@gmail.com',
+    department: 'QA Engineer',
+    supervisor: 'Sofia Martinez',
+    status: 'Inactive',
+    startDate: '2026-01-07',
+  },
+  {
+    id: 18,
+    name: 'Logan Hughes',
+    email: 'logan.hughes@gmail.com',
+    department: 'Fullstack Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-08',
+  },
+  {
+    id: 19,
+    name: 'Nora Kelly',
+    email: 'nora.kelly@gmail.com',
+    department: 'UI/UX Designer',
+    supervisor: 'Anna Lee',
+    status: 'Active',
+    startDate: '2026-01-08',
+  },
+  {
+    id: 20,
+    name: 'Owen Parker',
+    email: 'owen.parker@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-09',
   },
 ];
 
@@ -207,6 +325,8 @@ function InternManagement() {
   const [isSavingEvaluation, setIsSavingEvaluation] = useState(false);
   const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
   const [isDeactivating, setIsDeactivating] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 7;
   const filterForm = useFormValidation(
     {
       searchTerm: '',
@@ -257,6 +377,19 @@ function InternManagement() {
       intern.email.toLowerCase().includes(normalizedSearch);
     return matchesStatus && matchesDepartment && matchesSearch;
   });
+  const totalPages = Math.max(1, Math.ceil(filteredInterns.length / rowsPerPage));
+  const paginatedInterns = filteredInterns.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterForm.values.searchTerm, filterForm.values.statusFilter, filterForm.values.departmentFilter]);
 
   const handleOpenProfile = (intern) => {
     setActiveIntern(intern);
@@ -985,10 +1118,14 @@ function InternManagement() {
       <DataTable
         footer={
           <Pagination
-            currentPage={1}
-            totalPages={100}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pages={pageNumbers}
             variant="amber"
             className="border-t border-slate-700 bg-slate-800 px-6 py-4 text-sm text-slate-400 md:gap-4"
+            onPageChange={setCurrentPage}
+            onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           />
         }
       >
@@ -1005,7 +1142,7 @@ function InternManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-            {filteredInterns.map((intern) => (
+            {paginatedInterns.map((intern) => (
               <tr key={intern.id} className="hover:bg-slate-700/60">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
@@ -1030,7 +1167,7 @@ function InternManagement() {
                       aria-label="View"
                       onClick={() => handleOpenProfile(intern)}
                     >
-                      <Eye className="h-4 w-4" />
+                      <UserPen className="h-4 w-4" />
                     </button>
                     <button
                       type="button"
@@ -1046,7 +1183,7 @@ function InternManagement() {
                       aria-label="Edit"
                       onClick={() => handleOpenEvaluation(intern)}
                     >
-                      <Edit3 className="h-4 w-4" />
+                      <ClipboardPen className="h-4 w-4" />
                     </button>
                   </div>
                 </td>

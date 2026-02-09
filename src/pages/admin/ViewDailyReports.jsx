@@ -18,6 +18,14 @@ const COMPLIANCE_ROWS = [
   { id: 2, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026', status: 'Verified' },
   { id: 3, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026', status: 'Verified' },
   { id: 4, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026', status: 'Pending' },
+  { id: 5, name: 'Emma Wilson', email: 'emma.wilson@gmail.com', date: 'January 27, 2026', status: 'Verified' },
+  { id: 6, name: 'Liam Carter', email: 'liam.carter@gmail.com', date: 'January 27, 2026', status: 'Verified' },
+  { id: 7, name: 'Mia Johnson', email: 'mia.johnson@gmail.com', date: 'January 28, 2026', status: 'Pending' },
+  { id: 8, name: 'Noah Brown', email: 'noah.brown@gmail.com', date: 'January 28, 2026', status: 'Verified' },
+  { id: 9, name: 'Olivia Green', email: 'olivia.green@gmail.com', date: 'January 29, 2026', status: 'Verified' },
+  { id: 10, name: 'Ethan Rivera', email: 'ethan.rivera@gmail.com', date: 'January 29, 2026', status: 'Verified' },
+  { id: 11, name: 'Sophia Clark', email: 'sophia.clark@gmail.com', date: 'January 30, 2026', status: 'Pending' },
+  { id: 12, name: 'Lucas Martin', email: 'lucas.martin@gmail.com', date: 'January 30, 2026', status: 'Verified' },
 ];
 
 const MISSING_ROWS = [
@@ -25,6 +33,14 @@ const MISSING_ROWS = [
   { id: 2, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026' },
   { id: 3, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026' },
   { id: 4, name: 'John Doe', email: 'JohnDoesWork@gmail.com', date: 'January 26, 2026' },
+  { id: 5, name: 'Emma Wilson', email: 'emma.wilson@gmail.com', date: 'January 27, 2026' },
+  { id: 6, name: 'Liam Carter', email: 'liam.carter@gmail.com', date: 'January 27, 2026' },
+  { id: 7, name: 'Mia Johnson', email: 'mia.johnson@gmail.com', date: 'January 28, 2026' },
+  { id: 8, name: 'Noah Brown', email: 'noah.brown@gmail.com', date: 'January 28, 2026' },
+  { id: 9, name: 'Olivia Green', email: 'olivia.green@gmail.com', date: 'January 29, 2026' },
+  { id: 10, name: 'Ethan Rivera', email: 'ethan.rivera@gmail.com', date: 'January 29, 2026' },
+  { id: 11, name: 'Sophia Clark', email: 'sophia.clark@gmail.com', date: 'January 30, 2026' },
+  { id: 12, name: 'Lucas Martin', email: 'lucas.martin@gmail.com', date: 'January 30, 2026' },
 ];
 
 function ViewDailyReports() {

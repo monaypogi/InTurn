@@ -21,17 +21,31 @@ function Pagination({
   totalPages = 100,
   pages = [1, 2, 3, 4, 5],
   variant = 'slate',
+  prevLabel = 'Prev',
   nextLabel = 'Next',
   className = '',
   onPageChange,
+  onPrev,
   onNext,
 }) {
   const styles = variantStyles[variant] || variantStyles.slate;
+  const isPrevDisabled = !onPrev || currentPage <= 1;
+  const isNextDisabled = !onNext || currentPage >= totalPages;
 
   return (
     <footer className={`flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${className}`.trim()}>
       <span>Page {currentPage} of {totalPages}</span>
       <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onPrev}
+          disabled={isPrevDisabled}
+          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${styles.next} ${
+            isPrevDisabled ? 'cursor-not-allowed opacity-60' : ''
+          }`}
+        >
+          {prevLabel}
+        </button>
         {pages.map((page) => (
           <button
             key={page}
@@ -47,7 +61,10 @@ function Pagination({
         <button
           type="button"
           onClick={onNext}
-          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${styles.next}`}
+          disabled={isNextDisabled}
+          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${styles.next} ${
+            isNextDisabled ? 'cursor-not-allowed opacity-60' : ''
+          }`}
         >
           {nextLabel}
         </button>

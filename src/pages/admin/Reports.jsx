@@ -43,8 +43,8 @@ const REPORT_ROWS = [
   },
   {
     id: 2,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Jane Smith',
+    team: 'Frontend - AVAA',
     time: '09:10 AM',
     type: 'Daily Report',
     status: 'Approved',
@@ -53,7 +53,7 @@ const REPORT_ROWS = [
   },
   {
     id: 3,
-    name: 'John Doe',
+    name: 'Emma Wilson',
     team: 'UI/UX Designer',
     time: '09:00 AM',
     type: 'Documents',
@@ -63,8 +63,8 @@ const REPORT_ROWS = [
   },
   {
     id: 4,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Liam Carter',
+    team: 'Frontend Developer',
     time: '09:00 AM',
     type: 'Documents',
     status: 'Approved',
@@ -73,8 +73,8 @@ const REPORT_ROWS = [
   },
   {
     id: 5,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Mia Johnson',
+    team: 'QA Engineer',
     time: '---',
     type: '---',
     status: 'Did not submit',
@@ -83,13 +83,103 @@ const REPORT_ROWS = [
   },
   {
     id: 6,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Noah Brown',
+    team: 'Product Design',
     time: '10:00 AM',
     type: 'Daily Report',
     status: 'Waiting...',
     remarks: 'Late Submitted',
     rowTone: 'warning',
+  },
+  {
+    id: 7,
+    name: 'Olivia Green',
+    team: 'Data Analyst',
+    time: '09:05 AM',
+    type: 'Daily Report',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 8,
+    name: 'Ethan Rivera',
+    team: 'Marketing',
+    time: '09:15 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 9,
+    name: 'Sophia Clark',
+    team: 'UI/UX Designer',
+    time: '09:20 AM',
+    type: 'Daily Report',
+    status: 'Waiting...',
+    remarks: 'Needs review',
+    rowTone: 'warning',
+  },
+  {
+    id: 10,
+    name: 'Lucas Martin',
+    team: 'Frontend Developer',
+    time: '---',
+    type: 'Documents',
+    status: 'Did not submit',
+    remarks: 'Missing documents',
+    rowTone: 'danger',
+  },
+  {
+    id: 11,
+    name: 'Ava Lopez',
+    team: 'QA - Team 1',
+    time: '09:02 AM',
+    type: 'Daily Report',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 12,
+    name: 'Jackson Lee',
+    team: 'Backend Developer',
+    time: '09:18 AM',
+    type: 'Daily Report',
+    status: 'Waiting...',
+    remarks: 'Late Submitted',
+    rowTone: 'warning',
+  },
+  {
+    id: 13,
+    name: 'Isabella Young',
+    team: 'Product Design',
+    time: '09:01 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 14,
+    name: 'Henry Walker',
+    team: 'Frontend - AVAA',
+    time: '---',
+    type: 'Daily Report',
+    status: 'Did not submit',
+    remarks: 'No report',
+    rowTone: 'danger',
+  },
+  {
+    id: 15,
+    name: 'Grace Hall',
+    team: 'Data Analyst',
+    time: '09:07 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
   },
 ];
 
@@ -342,6 +432,8 @@ function VerificationPanel({ requests }) {
 function Reports() {
   const navigate = useNavigate();
   const [internFilter] = useState('All Interns');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 6;
   const typeOptions = ['All', 'Daily Report', 'Documents'];
   const { values, errors, handleChange, handleBlur } = useFormValidation(
     { search: '', typeFilter: 'All' },
@@ -362,6 +454,19 @@ function Reports() {
       const matchesType = values.typeFilter === 'All' || row.type === values.typeFilter;
       return matchesQuery && matchesType;
     });
+  }, [values.search, values.typeFilter]);
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / rowsPerPage));
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
   }, [values.search, values.typeFilter]);
 
   return (
@@ -430,10 +535,14 @@ function Reports() {
           <DataTable
             footer={
               <Pagination
-                currentPage={1}
-                totalPages={100}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pages={pageNumbers}
                 variant="slate"
                 className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+                onPageChange={setCurrentPage}
+                onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               />
             }
           >
@@ -449,7 +558,7 @@ function Reports() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                {filteredRows.map((row) => (
+                {paginatedRows.map((row) => (
                   <tr key={row.id} className={rowToneStyles[row.rowTone]}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">

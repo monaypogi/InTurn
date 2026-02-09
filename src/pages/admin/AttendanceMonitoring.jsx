@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, Calendar } from 'lucide-react';
 import MetricCard from '../../components/MetricCard';
 import Avatar from '../../components/Avatar';
@@ -15,6 +15,19 @@ const ATTENDANCE_ROWS = [
   { id: 3, name: 'Bob Wilson', team: 'QA - Team 1', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
   { id: 4, name: 'Emma Wilson', team: 'UI/UX Designer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
   { id: 5, name: 'Liam Carter', team: 'Frontend Developer', timeIn: '09:05 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 6, name: 'Mia Johnson', team: 'QA Engineer', timeIn: '09:15 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 7, name: 'Noah Brown', team: 'Product Design', timeIn: '09:02 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 8, name: 'Olivia Green', team: 'Data Analyst', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 9, name: 'Ethan Rivera', team: 'Marketing', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 10, name: 'Sophia Clark', team: 'UI/UX Designer', timeIn: '09:18 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 11, name: 'Lucas Martin', team: 'Frontend Developer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 12, name: 'Ava Lopez', team: 'QA - Team 1', timeIn: '09:22 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 13, name: 'Jackson Lee', team: 'Backend Developer', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 14, name: 'Isabella Young', team: 'Product Design', timeIn: '09:01 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 15, name: 'Henry Walker', team: 'Frontend - AVAA', timeIn: '09:12 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 16, name: 'Grace Hall', team: 'Data Analyst', timeIn: '09:03 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 17, name: 'Daniel Scott', team: 'Marketing', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 18, name: 'Chloe Adams', team: 'UI/UX Designer', timeIn: '09:08 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
 ];
 
 function AttendanceMonitoring() {
@@ -46,6 +59,8 @@ function AttendanceMonitoring() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [feedback, setFeedback] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
   const statusOptions = ['All', 'Present - On Time', 'Present - Late', 'Present - Undertime', 'Absent'];
 
   const filteredRows = ATTENDANCE_ROWS.filter((row) => {
@@ -54,6 +69,19 @@ function AttendanceMonitoring() {
     }
     return row.status.toLowerCase() === statusFilter.toLowerCase();
   });
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / rowsPerPage));
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter]);
 
   const handleGenerateReport = async () => {
     const nextErrors = validateForm();
@@ -129,11 +157,15 @@ function AttendanceMonitoring() {
           <DataTable
             footer={
               <Pagination
-                currentPage={1}
-                totalPages={100}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pages={pageNumbers}
                 variant="teal"
                 nextLabel="Next >"
                 className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+                onPageChange={setCurrentPage}
+                onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               />
             }
           >
@@ -149,7 +181,7 @@ function AttendanceMonitoring() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                {filteredRows.map((row) => (
+                {paginatedRows.map((row) => (
                   <tr key={row.id} className="hover:bg-slate-700/40">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
