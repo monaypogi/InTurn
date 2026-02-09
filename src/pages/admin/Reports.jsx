@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import DataTable from '../../components/DataTable';
 import Pagination from '../../components/Pagination';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
 import { maxLength, oneOf } from '../../utils/validation';
 
@@ -147,6 +149,9 @@ function VerificationPanel({ requests }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const hasRequests = requests.length > 0;
   const current = requests[currentIndex] || null;
+  const [feedback, setFeedback] = useState(null);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { values, errors, handleChange, handleBlur, validateForm, resetForm } = useFormValidation(
     { message: '', remarks: '' },
     {
@@ -163,10 +168,30 @@ function VerificationPanel({ requests }) {
     setCurrentIndex((prev) => (prev - 1 + requests.length) % requests.length);
   };
 
-  const handleDecision = () => {
+  const handleDecision = (action) => {
     const nextErrors = validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
+    }
+    setConfirmAction({ action });
+  };
+
+  const handleConfirmDecision = async () => {
+    if (!confirmAction) {
+      return;
+    }
+    setIsProcessing(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const label = confirmAction.action === 'approve' ? 'approved' : 'rejected';
+      setFeedback({ type: 'success', message: `Request ${label} successfully.` });
+      setConfirmAction(null);
+      resetForm();
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to process the request.' });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -178,6 +203,11 @@ function VerificationPanel({ requests }) {
     return (
       <div className="flex min-h-[420px] flex-col rounded-xl border border-slate-600 bg-slate-800 p-6">
         <h3 className="text-lg font-semibold text-white">Document Verification</h3>
+        <Toast
+          type={feedback?.type}
+          message={feedback?.message}
+          onDismiss={() => setFeedback(null)}
+        />
         <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate-600 bg-slate-700/40 p-6 text-center">
           <FileText className="h-8 w-8 text-slate-400" />
           <p className="text-sm text-slate-400">No pending document verification requests.</p>
@@ -189,6 +219,11 @@ function VerificationPanel({ requests }) {
   return (
     <div className="min-h-[420px] rounded-xl border border-slate-600 bg-slate-800 p-6">
       <h3 className="text-lg font-semibold text-white">Document Verification</h3>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
       <div className="mt-4 flex items-center gap-3">
         <UserCircle className="h-10 w-10 text-amber-400" />
         <div>
@@ -249,15 +284,21 @@ function VerificationPanel({ requests }) {
       <div className="mt-4 flex items-center gap-3">
         <button
           type="button"
-          onClick={handleDecision}
-          className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500"
+          onClick={() => handleDecision('reject')}
+          className={`flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500 ${
+            isProcessing ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isProcessing}
         >
           Reject
         </button>
         <button
           type="button"
-          onClick={handleDecision}
-          className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
+          onClick={() => handleDecision('approve')}
+          className={`flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500 ${
+            isProcessing ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isProcessing}
         >
           Approve
         </button>
@@ -284,6 +325,16 @@ function VerificationPanel({ requests }) {
           </button>
         </div>
       )}
+      <ConfirmDialog
+        isOpen={!!confirmAction}
+        title={confirmAction?.action === 'approve' ? 'Approve request?' : 'Reject request?'}
+        description="This action will update the verification status."
+        confirmLabel={confirmAction?.action === 'approve' ? 'Approve' : 'Reject'}
+        tone={confirmAction?.action === 'approve' ? 'primary' : 'danger'}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={handleConfirmDecision}
+        isProcessing={isProcessing}
+      />
     </div>
   );
 }

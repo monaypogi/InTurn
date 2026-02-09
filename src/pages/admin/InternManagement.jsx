@@ -21,6 +21,8 @@ import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
 import { maxLength, oneOf, required } from '../../utils/validation';
 
@@ -198,6 +200,13 @@ function InternManagement() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [evaluationIntern, setEvaluationIntern] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [pageFeedback, setPageFeedback] = useState(null);
+  const [profileFeedback, setProfileFeedback] = useState(null);
+  const [evaluationFeedback, setEvaluationFeedback] = useState(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isSavingEvaluation, setIsSavingEvaluation] = useState(false);
+  const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
   const filterForm = useFormValidation(
     {
       searchTerm: '',
@@ -261,6 +270,7 @@ function InternManagement() {
   const handleCloseProfile = () => {
     setIsProfileOpen(false);
     profileForm.resetForm();
+    setProfileFeedback(null);
   };
 
   const handleOpenPerformance = (intern) => {
@@ -281,6 +291,7 @@ function InternManagement() {
   const handleCloseEvaluation = () => {
     setIsEvaluationOpen(false);
     evaluationForm.resetForm();
+    setEvaluationFeedback(null);
   };
 
   const handleOpenHistory = () => {
@@ -291,22 +302,66 @@ function InternManagement() {
   const handleCloseHistory = () => {
     setIsHistoryOpen(false);
   };
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     const nextErrors = profileForm.validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
-    setIsProfileOpen(false);
+    setIsSavingProfile(true);
+    setProfileFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsProfileOpen(false);
+      setPageFeedback({ type: 'success', message: 'Profile updated successfully.' });
+    } catch (error) {
+      setProfileFeedback({ type: 'error', message: 'Unable to save profile changes.' });
+    } finally {
+      setIsSavingProfile(false);
+    }
   };
-  const handleSaveEvaluation = () => {
+  const handleSaveEvaluation = async () => {
     const nextErrors = evaluationForm.validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
+    setIsSavingEvaluation(true);
+    setEvaluationFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setEvaluationFeedback({ type: 'success', message: 'Evaluation saved successfully.' });
+    } catch (error) {
+      setEvaluationFeedback({ type: 'error', message: 'Unable to save evaluation.' });
+    } finally {
+      setIsSavingEvaluation(false);
+    }
+  };
+
+  const handleConfirmDeactivate = async () => {
+    if (!activeIntern) {
+      return;
+    }
+    setIsDeactivating(true);
+    setProfileFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsProfileOpen(false);
+      setIsDeactivateOpen(false);
+      setPageFeedback({ type: 'success', message: `${activeIntern.name} has been set to inactive.` });
+    } catch (error) {
+      setProfileFeedback({ type: 'error', message: 'Unable to deactivate intern. Please try again.' });
+    } finally {
+      setIsDeactivating(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
+      <Toast
+        type={pageFeedback?.type}
+        message={pageFeedback?.message}
+        onDismiss={() => setPageFeedback(null)}
+      />
       {isProfileOpen && activeIntern && (
         <Modal
           isOpen={isProfileOpen}
@@ -324,6 +379,11 @@ function InternManagement() {
                 <X className="h-4 w-4" />
               </button>
             </div>
+            <Toast
+              type={profileFeedback?.type}
+              message={profileFeedback?.message}
+              onDismiss={() => setProfileFeedback(null)}
+            />
 
             <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-start">
               <div className="flex items-start gap-3">
@@ -441,16 +501,23 @@ function InternManagement() {
             <div className="mt-6 flex items-center justify-center gap-3">
               <button
                 type="button"
-                className="rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"
+                className={`rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 ${
+                  isSavingProfile ? 'cursor-not-allowed opacity-70' : ''
+                }`}
                 onClick={handleSaveProfile}
+                disabled={isSavingProfile}
               >
-                Save Profile
+                {isSavingProfile ? 'Saving...' : 'Save Profile'}
               </button>
               <button
                 type="button"
-                className="rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-100"
+                className={`rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-100 ${
+                  isDeactivating ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                onClick={() => setIsDeactivateOpen(true)}
+                disabled={isDeactivating}
               >
-                Inactive
+                {isDeactivating ? 'Updating...' : 'Inactive'}
               </button>
             </div>
         </Modal>
@@ -632,6 +699,11 @@ function InternManagement() {
                 </button>
               </div>
             </div>
+            <Toast
+              type={evaluationFeedback?.type}
+              message={evaluationFeedback?.message}
+              onDismiss={() => setEvaluationFeedback(null)}
+            />
 
             <div className="mt-4 grid gap-5 lg:grid-cols-[1.5fr_1fr]">
               <div className="space-y-5 rounded-xl border border-slate-200 p-5 text-sm text-slate-700">
@@ -708,9 +780,12 @@ function InternManagement() {
                   <button
                     type="button"
                     onClick={handleSaveEvaluation}
-                    className="rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white"
+                    className={`rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white ${
+                      isSavingEvaluation ? 'cursor-not-allowed opacity-70' : ''
+                    }`}
+                    disabled={isSavingEvaluation}
                   >
-                    Save Evaluation
+                    {isSavingEvaluation ? 'Saving...' : 'Save Evaluation'}
                   </button>
                 </div>
               </div>
@@ -980,7 +1055,22 @@ function InternManagement() {
           </tbody>
         </table>
       </DataTable>
-    </div>
+      </div>
+      <ConfirmDialog
+        isOpen={isDeactivateOpen}
+        title="Set intern to inactive?"
+        description={
+          activeIntern
+            ? `This will mark ${activeIntern.name} as inactive.`
+            : 'This will mark the intern as inactive.'
+        }
+        confirmLabel="Set Inactive"
+        tone="danger"
+        onCancel={() => setIsDeactivateOpen(false)}
+        onConfirm={handleConfirmDeactivate}
+        isProcessing={isDeactivating}
+      />
+    </>
   );
 }
 

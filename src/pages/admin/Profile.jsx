@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { User, Mail, Phone, Briefcase, Hash, Calendar, Lock, ShieldCheck, Eye, EyeOff, X } from 'lucide-react';
 import Modal from '../../components/Modal';
+import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
 import {
   digitsLength,
@@ -61,6 +62,8 @@ function Profile() {
 
 function ProfileGeneral() {
   const [isEditing, setIsEditing] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const initialProfile = {
     firstName: PROFILE_DATA.firstName,
     lastName: PROFILE_DATA.lastName,
@@ -79,14 +82,25 @@ function ProfileGeneral() {
   const handleCancel = () => {
     resetForm(initialProfile);
     setIsEditing(false);
+    setFeedback(null);
   };
-  const handleEditToggle = () => {
+  const handleEditToggle = async () => {
     if (isEditing) {
       const nextErrors = validateForm();
       if (Object.keys(nextErrors).length > 0) {
         return;
       }
-      setIsEditing(false);
+      setIsSaving(true);
+      setFeedback(null);
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        setIsEditing(false);
+        setFeedback({ type: 'success', message: 'Profile updated successfully.' });
+      } catch (error) {
+        setFeedback({ type: 'error', message: 'Unable to save profile changes.' });
+      } finally {
+        setIsSaving(false);
+      }
       return;
     }
     setIsEditing(true);
@@ -98,6 +112,11 @@ function ProfileGeneral() {
         <h2 className="text-lg font-semibold text-white">Profile Information</h2>
         <p className="text-sm text-slate-400">Update your personal information and profile picture</p>
       </header>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
@@ -171,9 +190,12 @@ function ProfileGeneral() {
         <button
           type="button"
           onClick={handleEditToggle}
-          className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
+          className={`rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600 ${
+            isSaving ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isSaving}
         >
-          {isEditing ? 'Save Changes' : 'Edit Profile'}
+          {isSaving ? 'Saving...' : isEditing ? 'Save Changes' : 'Edit Profile'}
         </button>
       </div>
     </section>
@@ -212,6 +234,10 @@ function ProfileSecurity() {
   const [confirmAction, setConfirmAction] = useState(null);
   const [verificationCode, setVerificationCode] = useState(Array(6).fill(''));
   const codeInputRefs = useRef([]);
+  const [feedback, setFeedback] = useState(null);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isConfirmingCode, setIsConfirmingCode] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const passwordForm = useFormValidation(
     { currentPassword: '', newPassword: '', confirmPassword: '' },
     {
@@ -302,21 +328,59 @@ function ProfileSecurity() {
   const handleCloseSessions = () => {
     setIsSessionsOpen(false);
   };
-  const handleConfirm = () => {
-    setConfirmAction(null);
-    setIsSessionsOpen(false);
+  const handleConfirm = async () => {
+    if (!confirmAction) {
+      return;
+    }
+    setIsLoggingOut(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const label =
+        confirmAction.type === 'logoutAll' ? 'all other sessions' : confirmAction.label;
+      setFeedback({ type: 'success', message: `Logged out from ${label} successfully.` });
+      setConfirmAction(null);
+      setIsSessionsOpen(false);
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to log out sessions. Please try again.' });
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
-  const handlePasswordUpdate = () => {
+  const handlePasswordUpdate = async () => {
     const nextErrors = passwordForm.validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
-    passwordForm.resetForm();
+    setIsUpdatingPassword(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      passwordForm.resetForm();
+      setFeedback({ type: 'success', message: 'Password updated successfully.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to update password.' });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
   };
-  const handleConfirmCode = () => {
+  const handleConfirmCode = async () => {
     const nextErrors = verificationForm.validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
+    }
+    setIsConfirmingCode(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsVerifyOpen(false);
+      setVerificationCode(Array(6).fill(''));
+      verificationForm.resetForm();
+      setFeedback({ type: 'success', message: 'Two-factor authentication enabled.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to verify the code. Please try again.' });
+    } finally {
+      setIsConfirmingCode(false);
     }
   };
 
@@ -358,9 +422,12 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={handlePasswordUpdate}
-              className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
+              className={`rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600 ${
+                isUpdatingPassword ? 'cursor-not-allowed opacity-70' : ''
+              }`}
+              disabled={isUpdatingPassword}
             >
-              Update Password
+              {isUpdatingPassword ? 'Updating...' : 'Update Password'}
             </button>
           </div>
         </section>
@@ -398,6 +465,11 @@ function ProfileSecurity() {
           </div>
         </section>
       </div>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
 
       {isModalOpen && (
         <Modal
@@ -581,9 +653,12 @@ function ProfileSecurity() {
               <button
                 type="button"
                 onClick={handleConfirmCode}
-                className="rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600"
+                className={`rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 ${
+                  isConfirmingCode ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                disabled={isConfirmingCode}
               >
-                Confirm Code
+                {isConfirmingCode ? 'Confirming...' : 'Confirm Code'}
               </button>
             </div>
           </div>
@@ -702,9 +777,12 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={handleConfirm}
-              className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+              className={`rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 ${
+                isLoggingOut ? 'cursor-not-allowed opacity-70' : ''
+              }`}
+              disabled={isLoggingOut}
             >
-              Confirm
+              {isLoggingOut ? 'Working...' : 'Confirm'}
             </button>
           </div>
         </Modal>

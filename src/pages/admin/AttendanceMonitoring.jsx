@@ -5,6 +5,7 @@ import Avatar from '../../components/Avatar';
 import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
+import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
 import { date, dateAfter, dateBefore, oneOf, required } from '../../utils/validation';
 
@@ -43,6 +44,8 @@ function AttendanceMonitoring() {
     }
   );
   const [statusFilter, setStatusFilter] = useState('All');
+  const [feedback, setFeedback] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const statusOptions = ['All', 'Present - On Time', 'Present - Late', 'Present - Undertime', 'Absent'];
 
   const filteredRows = ATTENDANCE_ROWS.filter((row) => {
@@ -52,15 +55,30 @@ function AttendanceMonitoring() {
     return row.status.toLowerCase() === statusFilter.toLowerCase();
   });
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     const nextErrors = validateForm();
     if (Object.keys(nextErrors).length > 0) {
       return;
+    }
+    setIsGenerating(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setFeedback({ type: 'success', message: 'Attendance report generated successfully.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to generate the report. Please try again.' });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   return (
     <div className="space-y-6">
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
       {/* Hero */}
       <section className="relative rounded-xl overflow-hidden border border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800">
         <div
@@ -217,10 +235,13 @@ function AttendanceMonitoring() {
               </div>
               <button
                 type="button"
-                className="w-full rounded-lg bg-teal-500 py-2.5 font-medium text-white hover:bg-teal-600"
+                className={`w-full rounded-lg bg-teal-500 py-2.5 font-medium text-white hover:bg-teal-600 ${
+                  isGenerating ? 'cursor-not-allowed opacity-70' : ''
+                }`}
                 onClick={handleGenerateReport}
+                disabled={isGenerating}
               >
-                Generate Report
+                {isGenerating ? 'Generating...' : 'Generate Report'}
               </button>
             </div>
           </div>
