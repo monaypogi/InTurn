@@ -58,6 +58,7 @@ function ViewDocuments() {
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [activeRequest, setActiveRequest] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [remindToast, setRemindToast] = useState(null);
   const [confirmAction, setConfirmAction] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { values, errors, handleChange, handleBlur, validateForm, resetForm } = useFormValidation(
@@ -110,6 +111,10 @@ function ViewDocuments() {
     }
   };
 
+  const handleRemind = (row) => {
+    setRemindToast({ type: 'success', message: `Reminder sent to ${row.email}.` });
+  };
+
   const complianceRows = useMemo(
     () =>
       COMPLIANCE_ROWS.map((row) =>
@@ -138,6 +143,12 @@ function ViewDocuments() {
 
       <ReportStatsGrid stats={STATS} />
 
+      <Toast
+        type={remindToast?.type}
+        message={remindToast?.message}
+        onDismiss={() => setRemindToast(null)}
+      />
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ComplianceTable title="All Compliance" rows={complianceRows} />
         <MissingSubmissionsTable
@@ -145,6 +156,7 @@ function ViewDocuments() {
           rows={missingRows.map((row) => ({ ...row, date: row.joined }))}
           dateLabel="Joined"
           showFiles
+          onAction={handleRemind}
           footerActionLabel="View Company Documents"
           onFooterAction={() => navigate('/admin/reports/documents/upload')}
         />

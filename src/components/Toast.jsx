@@ -1,13 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function Toast({ type = 'success', message, onDismiss, durationMs = 3000 }) {
+  const onDismissRef = useRef(onDismiss);
+
   useEffect(() => {
-    if (!message || !onDismiss) {
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
+
+  useEffect(() => {
+    if (!message || !onDismissRef.current) {
       return undefined;
     }
-    const timer = setTimeout(() => onDismiss(), durationMs);
+    const timer = setTimeout(() => onDismissRef.current?.(), durationMs);
     return () => clearTimeout(timer);
-  }, [message, onDismiss, durationMs]);
+  }, [message, durationMs]);
 
   if (!message) {
     return null;

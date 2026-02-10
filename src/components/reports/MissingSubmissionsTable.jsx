@@ -8,6 +8,7 @@ function MissingSubmissionsTable({
   dateLabel = 'Date',
   showFiles = false,
   actionLabel = 'Remind',
+  onAction,
   footerActionLabel,
   onFooterAction,
   rowsPerPage = 6,
@@ -66,6 +67,7 @@ function MissingSubmissionsTable({
                 <td className="px-4 py-3 text-right">
                   <button
                     type="button"
+                    onClick={() => onAction?.(row)}
                     className="rounded-lg bg-amber-500/70 px-3 py-1 text-xs font-semibold text-slate-900 hover:bg-amber-500"
                   >
                     {actionLabel}
