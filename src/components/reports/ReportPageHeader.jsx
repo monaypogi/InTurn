@@ -11,7 +11,7 @@ function ReportPageHeader({ title, onBack }) {
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
-      <h1 className="text-2xl font-semibold text-white">{title}</h1>
+      <h1 className="text-xl font-semibold text-white sm:text-2xl">{title}</h1>
     </div>
   );
 }

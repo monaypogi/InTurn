@@ -171,7 +171,7 @@ function ViewDailyReports() {
         <Modal
           isOpen={isVerificationOpen}
           overlayClassName="bg-slate-900/80"
-          panelClassName="w-full max-w-lg rounded-2xl border border-slate-600 bg-slate-800 p-6 shadow-xl"
+          panelClassName="w-full max-w-lg rounded-2xl border border-slate-600 bg-slate-800 p-4 shadow-xl sm:p-6"
         >
           <div className="flex items-start justify-between">
             <div>

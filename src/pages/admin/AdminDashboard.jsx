@@ -63,7 +63,7 @@ function AdminLayout() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <AdminHeader />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
         {mainContent}
       </main>
     </div>
@@ -88,10 +88,10 @@ function DashboardHome({ currentTime }) {
   return (
     <>
       {/* Welcome banner */}
-      <section className="relative rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600">
+      <section className="relative mb-6 overflow-hidden rounded-xl border border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 sm:mb-8">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800')] bg-cover bg-center opacity-30" />
-        <div className="relative px-8 py-10">
-          <h1 className="text-3xl font-bold mb-1">Welcome, Admin</h1>
+        <div className="relative px-4 py-6 sm:px-8 sm:py-10">
+          <h1 className="mb-1 text-2xl font-bold sm:text-3xl">Welcome, Admin</h1>
           <p className="text-slate-300 text-sm mb-4">
             {formattedDate} {formattedTime}
           </p>
@@ -102,7 +102,7 @@ function DashboardHome({ currentTime }) {
           <button
             type="button"
             onClick={() => navigate('/admin/reports')}
-            className="px-5 py-2.5 rounded-lg font-medium bg-amber-500 hover:bg-amber-600 text-white transition-colors"
+            className="w-full rounded-lg bg-amber-500 px-5 py-2.5 font-medium text-white transition-colors hover:bg-amber-600 sm:w-auto"
           >
             View Reports
           </button>
@@ -110,7 +110,7 @@ function DashboardHome({ currentTime }) {
       </section>
 
       {/* Metric cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         <MetricCard icon={<Users className="w-10 h-10" />} label="Total Interns" value="128" />
         <MetricCard icon={<CheckCircle className="w-10 h-10" />} label="Today's Attendance" value="42 | 128" />
         <MetricCard icon={<FileText className="w-10 h-10" />} label="Pending Reports" value="21" />
@@ -118,7 +118,7 @@ function DashboardHome({ currentTime }) {
       </div>
 
       {/* Three columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <ManageInternsCard interns={MOCK_INTERNS} />
         <RecentSubmissionsCard submissions={MOCK_SUBMISSIONS} />
         <AttendanceSummaryCard present={42} late={10} absent={7} />
@@ -133,8 +133,8 @@ function ManageInternsCard({ interns }) {
       <h2 className="px-6 py-4 text-lg font-semibold border-b border-slate-600">Manage Interns</h2>
       <ul className="divide-y divide-slate-600">
         {interns.map((intern) => (
-          <li key={intern.id} className="px-6 py-4">
-            <div className="flex items-center justify-between gap-4">
+          <li key={intern.id} className="px-4 py-4 sm:px-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3 min-w-0">
                 <Avatar size="h-10 w-10">
                   <User className="w-5 h-5" />
@@ -156,7 +156,7 @@ function ManageInternsCard({ interns }) {
               </div>
               <button
                 type="button"
-                className="flex-shrink-0 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 text-white text-sm font-medium"
+                className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 sm:w-auto"
               >
                 Manage
               </button>
@@ -174,8 +174,8 @@ function RecentSubmissionsCard({ submissions }) {
       <h2 className="px-6 py-4 text-lg font-semibold border-b border-slate-600">Recent Submissions</h2>
       <ul className="divide-y divide-slate-600">
         {submissions.map((sub) => (
-          <li key={sub.id} className="px-6 py-4">
-            <div className="flex items-center justify-between gap-4">
+          <li key={sub.id} className="px-4 py-4 sm:px-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3 min-w-0">
                 <Avatar size="h-10 w-10">
                   <User className="w-5 h-5" />
@@ -190,7 +190,7 @@ function RecentSubmissionsCard({ submissions }) {
               </div>
               <button
                 type="button"
-                className="flex-shrink-0 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 text-white text-sm font-medium"
+                className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 sm:w-auto"
               >
                 Review
               </button>
@@ -204,16 +204,16 @@ function RecentSubmissionsCard({ submissions }) {
 
 function AttendanceSummaryCard({ present, late, absent }) {
   return (
-    <div className="bg-slate-800 border border-slate-600 rounded-xl p-6 h-full">
+    <div className="h-full rounded-xl border border-slate-600 bg-slate-800 p-6">
       <div className="flex h-full flex-col items-center justify-center text-center text-2xl">
         <span className="font-semibold text-green-400">Present</span>
-        <span className="mt-2 text-base text-white text-xl">{present}</span>
+        <span className="mt-2 text-xl text-white">{present}</span>
         <span className="my-4 h-px w-full bg-slate-600" />
         <span className="font-semibold text-amber-400">Late</span>
-        <span className="mt-2 text-base text-white text-xl">{late}</span>
+        <span className="mt-2 text-xl text-white">{late}</span>
         <span className="my-4 h-px w-full bg-slate-600" />
         <span className="font-semibold text-red-400">Absent</span>
-        <span className="mt-2 text-base text-white text-xl">{absent}</span>
+        <span className="mt-2 text-xl text-white">{absent}</span>
       </div>
     </div>
   );

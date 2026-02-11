@@ -5,7 +5,7 @@ function DataTable({
   className = '',
   headerClassName = 'border-b border-slate-700 px-4 py-3',
   titleClassName = 'text-lg font-semibold text-white',
-  bodyClassName = 'overflow-x-auto',
+  bodyClassName = 'overflow-x-auto [&>table]:min-w-[640px] md:[&>table]:min-w-full',
 }) {
   return (
     <div className={`rounded-xl border border-slate-600 bg-slate-800 overflow-hidden ${className}`.trim()}>

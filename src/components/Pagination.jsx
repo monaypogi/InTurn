@@ -31,11 +31,19 @@ function Pagination({
   const styles = variantStyles[variant] || variantStyles.slate;
   const isPrevDisabled = !onPrev || currentPage <= 1;
   const isNextDisabled = !onNext || currentPage >= totalPages;
+  const compactPages = pages.filter(
+    (page, index) =>
+      page === 1 ||
+      page === totalPages ||
+      Math.abs(page - currentPage) <= 1 ||
+      (index === 0 && pages.length === 1)
+  );
+  const displayPages = [...new Set(compactPages)];
 
   return (
     <footer className={`flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${className}`.trim()}>
       <span>Page {currentPage} of {totalPages}</span>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={onPrev}
@@ -46,18 +54,34 @@ function Pagination({
         >
           {prevLabel}
         </button>
-        {pages.map((page) => (
-          <button
-            key={page}
-            type="button"
-            onClick={onPageChange ? () => onPageChange(page) : undefined}
-            className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
-              page === currentPage ? styles.active : styles.inactive
-            }`}
-          >
-            {page}
-          </button>
-        ))}
+        <div className="hidden items-center gap-2 sm:flex">
+          {pages.map((page) => (
+            <button
+              key={page}
+              type="button"
+              onClick={onPageChange ? () => onPageChange(page) : undefined}
+              className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
+                page === currentPage ? styles.active : styles.inactive
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 sm:hidden">
+          {displayPages.map((page) => (
+            <button
+              key={page}
+              type="button"
+              onClick={onPageChange ? () => onPageChange(page) : undefined}
+              className={`h-8 min-w-[2rem] rounded-lg px-2 text-sm font-medium ${
+                page === currentPage ? styles.active : styles.inactive
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
         <button
           type="button"
           onClick={onNext}

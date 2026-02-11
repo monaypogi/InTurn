@@ -37,7 +37,7 @@ function Profile() {
         <p className="text-slate-400">Manage your account settings and preferences</p>
       </header>
 
-      <div className="rounded-full bg-slate-800 p-1 flex items-center gap-2 w-full">
+      <div className="flex w-full items-center gap-2 rounded-full bg-slate-800 p-1">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
           return (
@@ -45,7 +45,7 @@ function Profile() {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 rounded-full px-6 py-2 text-sm font-semibold text-center transition-colors ${
+              className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold text-center transition-colors sm:px-6 ${
                 isActive ? 'bg-slate-100 text-slate-900' : 'text-slate-300 hover:text-white'
               }`}
             >
@@ -621,7 +621,7 @@ function ProfileSecurity() {
             </p>
           </div>
 
-          <div className="mt-6 flex items-center justify-center gap-3">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             {verificationCode.map((digit, index) => (
               <input
                 key={index}
@@ -634,7 +634,7 @@ function ProfileSecurity() {
                 ref={(el) => {
                   codeInputRefs.current[index] = el;
                 }}
-                className="h-12 w-12 rounded-lg border border-slate-300 bg-slate-100 text-center text-base font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                className="h-11 w-11 rounded-lg border border-slate-300 bg-slate-100 text-center text-base font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400 sm:h-12 sm:w-12"
               />
             ))}
           </div>
@@ -642,11 +642,11 @@ function ProfileSecurity() {
             <p className="mt-3 text-center text-xs text-red-500">{verificationForm.errors.code}</p>
           )}
 
-          <div className="mt-8 flex items-center justify-between text-sm text-slate-500">
+          <div className="mt-8 flex flex-col items-start justify-between gap-4 text-sm text-slate-500 sm:flex-row sm:items-center">
             <button type="button" onClick={handleBackToSelection} className="font-semibold text-slate-600 hover:text-slate-900">
               &larr; Back
             </button>
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <button type="button" className="font-semibold text-slate-600 hover:text-slate-900">
                 Resend Code
               </button>

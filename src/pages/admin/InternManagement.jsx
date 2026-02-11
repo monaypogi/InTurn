@@ -418,6 +418,7 @@ function InternManagement() {
   const handleOpenEvaluation = (intern) => {
     setEvaluationIntern(intern);
     setIsEvaluationOpen(true);
+    setIsHistoryOpen(false);
     evaluationForm.resetForm();
   };
 
@@ -582,14 +583,14 @@ function InternManagement() {
                 Recent Attendance
               </div>
               <div className="max-h-40 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
-                <div className="sticky top-0 grid grid-cols-4 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500">
+                <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
                   <span>Date</span>
                   <span>Time In</span>
                   <span>Time Out</span>
                   <span>Status</span>
                 </div>
                 {attendanceRecords.map((record) => (
-                  <div key={`${record.date}-${record.timeIn}`} className="grid grid-cols-4 gap-2 px-4 py-2">
+                  <div key={`${record.date}-${record.timeIn}`} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
                     <span>{record.date}</span>
                     <span>{record.timeIn}</span>
                     <span>{record.timeOut}</span>
@@ -612,14 +613,14 @@ function InternManagement() {
                 Document Verification
               </div>
               <div className="max-h-40 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
-                <div className="sticky top-0 grid grid-cols-4 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500">
+                <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
                   <span>Type</span>
                   <span>File Name</span>
                   <span>Date Submitted</span>
                   <span>Status</span>
                 </div>
                 {documentRecords.map((record) => (
-                  <div key={record.file} className="grid grid-cols-4 gap-2 px-4 py-2">
+                  <div key={record.file} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
                     <span>{record.type}</span>
                     <span>{record.file}</span>
                     <span>{record.submitted}</span>
@@ -1018,8 +1019,8 @@ function InternManagement() {
               </button>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-xl border border-slate-200">
-              <div className="grid grid-cols-5 gap-2 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500">
+            <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200">
+              <div className="grid min-w-[760px] grid-cols-5 gap-2 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500">
                 <span>Period</span>
                 <span>Type</span>
                 <span>Average Rating</span>
@@ -1036,7 +1037,7 @@ function InternManagement() {
                   { period: 'Week 1 - February 2024', type: 'Weekly' },
                   { period: 'Week 2 - February 2024', type: 'Weekly' },
                 ].map((row) => (
-                  <div key={row.period} className="grid grid-cols-5 gap-2 px-4 py-3">
+                  <div key={row.period} className="grid min-w-[760px] grid-cols-5 gap-2 px-4 py-3">
                     <span>{row.period}</span>
                     <span>
                       <span
@@ -1065,11 +1066,27 @@ function InternManagement() {
                 ))}
               </div>
             </div>
+
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  if (evaluationIntern) {
+                    handleOpenEvaluation(evaluationIntern);
+                  } else {
+                    handleCloseHistory();
+                  }
+                }}
+                className="rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+              >
+                Back
+              </button>
+            </div>
         </Modal>
       )}
 
       <section>
-        <h1 className="text-2xl font-semibold text-white">Intern Management</h1>
+        <h1 className="text-xl font-semibold text-white sm:text-2xl">Intern Management</h1>
         <p className="mt-1 text-slate-400">Add and manage intern profiles</p>
       </section>
 
@@ -1129,7 +1146,7 @@ function InternManagement() {
           />
         }
       >
-        <table className="min-w-full divide-y divide-slate-700">
+        <table className="min-w-[980px] divide-y divide-slate-700 lg:min-w-full">
           <thead className="bg-slate-700/60">
             <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
               <th className="px-6 py-4">Name</th>

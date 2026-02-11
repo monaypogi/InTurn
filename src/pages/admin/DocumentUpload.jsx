@@ -83,7 +83,7 @@ function DocumentUpload() {
       />
 
       <DataTable title="Documents & Requirements">
-        <table className="min-w-full divide-y divide-slate-700">
+        <table className="min-w-[680px] divide-y divide-slate-700 lg:min-w-full">
           <thead className="bg-slate-700/60">
             <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
               <th className="px-4 py-3">Document Name</th>
@@ -117,11 +117,11 @@ function DocumentUpload() {
         </table>
       </DataTable>
 
-      <div className="flex justify-end">
+      <div className="flex justify-stretch sm:justify-end">
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-600"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-600 sm:w-auto"
         >
           <Upload className="h-4 w-4" />
           Upload Documents

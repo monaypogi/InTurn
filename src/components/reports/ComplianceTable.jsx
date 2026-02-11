@@ -21,7 +21,7 @@ function ComplianceTable({ title, rows, dateLabel = 'Date Submitted', rowsPerPag
         <h2 className="text-lg font-semibold text-white">{title}</h2>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-700">
+        <table className="min-w-[640px] divide-y divide-slate-700 lg:min-w-full">
           <thead className="bg-slate-700/60">
             <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
               <th className="px-4 py-3">Intern</th>

@@ -471,13 +471,13 @@ function Reports() {
 
   return (
     <div className="space-y-6">
-      <section className="relative rounded-xl overflow-hidden border border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800">
+      <section className="relative overflow-hidden rounded-xl border border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800')" }}
         />
-        <div className="relative px-8 py-10">
-          <h1 className="text-2xl font-bold text-white">Document and Reports Verification</h1>
+        <div className="relative px-4 py-6 sm:px-8 sm:py-10">
+          <h1 className="text-xl font-bold text-white sm:text-2xl">Document and Reports Verification</h1>
           <p className="mt-1 text-slate-300">Approve, Reject, and Give Remarks on Intern’s Documents</p>
         </div>
       </section>
@@ -511,11 +511,11 @@ function Reports() {
               />
               {errors.search && <p className="mt-1 text-xs text-red-400">{errors.search}</p>}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="relative">
-                <span className="mr-2 text-sm font-semibold text-white">Type:</span>
+            <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+              <label className="relative w-full sm:w-auto">
+                <span className="mb-1 block text-sm font-semibold text-white sm:mb-0 sm:mr-2 sm:inline">Type:</span>
                 <select
-                  className="appearance-none rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 pr-9 text-sm text-slate-200"
+                  className="w-full appearance-none rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 pr-9 text-sm text-slate-200 sm:w-auto"
                   value={values.typeFilter}
                   onChange={(event) => handleChange('typeFilter', event.target.value)}
                   onBlur={() => handleBlur('typeFilter')}
@@ -546,7 +546,7 @@ function Reports() {
               />
             }
           >
-            <table className="min-w-full divide-y divide-slate-700">
+            <table className="min-w-[900px] divide-y divide-slate-700 lg:min-w-full">
               <thead className="bg-slate-700/60">
                 <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
                   <th className="px-4 py-3">Intern</th>

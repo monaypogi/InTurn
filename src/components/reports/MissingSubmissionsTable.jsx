@@ -27,7 +27,7 @@ function MissingSubmissionsTable({
 
   return (
     <div className="rounded-xl border border-slate-600 bg-slate-800 overflow-hidden flex flex-col">
-      <div className="border-b border-slate-700 px-4 py-3 flex items-center justify-between gap-3">
+      <div className="border-b border-slate-700 px-4 py-3 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <h2 className="text-lg font-semibold text-white">{title}</h2>
         {footerActionLabel && (
           <button
@@ -41,7 +41,7 @@ function MissingSubmissionsTable({
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-700">
+        <table className="min-w-[680px] divide-y divide-slate-700 lg:min-w-full">
           <thead className="bg-slate-700/60">
             <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
               <th className="px-4 py-3">Intern</th>
