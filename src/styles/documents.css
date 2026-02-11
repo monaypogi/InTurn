@@ -2,7 +2,7 @@
   padding: 24px;
   width: 100%;
   min-height: 100vh;
-  background-color: #08121B;
+  background: radial-gradient(circle at top left, #0b2a38, #071821);
   overflow-x: hidden;
 }
 
@@ -156,4 +156,77 @@
 .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+
+  /* Page padding */
+  .documents-page {
+    padding: 16px;
+  }
+
+  /* Header text */
+  .documents-header h2 {
+    font-size: 22px;
+  }
+
+  .documents-header p {
+    font-size: 13px;
+  }
+
+  /* Card spacing */
+  .documents-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  /* Card header layout */
+  .documents-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .documents-card-header h3 {
+    font-size: 20px;
+  }
+
+  .documents-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .documents-table {
+    min-width: 0;
+    table-layout: auto;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .documents-table th,
+  .documents-table td {
+    white-space: normal;
+    /* allow wrapping */
+    word-break: break-word;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Search box full width */
+  .search-box {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Download button */
+  .download-btn {
+    font-size: 12px;
+    padding: 3px 7px;
+    white-space: nowrap;
+  }
+
+  /* Pagination spacing */
+  .pagination {
+    gap: 10px;
+  }
 }

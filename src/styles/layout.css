@@ -29,10 +29,11 @@ body {
   font-size: 30px;
   cursor: pointer;
 }
+
 .header-right {
   display: flex;
   align-items: center;
-  gap: 0px; 
+  gap: 0px;
 }
 
 .menu-icon {
@@ -47,26 +48,28 @@ body {
 .layout {
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 64px); /* header height if you have one */
+  min-height: calc(100vh - 64px);
+  /* header height if you have one */
 }
 
 .content {
-  flex: 1;              /* 🔴 THIS is critical */
+  flex: 1;
+  /* 🔴 THIS is critical */
   width: 100%;
   padding: 24px;
-  overflow-x: hidden;
-   transition: all 0.3s ease-in-out;
+  overflow-x: auto;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
 }
+
 .sidebar {
   width: 220px;
 
-  background: linear-gradient(
-    180deg,
-    #163846 0%,
-    #0b222c 100%
-  );
+  background: linear-gradient(180deg,
+      #163846 0%,
+      #0b222c 100%);
 
-  border-right: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 
   min-height: calc(100vh - 60px);
   transition: width 0.3s ease-in-out;
@@ -85,12 +88,7 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 16px; 
-}
-
-.sidebar-menu a.active-link {
-  background-color: #5F9598;
-  color: #061E29;
+  gap: 16px;
 }
 
 .sidebar-menu a {
@@ -98,7 +96,7 @@ body {
   width: 100%;
   padding: 14px 20px;
 
-  color: rgba(243,244,244,0.85);
+  color: rgba(243, 244, 244, 0.85);
   text-decoration: none;
 
   align-items: center;
@@ -108,19 +106,14 @@ body {
 
   transition: all 0.25s ease;
 }
-
-
-.sidebar li.active,
-.sidebar li:hover {
-  background-color: #5F9598;
+.sidebar-menu a:hover {
+  background-color: rgba(95, 149, 152, 0.25);
 }
 
-
-.sidebar-menu a.active {
+.sidebar-menu a.active-link {
   background-color: #5F9598;
   color: #061E29;
 }
-
 
 .sidebar-collapsed .content {
   width: 100%;
@@ -181,3 +174,101 @@ body {
   justify-content: center;
 }
 
+.logo {
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  /* Make sidebar overlay instead of pushing content */
+  .sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 100px);
+    z-index: 1000;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Prevent dashboard from being squished */
+  .main-content,
+  .dashboard {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .mobile-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+   .header {
+    height: 70px;
+    padding: 0 14px;
+  }
+
+  .logo {
+    height: 45px;
+  }
+
+  .header-icon {
+    font-size: 24px;
+    margin-left: 14px;
+  }
+
+
+  .sidebar-menu a:hover {
+    background-color: transparent; /* remove sticky hover */
+  }
+
+  .sidebar-menu a.active-link {
+    background-color: #5F9598; /* only active link gets color */
+    color: #061E29;
+  }
+
+  .page-transition {
+  animation: pageFade 0.25s ease;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+}

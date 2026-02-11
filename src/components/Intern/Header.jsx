@@ -31,7 +31,13 @@ export default function Header({ toggleSidebar }) {
             className="header-icon menu-icon"
             onClick={toggleSidebar}
           />
-          <img src="/logo1.png" alt="Logo" className="logo" />
+          <img
+            src="/logo1.png"
+            alt="Logo"
+            className="logo"
+            onClick={() => navigate("/intern")}
+          />
+
         </div>
 
 
@@ -62,8 +68,8 @@ export default function Header({ toggleSidebar }) {
                   onClick={() => {
                     setShowDropdown(false);
 
-                    localStorage.removeItem("auth"); 
-                    window.location.href = "/login"; 
+                    localStorage.removeItem("auth");
+                    window.location.href = "/login";
                   }}
                 >
                   Logout

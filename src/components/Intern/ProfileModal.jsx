@@ -13,22 +13,158 @@ export default function ProfileModal({ onClose }) {
 Los Angeles, CA 900212`,
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    phone: "",
+    emergencyPhone: "",
+    emergencyName: "",
+    address: "",
+  });
+
+  const [toast, setToast] = useState(null); // { type: "success" | "error", message: "" }
+
+  function showToast(type, message) {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  }
+
+  function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
+
+    // PHONE FIELDS
+    if (name === "phone" || name === "emergencyPhone") {
+      let numericValue = value.replace(/\D/g, "").slice(0, 11);
+
+      // enforce starting with 09
+      if (numericValue.length >= 2 && !numericValue.startsWith("09")) {
+        setErrors(prev => ({
+          ...prev,
+          [name]: "Must start with 09",
+        }));
+      } else if (numericValue.length !== 11) {
+        setErrors(prev => ({
+          ...prev,
+          [name]: "Must be 11 digits starting with 09",
+        }));
+      } else {
+        setErrors(prev => ({
+          ...prev,
+          [name]: "",
+        }));
+      }
+
+      setProfile(prev => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+
+      return;
+    }
+
+
+    // EMAIL
+    if (name === "email") {
+      setProfile(prev => ({
+        ...prev,
+        email: value,
+      }));
+
+      setErrors(prev => ({
+        ...prev,
+        email: validateEmail(value)
+          ? ""
+          : "Enter a valid email",
+      }));
+
+      return;
+    }
+
+    // REQUIRED TEXT FIELDS
     setProfile(prev => ({
       ...prev,
       [name]: value,
     }));
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: value.trim() === "" ? "This field is required" : "",
+    }));
+  }
+
+  function validateAllFields() {
+    const newErrors = {
+      email: "",
+      phone: "",
+      emergencyPhone: "",
+      emergencyName: "",
+      address: "",
+    };
+
+    if (!profile.email.trim()) {
+      newErrors.email = "This field is required";
+    } else if (!validateEmail(profile.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    if (!/^09\d{9}$/.test(profile.phone)) {
+      newErrors.phone = "Must be 11 digits starting with 09";
+    }
+
+    if (!/^09\d{9}$/.test(profile.emergencyPhone)) {
+      newErrors.emergencyPhone = "Must be 11 digits starting with 09";
+    }
+
+
+    if (!profile.emergencyName.trim()) {
+      newErrors.emergencyName = "This field is required";
+    }
+
+    if (!profile.address.trim()) {
+      newErrors.address = "This field is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every(err => err === "");
   }
 
   function handleSave() {
+    const isValid = validateAllFields();
+
+    if (!isValid) {
+      showToast("error", "Please fix the errors before saving.");
+      return;
+    }
+
     // later: send to backend
     setIsEditing(false);
+
+    setErrors({
+      email: "",
+      phone: "",
+      emergencyPhone: "",
+      emergencyName: "",
+      address: "",
+    });
+
+    showToast("success", "Profile updated successfully.");
   }
 
   return (
     <div className="modal-overlay">
       <div className="profile-modal">
+
+        {/* Toast */}
+        {toast && (
+          <div className={`toast ${toast.type}`}>
+            {toast.message}
+          </div>
+        )}
 
         {/* Header */}
         <div className="profile-header">
@@ -46,11 +182,13 @@ Los Angeles, CA 900212`,
         {/* Body */}
         <div className="profile-body">
 
-          {/* LEFT COLUMN (always view-only) */}
+          {/* LEFT COLUMN */}
           <div className="profile-column">
             <div className="section-title">
               <h4>Personal Details</h4>
-              <span className="view-only">View Only</span>
+              <div className="section-action">
+                <span className="view-only">View Only</span>
+              </div>
             </div>
 
             <label>Full Name</label>
@@ -74,20 +212,22 @@ Los Angeles, CA 900212`,
 
           <div className="divider" />
 
-          {/* RIGHT COLUMN (editable) */}
+          {/* RIGHT COLUMN */}
           <div className="profile-column">
             <div className="section-title">
               <h4>Contact Details</h4>
+              <div className="section-action">
 
-              {!isEditing ? (
-                <span className="edit" onClick={() => setIsEditing(true)}>
-                   Edit
-                </span>
-              ) : (
-                <span className="edit" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </span>
-              )}
+                {!isEditing ? (
+                  <span className="edit" onClick={() => setIsEditing(true)}>
+                    Edit
+                  </span>
+                ) : (
+                  <span className="edit" onClick={() => setIsEditing(false)}>
+                    Cancel
+                  </span>
+                )}
+              </div>
             </div>
 
             <label>Personal Email</label>
@@ -97,6 +237,7 @@ Los Angeles, CA 900212`,
               onChange={handleChange}
               disabled={!isEditing}
             />
+            {errors.email && <small className="error">{errors.email}</small>}
 
             <label>Phone Number</label>
             <input
@@ -105,6 +246,7 @@ Los Angeles, CA 900212`,
               onChange={handleChange}
               disabled={!isEditing}
             />
+            {errors.phone && <small className="error">{errors.phone}</small>}
 
             <label>Emergency Contact</label>
             <input
@@ -113,6 +255,9 @@ Los Angeles, CA 900212`,
               onChange={handleChange}
               disabled={!isEditing}
             />
+            {errors.emergencyPhone && (
+              <small className="error">{errors.emergencyPhone}</small>
+            )}
 
             <label>Emergency Contact (Name)</label>
             <input
@@ -121,6 +266,9 @@ Los Angeles, CA 900212`,
               onChange={handleChange}
               disabled={!isEditing}
             />
+            {errors.emergencyName && (
+              <small className="error">{errors.emergencyName}</small>
+            )}
 
             <label>Address</label>
             <textarea
@@ -129,6 +277,9 @@ Los Angeles, CA 900212`,
               onChange={handleChange}
               disabled={!isEditing}
             />
+            {errors.address && (
+              <small className="error">{errors.address}</small>
+            )}
           </div>
         </div>
 
@@ -139,10 +290,10 @@ Los Angeles, CA 900212`,
             disabled={!isEditing}
             onClick={handleSave}
           >
+
             Save Changes
           </button>
         </div>
-
       </div>
     </div>
   );

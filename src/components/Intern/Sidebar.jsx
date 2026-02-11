@@ -8,8 +8,9 @@ import {
 } from "react-icons/fa";
 
 export default function Sidebar({ sidebarOpen }) {
+
   return (
-    <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
+    <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
       <ul className="sidebar-menu">
 
         <li>
@@ -26,6 +27,7 @@ export default function Sidebar({ sidebarOpen }) {
         <li>
           <NavLink
             to="/intern/reports"
+            end
             className={({ isActive }) => isActive ? "active-link" : ""}
           >
             <FaFileAlt />
@@ -36,6 +38,7 @@ export default function Sidebar({ sidebarOpen }) {
         <li>
           <NavLink
             to="/intern/documents"
+            end
             className={({ isActive }) => isActive ? "active-link" : ""}
           >
             <FaFolderOpen />
@@ -46,6 +49,7 @@ export default function Sidebar({ sidebarOpen }) {
         <li>
           <NavLink
             to="/intern/attendance"
+            end
             className={({ isActive }) => isActive ? "active-link" : ""}
           >
             <FaClock />
