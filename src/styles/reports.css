@@ -1,10 +1,8 @@
 .reports-page {
   padding: 24px;
   min-height: 100vh;
-  background-color: #08121B;
-  /* ← FIXED */
+  background: radial-gradient(circle at top left, #0b2a38, #071821);
   overflow-x: hidden;
-  /* ← prevents page-level bleed */
 }
 
 
@@ -15,12 +13,13 @@
   margin-top: 10px;
   overflow-x: auto;
 }
+
 .reports-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(243,244,244,0.12);
+  border-bottom: 1px solid rgba(243, 244, 244, 0.12);
   margin-left: 0px;
 }
 
@@ -47,7 +46,7 @@
 
 .reports-table {
   width: 100%;
-  min-width: 720px;
+  min-width: 0;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 16px;
@@ -163,6 +162,7 @@
   justify-content: center;
   z-index: 1000;
   padding: 16px;
+  overflow-y: auto;
 }
 
 /* Modal card */
@@ -264,7 +264,7 @@
   background-color: #0e1a23;
   border: 1px dashed rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  padding: 36px 20px; 
+  padding: 36px 20px;
   text-align: center;
   cursor: pointer;
 }
@@ -366,27 +366,6 @@
   font-size: 14px;
   font-weight: 600;
 }
-@media (max-width: 900px) {
-  .reports-table {
-    font-size: 14px;
-  }
-
-  .reports-table th,
-  .reports-table td {
-    padding: 12px 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .reports-table {
-    min-width: 560px;
-  }
-
-  .status {
-    font-size: 11px;
-    padding: 3px 8px;
-  }
-}
 
 @media (max-width: 768px) {
   .reports-card {
@@ -419,6 +398,8 @@
   width: 560px;
   /* was ~420–440px */
   max-width: calc(100% - 48px);
+  max-height: 90vh;
+  overflow-y: auto;
   background-color: #3b444b;
   border-radius: 14px;
   padding: 32px;
@@ -486,4 +467,106 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+@media (max-width: 768px) {
+
+  /* Page padding */
+  .reports-page {
+    padding: 16px;
+  }
+
+  /* Welcome card scaling */
+  .welcome-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .welcome-card h2 {
+    font-size: 26px;
+  }
+
+  .welcome-card p {
+    font-size: 14px;
+  }
+
+  /* Main reports card — match monthly-card spacing */
+  .reports-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Header layout */
+  .reports-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .reports-header h3 {
+    font-size: 20px;
+  }
+
+  /* Actions stack neatly */
+  .reports-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Table adjustments */
+  .reports-table {
+    font-size: 13px;
+    min-width: 620px;
+  }
+
+  .reports-table th,
+  .reports-table td {
+    white-space: normal;
+    /* allow wrapping */
+    word-break: break-word;
+    /* break long words/files */
+  }
+
+  /* Floating upload button */
+  .upload-btn {
+    right: 16px;
+    bottom: 16px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  /* Modal adjustments */
+  .upload-modal,
+  .document-modal,
+  .daily-report-modal {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
+  }
+  .view-btn {
+  background-color: #4F8CFF;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
 }

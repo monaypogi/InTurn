@@ -1,10 +1,9 @@
 .dashboard {
   padding: 24px;
   width: 100%;
-  min-height: 100vh;
 
   background: radial-gradient(circle at top left, #0b2a38, #071821);
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 
@@ -27,6 +26,7 @@
 .dashboard-notifications-card {
   grid-area: notifications;
 }
+
 .dashboard-grid {
   width: 100%;
   max-width: none;
@@ -47,11 +47,11 @@
   border-radius: 16px;
   width: 100%;
 
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   box-shadow:
-    0 12px 28px rgba(0,0,0,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.05);
+    0 12px 28px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .card h3 {
@@ -60,7 +60,7 @@
   font-weight: 700;
   color: #F3F4F4;
 
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 10px;
 }
 
@@ -105,8 +105,8 @@
   cursor: pointer;
 
   box-shadow:
-    0 6px 14px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.25);
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 
@@ -138,7 +138,7 @@
 
 .attendance-summary-card div {
   flex: 1;
-   border-right: 1px solid rgba(243, 244, 244, 0.12);
+  border-right: 1px solid rgba(243, 244, 244, 0.12);
 }
 
 .attendance-summary-card h4 {
@@ -155,7 +155,8 @@
 
 .attendance-summary-card p {
   margin-top: 6px;
-  font-size: 40px;        /* BIG */
+  font-size: 40px;
+  /* BIG */
   font-weight: 700;
   color: #F3F4F4;
 }
@@ -210,15 +211,13 @@
 /* RIGHT SIDE */
 
 .attendance-right {
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.05),
-    rgba(255,255,255,0.02)
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02));
 
   border-radius: 14px;
   padding: 18px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 
@@ -251,18 +250,6 @@
   width: 100%;
 }
 
-@media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "attendance"
-      "submission"
-      "summary"
-      "documents"
-      "notifications"
-      "performance";
-  }
-}
 
 @media (max-width: 768px) {
   .dashboard-grid {
@@ -276,14 +263,111 @@
       "performance";
   }
 
-  
+  .attendance-summary-card {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .attendance-summary-card div {
+    flex: 1 1 45%;
+    border-right: none;
+    border-bottom: 1px solid rgba(243, 244, 244, 0.12);
+    padding-bottom: 10px;
+  }
+
+  /* Remove bottom border for last row */
+  .attendance-summary-card div:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .attendance-summary-card h4 {
+    font-size: 16px;
+  }
 
   .attendance-summary-card p {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .welcome-card h2 {
     font-size: 28px;
+  }
+
+  /* Reduce dashboard padding */
+  .dashboard {
+    padding: 16px;
+  }
+
+  /* Make all cards match welcome card spacing */
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Card titles */
+  .card h3 {
+    font-size: 20px;
+  }
+
+  /* General text inside cards */
+  .attendance-row,
+  .submission-info h4,
+  .status-list li,
+  .notification-list li,
+  .performance-label {
+    font-size: 16px;
+  }
+
+  /* Big numbers (attendance summary, stats) */
+  .attendance-summary-card p,
+  .stat-value {
+    font-size: 28px;
+  }
+
+  /* Stack complex layouts vertically */
+  .attendance-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .documents-summary-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .documents-summary-left {
+    align-items: center;
+  }
+
+  /* Hide the vertical divider on small screens */
+  .documents-summary-divider {
+    display: none;
+  }
+
+  /* Make stats evenly spaced */
+  .documents-summary-stats {
+    width: 100%;
+    gap: 0;
+    justify-content: space-between;
+  }
+
+  .documents-summary-stats div {
+    flex: 1;
+  }
+
+  /* Add subtle separators between stats */
+  .documents-summary-stats div:not(:last-child) {
+    border-right: 1px solid rgba(243, 244, 244, 0.12);
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+
+  .stat-label {
+    font-size: 14px;
   }
 }
 
@@ -299,13 +383,14 @@
   flex-direction: column;
   gap: 14px;
 }
+
 .performance-item {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #F3F4F4;
 
   border-radius: 14px;
   padding: 14px 18px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   display: flex;
   justify-content: space-between;
@@ -337,7 +422,8 @@
 .performance-stars {
   display: flex;
   gap: 6px;
-  color: #ffb703; /* star yellow */
+  color: #ffb703;
+  /* star yellow */
   font-size: 22px;
 }
 
@@ -397,12 +483,14 @@
 
 /* Pending: warm, noticeable, not aggressive */
 .status-text.pending {
-  color: #f4c430; /* softer gold than pure yellow */
+  color: #f4c430;
+  /* softer gold than pure yellow */
 }
 
 /* Submitted: calm, success-like, cohesive with your palette */
 .status-text.submitted {
-  color: #6fbf9f; /* matches your green-teal tones */
+  color: #6fbf9f;
+  /* matches your green-teal tones */
 }
 
 
@@ -418,7 +506,7 @@
   white-space: nowrap;
 }
 
-.view-details  {
+.view-details {
   background-color: #4F8CFF;
   color: white;
   border: none;
@@ -437,7 +525,7 @@
 
 /* Documents Summary */
 
-.documents-summary-card{
+.documents-summary-card {
 
   display: flex;
   align-items: center;
@@ -534,6 +622,7 @@
   transform: translateY(-3px);
   transition: 0.25s ease;
 }
+
 .toast {
   position: fixed;
   top: 25px;
@@ -562,6 +651,7 @@
     transform: translateX(120%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

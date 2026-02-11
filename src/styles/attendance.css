@@ -1,7 +1,7 @@
 .attendance-page {
   padding: 24px;
   min-height: 100vh;
-  background-color: #08121b;
+  background: radial-gradient(circle at top left, #0b2a38, #071821);
 }
 
 /* ===== SUMMARY ROW ===== */
@@ -12,15 +12,19 @@
   gap: 20px;
   margin-bottom: 24px;
 }
+
 .time-card,
 .total-hours-card,
 .worked-hours-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* spreads content top ↔ bottom */
-  height: 100%;                   /* fills grid height */
+  justify-content: space-between;
+  /* spreads content top ↔ bottom */
+  height: 100%;
+  /* fills grid height */
   padding: 18px 20px;
 }
+
 .time-card h3,
 .total-hours-card h3 {
   font-size: 34px;
@@ -34,12 +38,13 @@
 }
 
 .total-hours-card .time-action-btn {
-  margin-top:auto; /* pushes button to bottom */
+  margin-top: auto;
+  /* pushes button to bottom */
 }
 
 
 
-.total-hours-card{
+.total-hours-card {
   align-self: center;
 }
 
@@ -47,11 +52,12 @@
   display: flex;
   align-items: flex-start;
   gap: 18px;
-  flex: 1; /* allows stretch */
-    align-items: flex-start; 
+  flex: 1;
+  /* allows stretch */
+  align-items: flex-start;
 }
 
-.time-left > div {
+.time-left>div {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -68,11 +74,14 @@
 }
 
 .time-center {
-  flex: 1;                     /* takes remaining card height */
+  flex: 1;
+  /* takes remaining card height */
   display: flex;
   flex-direction: column;
-  justify-content: center;     /* vertical center */
-  align-items: center;         /* horizontal center */
+  justify-content: center;
+  /* vertical center */
+  align-items: center;
+  /* horizontal center */
   text-align: center;
 }
 
@@ -126,7 +135,7 @@
     0 6px 14px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 
-  
+
 }
 
 .time-action-btn:hover {
@@ -280,7 +289,7 @@
 .hours-row {
   display: flex;
   gap: 16px;
-  flex: 1; 
+  flex: 1;
   margin-top: 6px;
   align-items: stretch;
 }
@@ -294,15 +303,19 @@
   font-size: 30px;
   font-weight: 800;
 }
+
 .state-pill {
   min-width: 120px;
   text-align: center;
   padding: 12px 22px;
   border-radius: 10px;
 
-  display: flex;              /* 👈 required */
-  align-items: center;        /* 👈 vertical center */
-  justify-content: center;    /* 👈 horizontal center */
+  display: flex;
+  /* 👈 required */
+  align-items: center;
+  /* 👈 vertical center */
+  justify-content: center;
+  /* 👈 horizontal center */
 
   flex: 1;
   font-size: 22px;
@@ -339,7 +352,8 @@
   display: flex;
   gap: 18px;
   margin-top: auto;
-  font-size: 14px;   /* slightly bigger */
+  font-size: 14px;
+  /* slightly bigger */
   font-weight: 600;
 }
 
@@ -350,20 +364,25 @@
 
 /* color-coded states (text only) */
 .status-legend .late {
-  color: #f4a261; /* warm orange */
+  color: #f4a261;
+  /* warm orange */
 }
 
 .status-legend .ontime {
-  color: #6fbf9f; /* calm green-teal */
+  color: #6fbf9f;
+  /* calm green-teal */
 }
 
 .status-legend .absent {
-  color: #e76f51; /* muted red */
+  color: #e76f51;
+  /* muted red */
 }
 
 .status-legend .undertime {
-  color: #8ecae6; /* soft blue */
+  color: #8ecae6;
+  /* soft blue */
 }
+
 .status-legend .legend:hover {
   opacity: 1;
 }
@@ -430,10 +449,8 @@
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: conic-gradient(
-    #6fbf9f 0% 94%,
-    rgba(255, 255, 255, 0.15) 94% 100%
-  );
+  background: conic-gradient(#6fbf9f 0% 94%,
+      rgba(255, 255, 255, 0.15) 94% 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,7 +481,8 @@
 /* ===== MONTHLY SUMMARY CARDS ===== */
 
 .monthly-card {
-  background-color: #1d2b36;          /* same family as other cards */
+  background-color: #1d2b36;
+  /* same family as other cards */
   border-radius: 12px;
   padding: 16px;
   box-shadow:
@@ -476,22 +494,26 @@
   justify-content: space-between;
   min-height: 220px;
 }
+
 .monthly-card h4 {
   font-size: 15px;
   font-weight: 600;
   opacity: 0.9;
   margin-bottom: 8px;
 }
+
 .progress-circle {
   width: 100px;
   height: 100px;
   margin: 16px auto;
 }
+
 .month-stats {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .monthly-card:hover {
   transform: translateY(-2px);
   transition: transform 0.2s ease;
@@ -532,7 +554,8 @@
 .year-select {
   background-color: rgba(255, 255, 255, 0.08);
   border: none;
-  padding: 6px 10px;
+  padding: 12px 14px;
+  margin-bottom: 25px;
   border-radius: 6px;
   color: #f3f4f4;
   font-size: 13px;
@@ -550,9 +573,11 @@
   grid-template-columns: repeat(5, minmax(140px, 1fr));
   gap: 14px;
 
-  flex: 1;               /* ⬅ critical */
+  flex: 1;
+  /* ⬅ critical */
   max-width: 100%;
 }
+
 /* Individual cards */
 .summary-card {
   background: rgba(255, 255, 255, 0.06);
@@ -565,14 +590,14 @@
 
   flex: 1;
   min-width: 0;
-color: #f3f4f4;
+  color: #f3f4f4;
 
   box-shadow:
     0 10px 24px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
-    min-width: 140px;
-  
+  min-width: 140px;
+
 }
 
 .summary-card p {
@@ -597,7 +622,8 @@ color: #f3f4f4;
   background: linear-gradient(135deg, #5f9598, #3b6f73);
   color: #061e29;
   border: none;
-  padding: 8px 14px;
+  padding: 12px 14px;
+  margin-bottom: 25px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
@@ -610,17 +636,23 @@ color: #f3f4f4;
 }
 
 .overall-content {
-  display: flex;              /* makes it horizontal */
-  align-items: stretch;        /* vertical alignment */
-  gap: 14px;                  /* space between cards */
+  display: flex;
+  /* makes it horizontal */
+  align-items: stretch;
+  /* vertical alignment */
+  gap: 14px;
+  /* space between cards */
   width: 100%;
 }
 
 .overall-header {
-  display: flex;          /* puts them beside each other */
-  align-items: center;    /* vertical alignment */
-  gap: 12px;   
-  width: 100%;           /* space between title and dropdown */
+  display: flex;
+  /* puts them beside each other */
+  align-items: center;
+  /* vertical alignment */
+  gap: 12px;
+  width: 100%;
+  /* space between title and dropdown */
 }
 
 .header-left {
@@ -648,3 +680,168 @@ color: #f3f4f4;
   background-color: #8a6d3b;
 }
 
+@media (max-width: 768px) {
+
+  /* Page spacing */
+  .attendance-page {
+    padding: 16px;
+  }
+
+  /* Summary cards stack vertically */
+  .attendance-summary-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Card padding */
+  .time-card,
+  .total-hours-card,
+  .worked-hours-card,
+  .attendance-table-card,
+  .monthly-card,
+  .summary-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Main numbers */
+  .time-card h3,
+  .total-hours-card h3,
+  .hours-box,
+  .state-pill {
+    font-size: 24px;
+  }
+
+  /* Labels and small text */
+  .label,
+  .subtext,
+  .status-legend,
+  .tab,
+  .filter-select {
+    font-size: 13px;
+  }
+
+  /* Buttons full width */
+  .time-action-btn,
+  .download-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Hours layout stacks */
+  .hours-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Monthly overall summary becomes vertical */
+  .overall-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .monthly-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Attendance table adjustments */
+  .attendance-table {
+    font-size: 13px;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    padding: 10px 12px;
+  }
+
+  /* Monthly overall summary */
+  .overall-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+
+  /* Summary cards grid */
+  .overall-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .summary-card {
+    padding: 14px;
+  }
+
+  .summary-card h3 {
+    font-size: 20px;
+  }
+
+  .summary-card p {
+    font-size: 13px;
+  }
+
+  /* Monthly cards grid */
+  .monthly-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .monthly-card {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .monthly-card h4 {
+    font-size: 16px;
+  }
+
+  .progress-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .month-stats {
+    font-size: 12px;
+  }
+
+  .total-days {
+    font-size: 12px;
+  }
+
+  .time-action-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .download-btn {
+    width: auto;
+    align-self: flex-end;
+    /* pushes it to the right */
+  }
+
+   .worked-hours-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertical center */
+    align-items: center;       /* horizontal center */
+    text-align: center;
+    gap: 10px;
+  }
+
+  .worked-hours-card .state-pill {
+    flex: 0 0 auto;     /* stop stretching */
+    min-width: 140px;   /* consistent size */
+  }
+
+
+}

@@ -5,7 +5,8 @@ import Sidebar from "../components/Intern/Sidebar";
 import "../styles/layout.css";
 
 export default function InternLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // default closed is better for mobile
 
   return (
     <>
@@ -14,14 +15,28 @@ export default function InternLayout() {
         toggleSidebar={() => setSidebarOpen(prev => !prev)}
       />
 
-      <div className={`layout ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="mobile-overlay show"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <div
+        className={`layout ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"
+          }`}
+      >
         <Sidebar sidebarOpen={sidebarOpen} />
 
+
+
         <main className="content">
-          <Outlet />
+          <div className="page-transition">
+            <Outlet />
+          </div>
         </main>
       </div>
     </>
   );
-
 }
