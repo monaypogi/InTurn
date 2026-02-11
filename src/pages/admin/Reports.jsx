@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -11,6 +11,10 @@ import {
 } from 'lucide-react';
 import DataTable from '../../components/DataTable';
 import Pagination from '../../components/Pagination';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Toast from '../../components/Toast';
+import useFormValidation from '../../hooks/useFormValidation';
+import { maxLength, oneOf } from '../../utils/validation';
 
 const DOCUMENT_SUMMARY = {
   submitted: 48,
@@ -39,8 +43,8 @@ const REPORT_ROWS = [
   },
   {
     id: 2,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Jane Smith',
+    team: 'Frontend - AVAA',
     time: '09:10 AM',
     type: 'Daily Report',
     status: 'Approved',
@@ -49,7 +53,7 @@ const REPORT_ROWS = [
   },
   {
     id: 3,
-    name: 'John Doe',
+    name: 'Emma Wilson',
     team: 'UI/UX Designer',
     time: '09:00 AM',
     type: 'Documents',
@@ -59,8 +63,8 @@ const REPORT_ROWS = [
   },
   {
     id: 4,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Liam Carter',
+    team: 'Frontend Developer',
     time: '09:00 AM',
     type: 'Documents',
     status: 'Approved',
@@ -69,8 +73,8 @@ const REPORT_ROWS = [
   },
   {
     id: 5,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Mia Johnson',
+    team: 'QA Engineer',
     time: '---',
     type: '---',
     status: 'Did not submit',
@@ -79,13 +83,103 @@ const REPORT_ROWS = [
   },
   {
     id: 6,
-    name: 'John Doe',
-    team: 'UI/UX Designer',
+    name: 'Noah Brown',
+    team: 'Product Design',
     time: '10:00 AM',
     type: 'Daily Report',
     status: 'Waiting...',
     remarks: 'Late Submitted',
     rowTone: 'warning',
+  },
+  {
+    id: 7,
+    name: 'Olivia Green',
+    team: 'Data Analyst',
+    time: '09:05 AM',
+    type: 'Daily Report',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 8,
+    name: 'Ethan Rivera',
+    team: 'Marketing',
+    time: '09:15 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 9,
+    name: 'Sophia Clark',
+    team: 'UI/UX Designer',
+    time: '09:20 AM',
+    type: 'Daily Report',
+    status: 'Waiting...',
+    remarks: 'Needs review',
+    rowTone: 'warning',
+  },
+  {
+    id: 10,
+    name: 'Lucas Martin',
+    team: 'Frontend Developer',
+    time: '---',
+    type: 'Documents',
+    status: 'Did not submit',
+    remarks: 'Missing documents',
+    rowTone: 'danger',
+  },
+  {
+    id: 11,
+    name: 'Ava Lopez',
+    team: 'QA - Team 1',
+    time: '09:02 AM',
+    type: 'Daily Report',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 12,
+    name: 'Jackson Lee',
+    team: 'Backend Developer',
+    time: '09:18 AM',
+    type: 'Daily Report',
+    status: 'Waiting...',
+    remarks: 'Late Submitted',
+    rowTone: 'warning',
+  },
+  {
+    id: 13,
+    name: 'Isabella Young',
+    team: 'Product Design',
+    time: '09:01 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
+  },
+  {
+    id: 14,
+    name: 'Henry Walker',
+    team: 'Frontend - AVAA',
+    time: '---',
+    type: 'Daily Report',
+    status: 'Did not submit',
+    remarks: 'No report',
+    rowTone: 'danger',
+  },
+  {
+    id: 15,
+    name: 'Grace Hall',
+    team: 'Data Analyst',
+    time: '09:07 AM',
+    type: 'Documents',
+    status: 'Approved',
+    remarks: '',
+    rowTone: 'default',
   },
 ];
 
@@ -145,6 +239,16 @@ function VerificationPanel({ requests }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const hasRequests = requests.length > 0;
   const current = requests[currentIndex] || null;
+  const [feedback, setFeedback] = useState(null);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { values, errors, handleChange, handleBlur, validateForm, resetForm } = useFormValidation(
+    { message: '', remarks: '' },
+    {
+      message: [maxLength(500)],
+      remarks: [maxLength(1000)],
+    }
+  );
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % requests.length);
@@ -154,10 +258,46 @@ function VerificationPanel({ requests }) {
     setCurrentIndex((prev) => (prev - 1 + requests.length) % requests.length);
   };
 
+  const handleDecision = (action) => {
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setConfirmAction({ action });
+  };
+
+  const handleConfirmDecision = async () => {
+    if (!confirmAction) {
+      return;
+    }
+    setIsProcessing(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const label = confirmAction.action === 'approve' ? 'approved' : 'rejected';
+      setFeedback({ type: 'success', message: `Request ${label} successfully.` });
+      setConfirmAction(null);
+      resetForm();
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to process the request.' });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  useEffect(() => {
+    resetForm();
+  }, [currentIndex, resetForm]);
+
   if (!hasRequests) {
     return (
       <div className="flex min-h-[420px] flex-col rounded-xl border border-slate-600 bg-slate-800 p-6">
         <h3 className="text-lg font-semibold text-white">Document Verification</h3>
+        <Toast
+          type={feedback?.type}
+          message={feedback?.message}
+          onDismiss={() => setFeedback(null)}
+        />
         <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate-600 bg-slate-700/40 p-6 text-center">
           <FileText className="h-8 w-8 text-slate-400" />
           <p className="text-sm text-slate-400">No pending document verification requests.</p>
@@ -169,6 +309,11 @@ function VerificationPanel({ requests }) {
   return (
     <div className="min-h-[420px] rounded-xl border border-slate-600 bg-slate-800 p-6">
       <h3 className="text-lg font-semibold text-white">Document Verification</h3>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
       <div className="mt-4 flex items-center gap-3">
         <UserCircle className="h-10 w-10 text-amber-400" />
         <div>
@@ -207,7 +352,11 @@ function VerificationPanel({ requests }) {
           className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
           rows={2}
           placeholder="message..."
+          value={values.message}
+          onChange={(event) => handleChange('message', event.target.value)}
+          onBlur={() => handleBlur('message')}
         />
+        {errors.message && <p className="mt-2 text-xs text-red-400">{errors.message}</p>}
       </div>
 
       <div className="mt-4">
@@ -215,19 +364,31 @@ function VerificationPanel({ requests }) {
         <textarea
           className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
           rows={3}
+          value={values.remarks}
+          onChange={(event) => handleChange('remarks', event.target.value)}
+          onBlur={() => handleBlur('remarks')}
         />
+        {errors.remarks && <p className="mt-2 text-xs text-red-400">{errors.remarks}</p>}
       </div>
 
       <div className="mt-4 flex items-center gap-3">
         <button
           type="button"
-          className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500"
+          onClick={() => handleDecision('reject')}
+          className={`flex-1 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white hover:bg-red-500 ${
+            isProcessing ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isProcessing}
         >
           Reject
         </button>
         <button
           type="button"
-          className="flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500"
+          onClick={() => handleDecision('approve')}
+          className={`flex-1 rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500 ${
+            isProcessing ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isProcessing}
         >
           Approve
         </button>
@@ -254,29 +415,59 @@ function VerificationPanel({ requests }) {
           </button>
         </div>
       )}
+      <ConfirmDialog
+        isOpen={!!confirmAction}
+        title={confirmAction?.action === 'approve' ? 'Approve request?' : 'Reject request?'}
+        description="This action will update the verification status."
+        confirmLabel={confirmAction?.action === 'approve' ? 'Approve' : 'Reject'}
+        tone={confirmAction?.action === 'approve' ? 'primary' : 'danger'}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={handleConfirmDecision}
+        isProcessing={isProcessing}
+      />
     </div>
   );
 }
 
 function Reports() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
   const [internFilter] = useState('All Interns');
-  const [typeFilter, setTypeFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 6;
   const typeOptions = ['All', 'Daily Report', 'Documents'];
+  const { values, errors, handleChange, handleBlur } = useFormValidation(
+    { search: '', typeFilter: 'All' },
+    {
+      search: [maxLength(100)],
+      typeFilter: [oneOf(typeOptions)],
+    }
+  );
 
   const filteredRows = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query = values.search.trim().toLowerCase();
     return REPORT_ROWS.filter((row) => {
       const matchesQuery =
         query.length === 0 ||
         [row.name, row.team, row.type, row.status].some((field) =>
           field.toLowerCase().includes(query)
         );
-      const matchesType = typeFilter === 'All' || row.type === typeFilter;
+      const matchesType = values.typeFilter === 'All' || row.type === values.typeFilter;
       return matchesQuery && matchesType;
     });
-  }, [search, typeFilter]);
+  }, [values.search, values.typeFilter]);
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / rowsPerPage));
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [values.search, values.typeFilter]);
 
   return (
     <div className="space-y-6">
@@ -312,19 +503,22 @@ function Reports() {
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={values.search}
+                onChange={(event) => handleChange('search', event.target.value)}
+                onBlur={() => handleBlur('search')}
                 placeholder="Search"
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 py-2 pl-9 pr-3 text-sm text-slate-200"
               />
+              {errors.search && <p className="mt-1 text-xs text-red-400">{errors.search}</p>}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <label className="relative">
                 <span className="mr-2 text-sm font-semibold text-white">Type:</span>
                 <select
                   className="appearance-none rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 pr-9 text-sm text-slate-200"
-                  value={typeFilter}
-                  onChange={(event) => setTypeFilter(event.target.value)}
+                  value={values.typeFilter}
+                  onChange={(event) => handleChange('typeFilter', event.target.value)}
+                  onBlur={() => handleBlur('typeFilter')}
                 >
                   {typeOptions.map((option) => (
                     <option key={option} value={option} className="bg-slate-800 text-slate-200">
@@ -334,16 +528,21 @@ function Reports() {
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </label>
+              {errors.typeFilter && <p className="text-xs text-red-400">{errors.typeFilter}</p>}
             </div>
           </div>
 
           <DataTable
             footer={
               <Pagination
-                currentPage={1}
-                totalPages={100}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pages={pageNumbers}
                 variant="slate"
                 className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+                onPageChange={setCurrentPage}
+                onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               />
             }
           >
@@ -359,7 +558,7 @@ function Reports() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                {filteredRows.map((row) => (
+                {paginatedRows.map((row) => (
                   <tr key={row.id} className={rowToneStyles[row.rowTone]}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">

@@ -1,6 +1,18 @@
 import { useRef, useState } from 'react';
 import { User, Mail, Phone, Briefcase, Hash, Calendar, Lock, ShieldCheck, Eye, EyeOff, X } from 'lucide-react';
 import Modal from '../../components/Modal';
+import Toast from '../../components/Toast';
+import useFormValidation from '../../hooks/useFormValidation';
+import {
+  digitsLength,
+  email as emailValidator,
+  matchField,
+  maxLength,
+  minLength,
+  phone as phoneValidator,
+  required,
+  validatePassword,
+} from '../../utils/validation';
 
 const PROFILE_DATA = {
   firstName: 'Anna',
@@ -50,24 +62,45 @@ function Profile() {
 
 function ProfileGeneral() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
+  const [feedback, setFeedback] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const initialProfile = {
     firstName: PROFILE_DATA.firstName,
     lastName: PROFILE_DATA.lastName,
     email: PROFILE_DATA.email,
     phone: PROFILE_DATA.phone,
-  });
-  const handleCancel = () => {
-    setProfile({
-      firstName: PROFILE_DATA.firstName,
-      lastName: PROFILE_DATA.lastName,
-      email: PROFILE_DATA.email,
-      phone: PROFILE_DATA.phone,
-    });
-    setIsEditing(false);
   };
-  const handleEditToggle = () => {
+  const { values, errors, handleChange, handleBlur, validateForm, resetForm } = useFormValidation(
+    initialProfile,
+    {
+      firstName: [required(), minLength(2), maxLength(50)],
+      lastName: [required(), minLength(2), maxLength(50)],
+      email: [required(), emailValidator()],
+      phone: [required(), phoneValidator()],
+    }
+  );
+  const handleCancel = () => {
+    resetForm(initialProfile);
+    setIsEditing(false);
+    setFeedback(null);
+  };
+  const handleEditToggle = async () => {
     if (isEditing) {
-      setIsEditing(false);
+      const nextErrors = validateForm();
+      if (Object.keys(nextErrors).length > 0) {
+        return;
+      }
+      setIsSaving(true);
+      setFeedback(null);
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        setIsEditing(false);
+        setFeedback({ type: 'success', message: 'Profile updated successfully.' });
+      } catch (error) {
+        setFeedback({ type: 'error', message: 'Unable to save profile changes.' });
+      } finally {
+        setIsSaving(false);
+      }
       return;
     }
     setIsEditing(true);
@@ -79,6 +112,11 @@ function ProfileGeneral() {
         <h2 className="text-lg font-semibold text-white">Profile Information</h2>
         <p className="text-sm text-slate-400">Update your personal information and profile picture</p>
       </header>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
@@ -100,30 +138,38 @@ function ProfileGeneral() {
         <ProfileField
           label="First Name"
           icon={<User className="h-4 w-4" />}
-          value={profile.firstName}
+          value={values.firstName}
+          error={errors.firstName}
           isEditable={isEditing}
-          onChange={(event) => setProfile((prev) => ({ ...prev, firstName: event.target.value }))}
+          onChange={(event) => handleChange('firstName', event.target.value)}
+          onBlur={() => handleBlur('firstName')}
         />
         <ProfileField
           label="Last Name"
           icon={<User className="h-4 w-4" />}
-          value={profile.lastName}
+          value={values.lastName}
+          error={errors.lastName}
           isEditable={isEditing}
-          onChange={(event) => setProfile((prev) => ({ ...prev, lastName: event.target.value }))}
+          onChange={(event) => handleChange('lastName', event.target.value)}
+          onBlur={() => handleBlur('lastName')}
         />
         <ProfileField
           label="Email Address"
           icon={<Mail className="h-4 w-4" />}
-          value={profile.email}
+          value={values.email}
+          error={errors.email}
           isEditable={isEditing}
-          onChange={(event) => setProfile((prev) => ({ ...prev, email: event.target.value }))}
+          onChange={(event) => handleChange('email', event.target.value)}
+          onBlur={() => handleBlur('email')}
         />
         <ProfileField
           label="Phone Number"
           icon={<Phone className="h-4 w-4" />}
-          value={profile.phone}
+          value={values.phone}
+          error={errors.phone}
           isEditable={isEditing}
-          onChange={(event) => setProfile((prev) => ({ ...prev, phone: event.target.value }))}
+          onChange={(event) => handleChange('phone', event.target.value)}
+          onBlur={() => handleBlur('phone')}
         />
         <ProfileField label="Department" icon={<Briefcase className="h-4 w-4" />} value={PROFILE_DATA.department} />
         <ProfileField label="Role" icon={<ShieldCheck className="h-4 w-4" />} value={PROFILE_DATA.role} />
@@ -144,16 +190,19 @@ function ProfileGeneral() {
         <button
           type="button"
           onClick={handleEditToggle}
-          className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
+          className={`rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600 ${
+            isSaving ? 'cursor-not-allowed opacity-70' : ''
+          }`}
+          disabled={isSaving}
         >
-          {isEditing ? 'Save Changes' : 'Edit Profile'}
+          {isSaving ? 'Saving...' : isEditing ? 'Save Changes' : 'Edit Profile'}
         </button>
       </div>
     </section>
   );
 }
 
-function ProfileField({ label, icon, value, isEditable = false, onChange }) {
+function ProfileField({ label, icon, value, error, isEditable = false, onChange, onBlur }) {
   const fieldClass = isEditable
     ? 'border-teal-400/70 bg-slate-600/70 ring-1 ring-teal-400/40'
     : 'border-slate-700 bg-slate-700/70';
@@ -168,36 +217,71 @@ function ProfileField({ label, icon, value, isEditable = false, onChange }) {
           value={value}
           readOnly={!isEditable}
           onChange={onChange}
+          onBlur={onBlur}
+          aria-invalid={!!error}
           className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
         />
       </div>
+      {error && isEditable && <p className="mt-2 text-xs text-red-400">{error}</p>}
     </label>
   );
 }
 
 function ProfileSecurity() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [isVerifyOpen, setIsVerifyOpen] = useState(false);
   const [isSessionsOpen, setIsSessionsOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
-  const [emailValue, setEmailValue] = useState('');
-  const [mobileValue, setMobileValue] = useState('');
   const [verificationCode, setVerificationCode] = useState(Array(6).fill(''));
   const codeInputRefs = useRef([]);
+  const [feedback, setFeedback] = useState(null);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isConfirmingCode, setIsConfirmingCode] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const passwordForm = useFormValidation(
+    { currentPassword: '', newPassword: '', confirmPassword: '' },
+    {
+      currentPassword: [required()],
+      newPassword: [
+        required(),
+        (value) => (validatePassword(value) ? null : 'Password must be at least 8 characters'),
+      ],
+      confirmPassword: [required(), matchField('newPassword', 'Passwords do not match')],
+    }
+  );
+  const twoFactorForm = useFormValidation(
+    { selectedOption: null, emailValue: '', mobileValue: '' },
+    {
+      selectedOption: [required('Select a verification method')],
+      emailValue: [
+        (value, values) => (values.selectedOption === 'email' ? required('Email is required')(value) : null),
+        (value, values) => (values.selectedOption === 'email' ? emailValidator()(value) : null),
+      ],
+      mobileValue: [
+        (value, values) => (values.selectedOption === 'mobile' ? required('Mobile number is required')(value) : null),
+        (value, values) => (values.selectedOption === 'mobile' ? phoneValidator()(value) : null),
+      ],
+    }
+  );
+  const verificationForm = useFormValidation(
+    { code: '' },
+    {
+      code: [required('Verification code is required'), digitsLength(6)],
+    }
+  );
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsVerifyOpen(false);
     setIsSessionsOpen(false);
     setConfirmAction(null);
-    setSelectedOption(null);
-    setEmailValue('');
-    setMobileValue('');
     setVerificationCode(Array(6).fill(''));
+    twoFactorForm.resetForm();
+    verificationForm.resetForm();
   };
   const handleContinue = () => {
-    if (!selectedOption) {
+    const nextErrors = twoFactorForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
       return;
     }
     setIsModalOpen(false);
@@ -207,12 +291,14 @@ function ProfileSecurity() {
     setIsVerifyOpen(false);
     setIsModalOpen(true);
     setVerificationCode(Array(6).fill(''));
+    verificationForm.resetForm();
   };
   const handleCodeChange = (index, value) => {
     const nextValue = value.replace(/\D/g, '').slice(-1);
     setVerificationCode((prev) => {
       const updated = [...prev];
       updated[index] = nextValue;
+      verificationForm.setFieldValue('code', updated.join(''));
       return updated;
     });
     if (nextValue && index < codeInputRefs.current.length - 1) {
@@ -235,15 +321,67 @@ function ProfileSecurity() {
       nextValues[idx] = digit;
     });
     setVerificationCode(nextValues);
+    verificationForm.setFieldValue('code', nextValues.join(''));
     const nextIndex = Math.min(pasted.length, verificationCode.length - 1);
     codeInputRefs.current[nextIndex]?.focus();
   };
   const handleCloseSessions = () => {
     setIsSessionsOpen(false);
   };
-  const handleConfirm = () => {
-    setConfirmAction(null);
-    setIsSessionsOpen(false);
+  const handleConfirm = async () => {
+    if (!confirmAction) {
+      return;
+    }
+    setIsLoggingOut(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const label =
+        confirmAction.type === 'logoutAll' ? 'all other sessions' : confirmAction.label;
+      setFeedback({ type: 'success', message: `Logged out from ${label} successfully.` });
+      setConfirmAction(null);
+      setIsSessionsOpen(false);
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to log out sessions. Please try again.' });
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+  const handlePasswordUpdate = async () => {
+    const nextErrors = passwordForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsUpdatingPassword(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      passwordForm.resetForm();
+      setFeedback({ type: 'success', message: 'Password updated successfully.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to update password.' });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
+  const handleConfirmCode = async () => {
+    const nextErrors = verificationForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsConfirmingCode(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsVerifyOpen(false);
+      setVerificationCode(Array(6).fill(''));
+      verificationForm.resetForm();
+      setFeedback({ type: 'success', message: 'Two-factor authentication enabled.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to verify the code. Please try again.' });
+    } finally {
+      setIsConfirmingCode(false);
+    }
   };
 
   return (
@@ -255,16 +393,41 @@ function ProfileSecurity() {
             <p className="text-sm text-slate-400">Update your password to keep your account secure</p>
           </header>
           <div className="space-y-4">
-            <PasswordField label="Current Password" placeholder="Enter current password" />
-            <PasswordField label="New Password" placeholder="Enter new password" />
-            <PasswordField label="Confirm Password" placeholder="Confirm new password" />
+            <PasswordField
+              label="Current Password"
+              placeholder="Enter current password"
+              value={passwordForm.values.currentPassword}
+              error={passwordForm.errors.currentPassword}
+              onChange={(event) => passwordForm.handleChange('currentPassword', event.target.value)}
+              onBlur={() => passwordForm.handleBlur('currentPassword')}
+            />
+            <PasswordField
+              label="New Password"
+              placeholder="Enter new password"
+              value={passwordForm.values.newPassword}
+              error={passwordForm.errors.newPassword}
+              onChange={(event) => passwordForm.handleChange('newPassword', event.target.value)}
+              onBlur={() => passwordForm.handleBlur('newPassword')}
+            />
+            <PasswordField
+              label="Confirm Password"
+              placeholder="Confirm new password"
+              value={passwordForm.values.confirmPassword}
+              error={passwordForm.errors.confirmPassword}
+              onChange={(event) => passwordForm.handleChange('confirmPassword', event.target.value)}
+              onBlur={() => passwordForm.handleBlur('confirmPassword')}
+            />
           </div>
           <div className="flex justify-end">
             <button
               type="button"
-              className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
+              onClick={handlePasswordUpdate}
+              className={`rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600 ${
+                isUpdatingPassword ? 'cursor-not-allowed opacity-70' : ''
+              }`}
+              disabled={isUpdatingPassword}
             >
-              Update Password
+              {isUpdatingPassword ? 'Updating...' : 'Update Password'}
             </button>
           </div>
         </section>
@@ -302,6 +465,11 @@ function ProfileSecurity() {
           </div>
         </section>
       </div>
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
 
       {isModalOpen && (
         <Modal
@@ -329,9 +497,9 @@ function ProfileSecurity() {
           <div className="mt-6 space-y-4">
             <button
               type="button"
-              onClick={() => setSelectedOption('email')}
+              onClick={() => twoFactorForm.setFieldValue('selectedOption', 'email')}
               className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
-                selectedOption === 'email'
+                twoFactorForm.values.selectedOption === 'email'
                   ? 'border-teal-400 bg-teal-50'
                   : 'border-slate-200 bg-white hover:bg-slate-50'
               }`}
@@ -339,10 +507,10 @@ function ProfileSecurity() {
               <div className="flex items-start gap-3">
                 <span
                   className={`mt-1 flex h-4 w-4 items-center justify-center rounded border ${
-                    selectedOption === 'email' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
+                    twoFactorForm.values.selectedOption === 'email' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
                   }`}
                 >
-                  {selectedOption === 'email' && <span className="h-2 w-2 rounded-sm bg-white" />}
+                  {twoFactorForm.values.selectedOption === 'email' && <span className="h-2 w-2 rounded-sm bg-white" />}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -350,14 +518,18 @@ function ProfileSecurity() {
                     <p className="text-base font-semibold text-slate-900">Email Address</p>
                   </div>
                   <p className="text-sm text-slate-600">Receive verification codes via email.</p>
-                  {selectedOption === 'email' && (
+                  {twoFactorForm.values.selectedOption === 'email' && (
                     <input
                       type="email"
-                      value={emailValue}
-                      onChange={(event) => setEmailValue(event.target.value)}
+                      value={twoFactorForm.values.emailValue}
+                      onChange={(event) => twoFactorForm.handleChange('emailValue', event.target.value)}
+                      onBlur={() => twoFactorForm.handleBlur('emailValue')}
                       placeholder="Enter your email address"
                       className="mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400"
                     />
+                  )}
+                  {twoFactorForm.errors.emailValue && (
+                    <p className="mt-2 text-xs text-red-500">{twoFactorForm.errors.emailValue}</p>
                   )}
                 </div>
               </div>
@@ -365,9 +537,9 @@ function ProfileSecurity() {
 
             <button
               type="button"
-              onClick={() => setSelectedOption('mobile')}
+              onClick={() => twoFactorForm.setFieldValue('selectedOption', 'mobile')}
               className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
-                selectedOption === 'mobile'
+                twoFactorForm.values.selectedOption === 'mobile'
                   ? 'border-teal-400 bg-teal-50'
                   : 'border-slate-200 bg-white hover:bg-slate-50'
               }`}
@@ -375,10 +547,10 @@ function ProfileSecurity() {
               <div className="flex items-start gap-3">
                 <span
                   className={`mt-1 flex h-4 w-4 items-center justify-center rounded border ${
-                    selectedOption === 'mobile' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
+                    twoFactorForm.values.selectedOption === 'mobile' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
                   }`}
                 >
-                  {selectedOption === 'mobile' && <span className="h-2 w-2 rounded-sm bg-white" />}
+                  {twoFactorForm.values.selectedOption === 'mobile' && <span className="h-2 w-2 rounded-sm bg-white" />}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -386,19 +558,26 @@ function ProfileSecurity() {
                     <p className="text-base font-semibold text-slate-900">Mobile Number</p>
                   </div>
                   <p className="text-sm text-slate-600">Receive verification codes via SMS.</p>
-                  {selectedOption === 'mobile' && (
+                  {twoFactorForm.values.selectedOption === 'mobile' && (
                     <input
                       type="tel"
-                      value={mobileValue}
-                      onChange={(event) => setMobileValue(event.target.value)}
+                      value={twoFactorForm.values.mobileValue}
+                      onChange={(event) => twoFactorForm.handleChange('mobileValue', event.target.value)}
+                      onBlur={() => twoFactorForm.handleBlur('mobileValue')}
                       placeholder="Enter your mobile number"
                       className="mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400"
                     />
+                  )}
+                  {twoFactorForm.errors.mobileValue && (
+                    <p className="mt-2 text-xs text-red-500">{twoFactorForm.errors.mobileValue}</p>
                   )}
                 </div>
               </div>
             </button>
           </div>
+          {twoFactorForm.errors.selectedOption && (
+            <p className="mt-3 text-xs text-red-500">{twoFactorForm.errors.selectedOption}</p>
+          )}
 
           <div className="mt-8 flex justify-end gap-3">
             <button
@@ -427,14 +606,16 @@ function ProfileSecurity() {
         >
           <div className="text-center">
             <h3 className="text-lg font-semibold text-slate-900">
-              {selectedOption === 'mobile' ? 'Check your mobile number for a code' : 'Check your email for a code'}
+              {twoFactorForm.values.selectedOption === 'mobile'
+                ? 'Check your mobile number for a code'
+                : 'Check your email for a code'}
             </h3>
             <p className="text-sm text-slate-600">
               We&apos;ve sent a 6-character code to{' '}
               <span className="font-semibold text-slate-700">
-                {selectedOption === 'mobile'
-                  ? mobileValue || '+63 917 654 3210'
-                  : emailValue || 'anna.bautista@gmail.com'}
+                {twoFactorForm.values.selectedOption === 'mobile'
+                  ? twoFactorForm.values.mobileValue || '+63 917 654 3210'
+                  : twoFactorForm.values.emailValue || 'anna.bautista@gmail.com'}
               </span>
               .
             </p>
@@ -449,6 +630,7 @@ function ProfileSecurity() {
                 onChange={(event) => handleCodeChange(index, event.target.value)}
                 onKeyDown={(event) => handleCodeKeyDown(index, event)}
                 onPaste={handleCodePaste}
+                onBlur={() => verificationForm.handleBlur('code')}
                 ref={(el) => {
                   codeInputRefs.current[index] = el;
                 }}
@@ -456,6 +638,9 @@ function ProfileSecurity() {
               />
             ))}
           </div>
+          {verificationForm.errors.code && (
+            <p className="mt-3 text-center text-xs text-red-500">{verificationForm.errors.code}</p>
+          )}
 
           <div className="mt-8 flex items-center justify-between text-sm text-slate-500">
             <button type="button" onClick={handleBackToSelection} className="font-semibold text-slate-600 hover:text-slate-900">
@@ -467,9 +652,13 @@ function ProfileSecurity() {
               </button>
               <button
                 type="button"
-                className="rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600"
+                onClick={handleConfirmCode}
+                className={`rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 ${
+                  isConfirmingCode ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                disabled={isConfirmingCode}
               >
-                Confirm Code
+                {isConfirmingCode ? 'Confirming...' : 'Confirm Code'}
               </button>
             </div>
           </div>
@@ -588,9 +777,12 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={handleConfirm}
-              className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+              className={`rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 ${
+                isLoggingOut ? 'cursor-not-allowed opacity-70' : ''
+              }`}
+              disabled={isLoggingOut}
             >
-              Confirm
+              {isLoggingOut ? 'Working...' : 'Confirm'}
             </button>
           </div>
         </Modal>
@@ -599,7 +791,7 @@ function ProfileSecurity() {
   );
 }
 
-function PasswordField({ label, placeholder }) {
+function PasswordField({ label, placeholder, value, onChange, onBlur, error }) {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
@@ -611,6 +803,10 @@ function PasswordField({ label, placeholder }) {
         <input
           type={isVisible ? 'text' : 'password'}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          aria-invalid={!!error}
           className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
         />
         <button
@@ -622,6 +818,7 @@ function PasswordField({ label, placeholder }) {
           {isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>
       </div>
+      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
     </label>
   );
 }

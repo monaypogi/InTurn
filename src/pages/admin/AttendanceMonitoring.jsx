@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, Calendar } from 'lucide-react';
 import MetricCard from '../../components/MetricCard';
 import Avatar from '../../components/Avatar';
 import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
+import Toast from '../../components/Toast';
+import useFormValidation from '../../hooks/useFormValidation';
+import { date, dateAfter, dateBefore, oneOf, required } from '../../utils/validation';
 
 const ATTENDANCE_ROWS = [
   { id: 1, name: 'John Doe', team: 'UI/UX Designer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
@@ -12,12 +15,22 @@ const ATTENDANCE_ROWS = [
   { id: 3, name: 'Bob Wilson', team: 'QA - Team 1', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
   { id: 4, name: 'Emma Wilson', team: 'UI/UX Designer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
   { id: 5, name: 'Liam Carter', team: 'Frontend Developer', timeIn: '09:05 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 6, name: 'Mia Johnson', team: 'QA Engineer', timeIn: '09:15 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 7, name: 'Noah Brown', team: 'Product Design', timeIn: '09:02 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 8, name: 'Olivia Green', team: 'Data Analyst', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 9, name: 'Ethan Rivera', team: 'Marketing', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 10, name: 'Sophia Clark', team: 'UI/UX Designer', timeIn: '09:18 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 11, name: 'Lucas Martin', team: 'Frontend Developer', timeIn: '09:00 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 12, name: 'Ava Lopez', team: 'QA - Team 1', timeIn: '09:22 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 13, name: 'Jackson Lee', team: 'Backend Developer', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 14, name: 'Isabella Young', team: 'Product Design', timeIn: '09:01 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 15, name: 'Henry Walker', team: 'Frontend - AVAA', timeIn: '09:12 AM', timeOut: '---', hours: '2 hours', status: 'Present - Late', statusType: 'late' },
+  { id: 16, name: 'Grace Hall', team: 'Data Analyst', timeIn: '09:03 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
+  { id: 17, name: 'Daniel Scott', team: 'Marketing', timeIn: '---', timeOut: '---', hours: '---', status: 'Absent', statusType: 'absent' },
+  { id: 18, name: 'Chloe Adams', team: 'UI/UX Designer', timeIn: '09:08 AM', timeOut: '---', hours: '2 hours', status: 'Present - On time', statusType: 'present' },
 ];
 
 function AttendanceMonitoring() {
-  const [startDate, setStartDate] = useState('04 / 21 / 2026');
-  const [endDate, setEndDate] = useState('06 / 24 / 2026');
-  const [reportType, setReportType] = useState('Present - On Time');
   const reportTypeOptions = [
     'All',
     'Present - On Time',
@@ -25,7 +38,29 @@ function AttendanceMonitoring() {
     'Present - Undertime',
     'Absent',
   ];
+  const {
+    values,
+    errors,
+    handleChange,
+    handleBlur,
+    validateForm,
+  } = useFormValidation(
+    {
+      startDate: '04 / 21 / 2026',
+      endDate: '06 / 24 / 2026',
+      reportType: 'Present - On Time',
+    },
+    {
+      startDate: [required(), date(), dateBefore('endDate')],
+      endDate: [required(), date(), dateAfter('startDate')],
+      reportType: [required(), oneOf(reportTypeOptions)],
+    }
+  );
   const [statusFilter, setStatusFilter] = useState('All');
+  const [feedback, setFeedback] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
   const statusOptions = ['All', 'Present - On Time', 'Present - Late', 'Present - Undertime', 'Absent'];
 
   const filteredRows = ATTENDANCE_ROWS.filter((row) => {
@@ -34,9 +69,44 @@ function AttendanceMonitoring() {
     }
     return row.status.toLowerCase() === statusFilter.toLowerCase();
   });
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / rowsPerPage));
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter]);
+
+  const handleGenerateReport = async () => {
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsGenerating(true);
+    setFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setFeedback({ type: 'success', message: 'Attendance report generated successfully.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: 'Unable to generate the report. Please try again.' });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
+      <Toast
+        type={feedback?.type}
+        message={feedback?.message}
+        onDismiss={() => setFeedback(null)}
+      />
       {/* Hero */}
       <section className="relative rounded-xl overflow-hidden border border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800">
         <div
@@ -87,11 +157,15 @@ function AttendanceMonitoring() {
           <DataTable
             footer={
               <Pagination
-                currentPage={1}
-                totalPages={100}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pages={pageNumbers}
                 variant="teal"
                 nextLabel="Next >"
                 className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+                onPageChange={setCurrentPage}
+                onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               />
             }
           >
@@ -107,7 +181,7 @@ function AttendanceMonitoring() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-                {filteredRows.map((row) => (
+                {paginatedRows.map((row) => (
                   <tr key={row.id} className="hover:bg-slate-700/40">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -145,12 +219,14 @@ function AttendanceMonitoring() {
                 <div className="relative">
                   <input
                     type="text"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    value={values.startDate}
+                    onChange={(event) => handleChange('startDate', event.target.value)}
+                    onBlur={() => handleBlur('startDate')}
                     className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
                   />
                   <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
+                {errors.startDate && <p className="mt-1 text-xs text-red-400">{errors.startDate}</p>}
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -159,12 +235,14 @@ function AttendanceMonitoring() {
                 <div className="relative">
                   <input
                     type="text"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    value={values.endDate}
+                    onChange={(event) => handleChange('endDate', event.target.value)}
+                    onBlur={() => handleBlur('endDate')}
                     className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
                   />
                   <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
+                {errors.endDate && <p className="mt-1 text-xs text-red-400">{errors.endDate}</p>}
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -173,8 +251,9 @@ function AttendanceMonitoring() {
                 <label className="relative block">
                   <select
                     className="w-full appearance-none rounded-lg border border-slate-600 bg-slate-700 px-3 py-2.5 text-left text-slate-200"
-                    value={reportType}
-                    onChange={(event) => setReportType(event.target.value)}
+                    value={values.reportType}
+                    onChange={(event) => handleChange('reportType', event.target.value)}
+                    onBlur={() => handleBlur('reportType')}
                   >
                     {reportTypeOptions.map((option) => (
                       <option key={option} value={option} className="bg-slate-800 text-slate-200">
@@ -184,12 +263,17 @@ function AttendanceMonitoring() {
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </label>
+                {errors.reportType && <p className="mt-1 text-xs text-red-400">{errors.reportType}</p>}
               </div>
               <button
                 type="button"
-                className="w-full rounded-lg bg-teal-500 py-2.5 font-medium text-white hover:bg-teal-600"
+                className={`w-full rounded-lg bg-teal-500 py-2.5 font-medium text-white hover:bg-teal-600 ${
+                  isGenerating ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                onClick={handleGenerateReport}
+                disabled={isGenerating}
               >
-                Generate Report
+                {isGenerating ? 'Generating...' : 'Generate Report'}
               </button>
             </div>
           </div>

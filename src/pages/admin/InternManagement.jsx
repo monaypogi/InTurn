@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Search,
   ChevronDown,
-  Eye,
+  ClipboardPen,
+  UserPen,
   BarChart3,
   Edit3,
   Mail,
@@ -21,6 +22,10 @@ import StatusBadge from '../../components/StatusBadge';
 import Pagination from '../../components/Pagination';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Toast from '../../components/Toast';
+import useFormValidation from '../../hooks/useFormValidation';
+import { maxLength, oneOf, required } from '../../utils/validation';
 
 const interns = [
   {
@@ -86,6 +91,123 @@ const interns = [
     status: 'Active',
     startDate: '2026-01-01',
   },
+  {
+    id: 8,
+    name: 'Aiden Torres',
+    email: 'aiden.torres@gmail.com',
+    department: 'Backend Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-02',
+  },
+  {
+    id: 9,
+    name: 'Zoe Carter',
+    email: 'zoe.carter@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-03',
+  },
+  {
+    id: 10,
+    name: 'Caleb Price',
+    email: 'caleb.price@gmail.com',
+    department: 'Fullstack Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-03',
+  },
+  {
+    id: 11,
+    name: 'Harper Davis',
+    email: 'harper.davis@gmail.com',
+    department: 'UI/UX Designer',
+    supervisor: 'Anna Lee',
+    status: 'Inactive',
+    startDate: '2026-01-04',
+  },
+  {
+    id: 12,
+    name: 'Elijah Moore',
+    email: 'elijah.moore@gmail.com',
+    department: 'Backend Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-04',
+  },
+  {
+    id: 13,
+    name: 'Lily Bennett',
+    email: 'lily.bennett@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Active',
+    startDate: '2026-01-05',
+  },
+  {
+    id: 14,
+    name: 'Nathan Reed',
+    email: 'nathan.reed@gmail.com',
+    department: 'Data Analyst',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-05',
+  },
+  {
+    id: 15,
+    name: 'Aria Collins',
+    email: 'aria.collins@gmail.com',
+    department: 'Product Design',
+    supervisor: 'Anna Lee',
+    status: 'Active',
+    startDate: '2026-01-06',
+  },
+  {
+    id: 16,
+    name: 'Mason Ward',
+    email: 'mason.ward@gmail.com',
+    department: 'Marketing',
+    supervisor: 'Sofia Martinez',
+    status: 'Active',
+    startDate: '2026-01-06',
+  },
+  {
+    id: 17,
+    name: 'Ella Brooks',
+    email: 'ella.brooks@gmail.com',
+    department: 'QA Engineer',
+    supervisor: 'Sofia Martinez',
+    status: 'Inactive',
+    startDate: '2026-01-07',
+  },
+  {
+    id: 18,
+    name: 'Logan Hughes',
+    email: 'logan.hughes@gmail.com',
+    department: 'Fullstack Developer',
+    supervisor: 'Marcus Young',
+    status: 'Active',
+    startDate: '2026-01-08',
+  },
+  {
+    id: 19,
+    name: 'Nora Kelly',
+    email: 'nora.kelly@gmail.com',
+    department: 'UI/UX Designer',
+    supervisor: 'Anna Lee',
+    status: 'Active',
+    startDate: '2026-01-08',
+  },
+  {
+    id: 20,
+    name: 'Owen Parker',
+    email: 'owen.parker@gmail.com',
+    department: 'Frontend Developer',
+    supervisor: 'Jacob Kim',
+    status: 'Pending',
+    startDate: '2026-01-09',
+  },
 ];
 
 const modalStatusStyles = {
@@ -94,29 +216,31 @@ const modalStatusStyles = {
   Pending: 'bg-amber-100 text-amber-600',
 };
 
-function FilterSelect({ label, value, options, onChange }) {
+function FilterSelect({ label, value, options, onChange, onBlur, error }) {
   return (
     <div className="flex flex-col gap-1 text-slate-900">
       <span className="text-[12px] uppercase tracking-wide text-white font-bold">{label}</span>
-      <label className="relative rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 transition-colors hover:bg-slate-200">
+      <div className="relative">
         <select
-          className="w-full appearance-none rounded-md bg-transparent py-1 pl-2 pr-8 text-base font-medium text-slate-900 focus:outline-none"
+          className="w-full appearance-none rounded-lg border border-slate-300 bg-slate-200 py-3 pl-4 pr-10 text-base font-medium text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          onBlur={onBlur}
         >
           {options.map((option) => (
-            <option key={option} value={option} className="bg-slate-200 pl-2 text-slate-900">
+            <option key={option} value={option} className="bg-slate-200 text-slate-900">
               {option}
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-      </label>
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+      </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
 
-function ModalSelect({ label, value, options, onChange }) {
+function ModalSelect({ label, value, options, onChange, onBlur, error }) {
   return (
     <label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
       <span>{label}</span>
@@ -125,6 +249,7 @@ function ModalSelect({ label, value, options, onChange }) {
           className="appearance-none rounded-md border border-slate-300 bg-slate-100 py-0.5 pl-2 pr-6 text-xs font-semibold text-slate-700 focus:outline-none"
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          onBlur={onBlur}
         >
           {options.map((option) => (
             <option key={option} value={option} className="bg-white text-slate-700">
@@ -134,6 +259,7 @@ function ModalSelect({ label, value, options, onChange }) {
         </select>
         <ChevronDown className="pointer-events-none absolute right-1 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
       </span>
+      {error && <span className="text-[10px] text-red-500">{error}</span>}
     </label>
   );
 }
@@ -185,9 +311,6 @@ function InternManagement() {
     { type: 'Document', file: 'Wilson_ID.pdf', submitted: '2026-01-21', status: 'Verified' },
     { type: 'Document', file: 'Wilson_MOA.pdf', submitted: '2026-01-22', status: 'Verified' },
   ];
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [departmentFilter, setDepartmentFilter] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeIntern, setActiveIntern] = useState(null);
   const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
@@ -195,13 +318,54 @@ function InternManagement() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [evaluationIntern, setEvaluationIntern] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [selectedSupervisor, setSelectedSupervisor] = useState(supervisorOptions[0]);
-  const [selectedDepartment, setSelectedDepartment] = useState(modalDepartmentOptions[0]);
+  const [pageFeedback, setPageFeedback] = useState(null);
+  const [profileFeedback, setProfileFeedback] = useState(null);
+  const [evaluationFeedback, setEvaluationFeedback] = useState(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isSavingEvaluation, setIsSavingEvaluation] = useState(false);
+  const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 7;
+  const filterForm = useFormValidation(
+    {
+      searchTerm: '',
+      statusFilter: 'All',
+      departmentFilter: 'All',
+    },
+    {
+      searchTerm: [maxLength(100)],
+      statusFilter: [oneOf(statusOptions)],
+      departmentFilter: [oneOf(departmentOptions)],
+    }
+  );
+  const profileForm = useFormValidation(
+    {
+      department: modalDepartmentOptions[0],
+      supervisor: supervisorOptions[0],
+    },
+    {
+      department: [required(), oneOf(modalDepartmentOptions)],
+      supervisor: [required(), oneOf(supervisorOptions)],
+    }
+  );
+  const evaluationForm = useFormValidation(
+    {
+      evaluationPeriod: 'Weekly',
+      selectedPeriod: 'Week 1 - January 2024',
+      adminComments: '',
+    },
+    {
+      evaluationPeriod: [required()],
+      selectedPeriod: [required()],
+      adminComments: [maxLength(1000)],
+    }
+  );
 
   const filteredInterns = interns.filter((intern) => {
-    const normalizedStatus = statusFilter.toLowerCase();
-    const normalizedDepartment = departmentFilter.toLowerCase();
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const normalizedStatus = filterForm.values.statusFilter.toLowerCase();
+    const normalizedDepartment = filterForm.values.departmentFilter.toLowerCase();
+    const normalizedSearch = filterForm.values.searchTerm.trim().toLowerCase();
     const matchesStatus =
       normalizedStatus === 'all' || intern.status.toLowerCase() === normalizedStatus;
     const matchesDepartment =
@@ -213,16 +377,33 @@ function InternManagement() {
       intern.email.toLowerCase().includes(normalizedSearch);
     return matchesStatus && matchesDepartment && matchesSearch;
   });
+  const totalPages = Math.max(1, Math.ceil(filteredInterns.length / rowsPerPage));
+  const paginatedInterns = filteredInterns.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+    const start = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    return start + index;
+  }).filter((page) => page <= totalPages);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterForm.values.searchTerm, filterForm.values.statusFilter, filterForm.values.departmentFilter]);
 
   const handleOpenProfile = (intern) => {
     setActiveIntern(intern);
-    setSelectedSupervisor(intern.supervisor || supervisorOptions[0]);
-    setSelectedDepartment(intern.department || modalDepartmentOptions[0]);
+    profileForm.resetForm({
+      supervisor: intern.supervisor || supervisorOptions[0],
+      department: intern.department || modalDepartmentOptions[0],
+    });
     setIsProfileOpen(true);
   };
 
   const handleCloseProfile = () => {
     setIsProfileOpen(false);
+    profileForm.resetForm();
+    setProfileFeedback(null);
   };
 
   const handleOpenPerformance = (intern) => {
@@ -237,10 +418,13 @@ function InternManagement() {
   const handleOpenEvaluation = (intern) => {
     setEvaluationIntern(intern);
     setIsEvaluationOpen(true);
+    evaluationForm.resetForm();
   };
 
   const handleCloseEvaluation = () => {
     setIsEvaluationOpen(false);
+    evaluationForm.resetForm();
+    setEvaluationFeedback(null);
   };
 
   const handleOpenHistory = () => {
@@ -251,9 +435,66 @@ function InternManagement() {
   const handleCloseHistory = () => {
     setIsHistoryOpen(false);
   };
+  const handleSaveProfile = async () => {
+    const nextErrors = profileForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsSavingProfile(true);
+    setProfileFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsProfileOpen(false);
+      setPageFeedback({ type: 'success', message: 'Profile updated successfully.' });
+    } catch (error) {
+      setProfileFeedback({ type: 'error', message: 'Unable to save profile changes.' });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+  const handleSaveEvaluation = async () => {
+    const nextErrors = evaluationForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsSavingEvaluation(true);
+    setEvaluationFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setEvaluationFeedback({ type: 'success', message: 'Evaluation saved successfully.' });
+    } catch (error) {
+      setEvaluationFeedback({ type: 'error', message: 'Unable to save evaluation.' });
+    } finally {
+      setIsSavingEvaluation(false);
+    }
+  };
+
+  const handleConfirmDeactivate = async () => {
+    if (!activeIntern) {
+      return;
+    }
+    setIsDeactivating(true);
+    setProfileFeedback(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsProfileOpen(false);
+      setIsDeactivateOpen(false);
+      setPageFeedback({ type: 'success', message: `${activeIntern.name} has been set to inactive.` });
+    } catch (error) {
+      setProfileFeedback({ type: 'error', message: 'Unable to deactivate intern. Please try again.' });
+    } finally {
+      setIsDeactivating(false);
+    }
+  };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
+      <Toast
+        type={pageFeedback?.type}
+        message={pageFeedback?.message}
+        onDismiss={() => setPageFeedback(null)}
+      />
       {isProfileOpen && activeIntern && (
         <Modal
           isOpen={isProfileOpen}
@@ -271,6 +512,11 @@ function InternManagement() {
                 <X className="h-4 w-4" />
               </button>
             </div>
+            <Toast
+              type={profileFeedback?.type}
+              message={profileFeedback?.message}
+              onDismiss={() => setProfileFeedback(null)}
+            />
 
             <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-start">
               <div className="flex items-start gap-3">
@@ -297,9 +543,11 @@ function InternManagement() {
                     <Briefcase className="h-4 w-4 text-slate-400" />
                     <ModalSelect
                       label="Department:"
-                      value={selectedDepartment}
+                    value={profileForm.values.department}
                       options={modalDepartmentOptions}
-                      onChange={setSelectedDepartment}
+                    onChange={(value) => profileForm.handleChange('department', value)}
+                    onBlur={() => profileForm.handleBlur('department')}
+                    error={profileForm.errors.department}
                     />
                   </div>
                 </div>
@@ -310,9 +558,11 @@ function InternManagement() {
                   <User className="h-4 w-4 text-slate-400" />
                   <ModalSelect
                     label="Supervisor:"
-                    value={selectedSupervisor}
+                    value={profileForm.values.supervisor}
                     options={supervisorOptions}
-                    onChange={setSelectedSupervisor}
+                    onChange={(value) => profileForm.handleChange('supervisor', value)}
+                    onBlur={() => profileForm.handleBlur('supervisor')}
+                    error={profileForm.errors.supervisor}
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -384,16 +634,23 @@ function InternManagement() {
             <div className="mt-6 flex items-center justify-center gap-3">
               <button
                 type="button"
-                className="rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"
-                onClick={handleCloseProfile}
+                className={`rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 ${
+                  isSavingProfile ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                onClick={handleSaveProfile}
+                disabled={isSavingProfile}
               >
-                Save Profile
+                {isSavingProfile ? 'Saving...' : 'Save Profile'}
               </button>
               <button
                 type="button"
-                className="rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-100"
+                className={`rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-100 ${
+                  isDeactivating ? 'cursor-not-allowed opacity-70' : ''
+                }`}
+                onClick={() => setIsDeactivateOpen(true)}
+                disabled={isDeactivating}
               >
-                Inactive
+                {isDeactivating ? 'Updating...' : 'Inactive'}
               </button>
             </div>
         </Modal>
@@ -575,25 +832,45 @@ function InternManagement() {
                 </button>
               </div>
             </div>
+            <Toast
+              type={evaluationFeedback?.type}
+              message={evaluationFeedback?.message}
+              onDismiss={() => setEvaluationFeedback(null)}
+            />
 
             <div className="mt-4 grid gap-5 lg:grid-cols-[1.5fr_1fr]">
               <div className="space-y-5 rounded-xl border border-slate-200 p-5 text-sm text-slate-700">
                 <div className="flex flex-wrap items-center gap-4">
                   <label className="flex items-center gap-2">
                     Evaluation Period
-                    <select className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700">
+                    <select
+                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
+                      value={evaluationForm.values.evaluationPeriod}
+                      onChange={(event) => evaluationForm.handleChange('evaluationPeriod', event.target.value)}
+                      onBlur={() => evaluationForm.handleBlur('evaluationPeriod')}
+                    >
                       <option>Weekly</option>
                       <option>Monthly</option>
                     </select>
                   </label>
                   <label className="flex items-center gap-2">
                     Select Period
-                    <select className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700">
+                    <select
+                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
+                      value={evaluationForm.values.selectedPeriod}
+                      onChange={(event) => evaluationForm.handleChange('selectedPeriod', event.target.value)}
+                      onBlur={() => evaluationForm.handleBlur('selectedPeriod')}
+                    >
                       <option>Week 1 - January 2024</option>
                       <option>Week 2 - January 2024</option>
                     </select>
                   </label>
                 </div>
+                {(evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod) && (
+                  <p className="text-xs text-red-500">
+                    {evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod}
+                  </p>
+                )}
 
                 <div className="space-y-4">
                   {['Technical Skills', 'Communication', 'Professionalism', 'Technical Skills', 'Technical Skills'].map(
@@ -623,15 +900,25 @@ function InternManagement() {
                     rows={3}
                     className="mt-2 w-full rounded-md border border-slate-300 p-3 text-sm text-slate-700"
                     placeholder="Add feedback..."
+                    value={evaluationForm.values.adminComments}
+                    onChange={(event) => evaluationForm.handleChange('adminComments', event.target.value)}
+                    onBlur={() => evaluationForm.handleBlur('adminComments')}
                   />
+                  {evaluationForm.errors.adminComments && (
+                    <p className="mt-2 text-xs text-red-500">{evaluationForm.errors.adminComments}</p>
+                  )}
                 </div>
 
                 <div className="flex justify-end">
                   <button
                     type="button"
-                    className="rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white"
+                    onClick={handleSaveEvaluation}
+                    className={`rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white ${
+                      isSavingEvaluation ? 'cursor-not-allowed opacity-70' : ''
+                    }`}
+                    disabled={isSavingEvaluation}
                   >
-                    Save Evaluation
+                    {isSavingEvaluation ? 'Saving...' : 'Save Evaluation'}
                   </button>
                 </div>
               </div>
@@ -798,23 +1085,31 @@ function InternManagement() {
                 type="text"
                 placeholder="Search by name or email..."
                 className="w-full rounded-lg border border-slate-300 bg-slate-200 py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
+                value={filterForm.values.searchTerm}
+                onChange={(event) => filterForm.handleChange('searchTerm', event.target.value)}
+                onBlur={() => filterForm.handleBlur('searchTerm')}
               />
+              {filterForm.errors.searchTerm && (
+                <p className="mt-1 text-xs text-red-500">{filterForm.errors.searchTerm}</p>
+              )}
             </div>
           </div>
           <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
             <FilterSelect
               label="Status"
-              value={statusFilter}
+              value={filterForm.values.statusFilter}
               options={statusOptions}
-              onChange={setStatusFilter}
+              onChange={(value) => filterForm.handleChange('statusFilter', value)}
+              onBlur={() => filterForm.handleBlur('statusFilter')}
+              error={filterForm.errors.statusFilter}
             />
             <FilterSelect
               label="Department"
-              value={departmentFilter}
+              value={filterForm.values.departmentFilter}
               options={departmentOptions}
-              onChange={setDepartmentFilter}
+              onChange={(value) => filterForm.handleChange('departmentFilter', value)}
+              onBlur={() => filterForm.handleBlur('departmentFilter')}
+              error={filterForm.errors.departmentFilter}
             />
           </div>
         </div>
@@ -823,10 +1118,14 @@ function InternManagement() {
       <DataTable
         footer={
           <Pagination
-            currentPage={1}
-            totalPages={100}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pages={pageNumbers}
             variant="amber"
             className="border-t border-slate-700 bg-slate-800 px-6 py-4 text-sm text-slate-400 md:gap-4"
+            onPageChange={setCurrentPage}
+            onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           />
         }
       >
@@ -843,7 +1142,7 @@ function InternManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
-            {filteredInterns.map((intern) => (
+            {paginatedInterns.map((intern) => (
               <tr key={intern.id} className="hover:bg-slate-700/60">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
@@ -868,7 +1167,7 @@ function InternManagement() {
                       aria-label="View"
                       onClick={() => handleOpenProfile(intern)}
                     >
-                      <Eye className="h-4 w-4" />
+                      <UserPen className="h-4 w-4" />
                     </button>
                     <button
                       type="button"
@@ -884,7 +1183,7 @@ function InternManagement() {
                       aria-label="Edit"
                       onClick={() => handleOpenEvaluation(intern)}
                     >
-                      <Edit3 className="h-4 w-4" />
+                      <ClipboardPen className="h-4 w-4" />
                     </button>
                   </div>
                 </td>
@@ -893,7 +1192,22 @@ function InternManagement() {
           </tbody>
         </table>
       </DataTable>
-    </div>
+      </div>
+      <ConfirmDialog
+        isOpen={isDeactivateOpen}
+        title="Set intern to inactive?"
+        description={
+          activeIntern
+            ? `This will mark ${activeIntern.name} as inactive.`
+            : 'This will mark the intern as inactive.'
+        }
+        confirmLabel="Set Inactive"
+        tone="danger"
+        onCancel={() => setIsDeactivateOpen(false)}
+        onConfirm={handleConfirmDeactivate}
+        isProcessing={isDeactivating}
+      />
+    </>
   );
 }
 
