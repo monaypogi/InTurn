@@ -12,6 +12,7 @@ export default function AttendanceTracker() {
     record => record.work_date === todayStr
   );
 
+  console.log(todayRecord)
  const [toast, setToast] = useState({
   show: false,
   message: "",
@@ -62,7 +63,7 @@ return (
 
             <div className="attendance-row">
               <span className="label">Time in:</span>
-              <span>{todayRecord?.timeIn || "—"}</span>
+              <span>{todayRecord?.time_in || "—"}</span>
             </div>
 
             <div className="attendance-row muted">
@@ -78,7 +79,7 @@ return (
               <div>
                 <p className="metric-label">Time in</p>
                 <p className="metric-value">
-                  {todayRecord?.timeIn || "--"}
+                  {todayRecord?.time_in || "--"}
                 </p>
               </div>
             </div>
