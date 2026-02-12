@@ -46,8 +46,8 @@ function AttendanceMonitoring() {
     validateForm,
   } = useFormValidation(
     {
-      startDate: '04 / 21 / 2026',
-      endDate: '06 / 24 / 2026',
+      startDate: '2026-04-21',
+      endDate: '2026-06-24',
       reportType: 'Present - On Time',
     },
     {
@@ -218,13 +218,12 @@ function AttendanceMonitoring() {
                 </label>
                 <div className="relative">
                   <input
-                    type="text"
+                    type="date"
                     value={values.startDate}
                     onChange={(event) => handleChange('startDate', event.target.value)}
                     onBlur={() => handleBlur('startDate')}
-                    className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
+                    className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 px-3 text-slate-100"
                   />
-                  <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
                 {errors.startDate && <p className="mt-1 text-xs text-red-400">{errors.startDate}</p>}
               </div>
@@ -234,13 +233,12 @@ function AttendanceMonitoring() {
                 </label>
                 <div className="relative">
                   <input
-                    type="text"
+                    type="date"
                     value={values.endDate}
                     onChange={(event) => handleChange('endDate', event.target.value)}
                     onBlur={() => handleBlur('endDate')}
-                    className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 pl-3 pr-10 text-slate-100"
+                    className="w-full rounded-lg border border-slate-600 bg-slate-700 py-2.5 px-3 text-slate-100"
                   />
-                  <Calendar className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
                 {errors.endDate && <p className="mt-1 text-xs text-red-400">{errors.endDate}</p>}
               </div>

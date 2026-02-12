@@ -128,6 +128,8 @@ function DashboardHome({ currentTime }) {
 }
 
 function ManageInternsCard({ interns }) {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-slate-800 border border-slate-600 rounded-xl overflow-hidden">
       <h2 className="px-6 py-4 text-lg font-semibold border-b border-slate-600">Manage Interns</h2>
@@ -156,6 +158,7 @@ function ManageInternsCard({ interns }) {
               </div>
               <button
                 type="button"
+                onClick={() => navigate('/admin/interns')}
                 className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 sm:w-auto"
               >
                 Manage
@@ -169,6 +172,8 @@ function ManageInternsCard({ interns }) {
 }
 
 function RecentSubmissionsCard({ submissions }) {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-slate-800 border border-slate-600 rounded-xl overflow-hidden">
       <h2 className="px-6 py-4 text-lg font-semibold border-b border-slate-600">Recent Submissions</h2>
@@ -190,6 +195,7 @@ function RecentSubmissionsCard({ submissions }) {
               </div>
               <button
                 type="button"
+                onClick={() => navigate('/admin/reports')}
                 className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 sm:w-auto"
               >
                 Review

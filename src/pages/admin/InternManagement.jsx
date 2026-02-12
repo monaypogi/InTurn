@@ -311,6 +311,123 @@ function InternManagement() {
     { type: 'Document', file: 'Wilson_ID.pdf', submitted: '2026-01-21', status: 'Verified' },
     { type: 'Document', file: 'Wilson_MOA.pdf', submitted: '2026-01-22', status: 'Verified' },
   ];
+  const weekOptions = [
+    'Jan 6 - Jan 10, 2026',
+    'Jan 13 - Jan 17, 2026',
+    'Jan 20 - Jan 24, 2026',
+    'Jan 27 - Jan 31, 2026',
+    'Feb 3 - Feb 7, 2026',
+    'Feb 10 - Feb 12, 2026',
+  ];
+  const weeklyEvaluationData = {
+    'Jan 6 - Jan 10, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Jan 6', status: 'Present' },
+        { day: 'Tue', date: 'Jan 7', status: 'Present' },
+        { day: 'Wed', date: 'Jan 8', status: 'Late' },
+        { day: 'Thu', date: 'Jan 9', status: 'Present' },
+        { day: 'Fri', date: 'Jan 10', status: 'Present' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Jan 6', status: 'Submitted' },
+        { day: 'Tue', date: 'Jan 7', status: 'Submitted' },
+        { day: 'Wed', date: 'Jan 8', status: 'Submitted' },
+        { day: 'Thu', date: 'Jan 9', status: 'Missing' },
+        { day: 'Fri', date: 'Jan 10', status: 'Submitted' },
+      ],
+    },
+    'Jan 13 - Jan 17, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Jan 13', status: 'Present' },
+        { day: 'Tue', date: 'Jan 14', status: 'Present' },
+        { day: 'Wed', date: 'Jan 15', status: 'Present' },
+        { day: 'Thu', date: 'Jan 16', status: 'Absent' },
+        { day: 'Fri', date: 'Jan 17', status: 'Present' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Jan 13', status: 'Submitted' },
+        { day: 'Tue', date: 'Jan 14', status: 'Submitted' },
+        { day: 'Wed', date: 'Jan 15', status: 'Missing' },
+        { day: 'Thu', date: 'Jan 16', status: 'Missing' },
+        { day: 'Fri', date: 'Jan 17', status: 'Submitted' },
+      ],
+    },
+    'Jan 20 - Jan 24, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Jan 20', status: 'Present' },
+        { day: 'Tue', date: 'Jan 21', status: 'Present' },
+        { day: 'Wed', date: 'Jan 22', status: 'Present' },
+        { day: 'Thu', date: 'Jan 23', status: 'Present' },
+        { day: 'Fri', date: 'Jan 24', status: 'Late' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Jan 20', status: 'Submitted' },
+        { day: 'Tue', date: 'Jan 21', status: 'Submitted' },
+        { day: 'Wed', date: 'Jan 22', status: 'Submitted' },
+        { day: 'Thu', date: 'Jan 23', status: 'Submitted' },
+        { day: 'Fri', date: 'Jan 24', status: 'Submitted' },
+      ],
+    },
+    'Jan 27 - Jan 31, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Jan 27', status: 'Present' },
+        { day: 'Tue', date: 'Jan 28', status: 'Late' },
+        { day: 'Wed', date: 'Jan 29', status: 'Present' },
+        { day: 'Thu', date: 'Jan 30', status: 'Present' },
+        { day: 'Fri', date: 'Jan 31', status: 'Present' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Jan 27', status: 'Submitted' },
+        { day: 'Tue', date: 'Jan 28', status: 'Submitted' },
+        { day: 'Wed', date: 'Jan 29', status: 'Missing' },
+        { day: 'Thu', date: 'Jan 30', status: 'Submitted' },
+        { day: 'Fri', date: 'Jan 31', status: 'Submitted' },
+      ],
+    },
+    'Feb 3 - Feb 7, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Feb 3', status: 'Present' },
+        { day: 'Tue', date: 'Feb 4', status: 'Present' },
+        { day: 'Wed', date: 'Feb 5', status: 'Present' },
+        { day: 'Thu', date: 'Feb 6', status: 'Present' },
+        { day: 'Fri', date: 'Feb 7', status: 'Present' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Feb 3', status: 'Submitted' },
+        { day: 'Tue', date: 'Feb 4', status: 'Submitted' },
+        { day: 'Wed', date: 'Feb 5', status: 'Submitted' },
+        { day: 'Thu', date: 'Feb 6', status: 'Submitted' },
+        { day: 'Fri', date: 'Feb 7', status: 'Submitted' },
+      ],
+    },
+    'Feb 10 - Feb 12, 2026': {
+      attendance: [
+        { day: 'Mon', date: 'Feb 10', status: 'Present' },
+        { day: 'Tue', date: 'Feb 11', status: 'Late' },
+        { day: 'Wed', date: 'Feb 12', status: 'Present' },
+      ],
+      reports: [
+        { day: 'Mon', date: 'Feb 10', status: 'Submitted' },
+        { day: 'Tue', date: 'Feb 11', status: 'Submitted' },
+        { day: 'Wed', date: 'Feb 12', status: 'Missing' },
+      ],
+    },
+  };
+  const overallStats = {
+    totalWorkingDays: 28,
+    daysPresent: 24,
+    daysAbsent: 1,
+    tardiness: 4,
+    reportsSubmitted: 24,
+  };
+  const recentActivityItems = [
+    { label: 'Submitted daily report', color: 'bg-emerald-500', timestamp: 'Feb 12, 2026 - 4:55 PM' },
+    { label: 'Arrived late (15 minutes)', color: 'bg-amber-500', timestamp: 'Feb 11, 2026 - 9:15 AM' },
+    { label: 'Submitted daily report', color: 'bg-emerald-500', timestamp: 'Feb 11, 2026 - 5:02 PM' },
+    { label: 'Absent - no attendance recorded', color: 'bg-rose-500', timestamp: 'Feb 10, 2026' },
+    { label: 'Daily report missing', color: 'bg-rose-500', timestamp: 'Feb 10, 2026' },
+    { label: 'Submitted daily report', color: 'bg-emerald-500', timestamp: 'Feb 7, 2026 - 4:48 PM' },
+  ];
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeIntern, setActiveIntern] = useState(null);
   const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
@@ -318,12 +435,15 @@ function InternManagement() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [evaluationIntern, setEvaluationIntern] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [historyOrigin, setHistoryOrigin] = useState(null);
   const [pageFeedback, setPageFeedback] = useState(null);
   const [profileFeedback, setProfileFeedback] = useState(null);
   const [evaluationFeedback, setEvaluationFeedback] = useState(null);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingEvaluation, setIsSavingEvaluation] = useState(false);
   const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isAttendanceExpanded, setIsAttendanceExpanded] = useState(false);
+  const [isDocumentsExpanded, setIsDocumentsExpanded] = useState(false);
   const [isDeactivating, setIsDeactivating] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
@@ -351,13 +471,11 @@ function InternManagement() {
   );
   const evaluationForm = useFormValidation(
     {
-      evaluationPeriod: 'Weekly',
-      selectedPeriod: 'Week 1 - January 2024',
+      selectedWeek: weekOptions[0],
       adminComments: '',
     },
     {
-      evaluationPeriod: [required()],
-      selectedPeriod: [required()],
+      selectedWeek: [required()],
       adminComments: [maxLength(1000)],
     }
   );
@@ -430,11 +548,13 @@ function InternManagement() {
 
   const handleOpenHistory = () => {
     setIsEvaluationOpen(false);
+    setHistoryOrigin('evaluation');
     setIsHistoryOpen(true);
   };
 
   const handleCloseHistory = () => {
     setIsHistoryOpen(false);
+    setHistoryOrigin(null);
   };
   const handleSaveProfile = async () => {
     const nextErrors = profileForm.validateForm();
@@ -579,57 +699,75 @@ function InternManagement() {
             </div>
 
             <div className="mt-6 rounded-xl border border-slate-200">
-              <div className="rounded-t-xl bg-slate-600 px-4 py-2 text-xs font-semibold uppercase text-white">
-                Recent Attendance
-              </div>
-              <div className="max-h-40 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
-                <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
-                  <span>Date</span>
-                  <span>Time In</span>
-                  <span>Time Out</span>
-                  <span>Status</span>
-                </div>
-                {attendanceRecords.map((record) => (
-                  <div key={`${record.date}-${record.timeIn}`} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
-                    <span>{record.date}</span>
-                    <span>{record.timeIn}</span>
-                    <span>{record.timeOut}</span>
-                    <span
-                      className={`inline-flex w-fit rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                        record.status === 'Late'
-                          ? 'bg-amber-100 text-amber-600'
-                          : 'bg-emerald-100 text-emerald-600'
-                      }`}
-                    >
-                      {record.status}
-                    </span>
+              <button
+                type="button"
+                onClick={() => setIsAttendanceExpanded((prev) => !prev)}
+                className="flex w-full items-center justify-between rounded-t-xl bg-slate-600 px-4 py-2 text-xs font-semibold uppercase text-white"
+              >
+                <span>Recent Attendance</span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${isAttendanceExpanded ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {isAttendanceExpanded && (
+                <div className="max-h-60 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
+                  <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
+                    <span>Date</span>
+                    <span>Time In</span>
+                    <span>Time Out</span>
+                    <span>Status</span>
                   </div>
-                ))}
-              </div>
+                  {attendanceRecords.map((record) => (
+                    <div key={`${record.date}-${record.timeIn}`} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
+                      <span>{record.date}</span>
+                      <span>{record.timeIn}</span>
+                      <span>{record.timeOut}</span>
+                      <span
+                        className={`inline-flex w-fit rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                          record.status === 'Late'
+                            ? 'bg-amber-100 text-amber-600'
+                            : 'bg-emerald-100 text-emerald-600'
+                        }`}
+                      >
+                        {record.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="mt-4 rounded-xl border border-slate-200">
-              <div className="rounded-t-xl bg-slate-600 px-4 py-2 text-xs font-semibold uppercase text-white">
-                Document Verification
-              </div>
-              <div className="max-h-40 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
-                <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
-                  <span>Type</span>
-                  <span>File Name</span>
-                  <span>Date Submitted</span>
-                  <span>Status</span>
-                </div>
-                {documentRecords.map((record) => (
-                  <div key={record.file} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
-                    <span>{record.type}</span>
-                    <span>{record.file}</span>
-                    <span>{record.submitted}</span>
-                    <span className="inline-flex w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">
-                      {record.status}
-                    </span>
+              <button
+                type="button"
+                onClick={() => setIsDocumentsExpanded((prev) => !prev)}
+                className="flex w-full items-center justify-between rounded-t-xl bg-slate-600 px-4 py-2 text-xs font-semibold uppercase text-white"
+              >
+                <span>Document Verification</span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${isDocumentsExpanded ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {isDocumentsExpanded && (
+                <div className="max-h-60 divide-y divide-slate-200 overflow-y-auto text-xs text-slate-600">
+                  <div className="sticky top-0 grid grid-cols-2 gap-2 bg-slate-100 px-4 py-2 font-semibold text-slate-500 sm:grid-cols-4">
+                    <span>Type</span>
+                    <span>File Name</span>
+                    <span>Date Submitted</span>
+                    <span>Status</span>
                   </div>
-                ))}
-              </div>
+                  {documentRecords.map((record) => (
+                    <div key={record.file} className="grid grid-cols-2 gap-2 px-4 py-2 sm:grid-cols-4">
+                      <span>{record.type}</span>
+                      <span>{record.file}</span>
+                      <span>{record.submitted}</span>
+                      <span className="inline-flex w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">
+                        {record.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -758,10 +896,15 @@ function InternManagement() {
               <button
                 type="button"
                 className="flex items-center gap-2 rounded-full bg-slate-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
-                onClick={handleClosePerformance}
+                onClick={() => {
+                  setEvaluationIntern(performanceIntern);
+                  setIsPerformanceOpen(false);
+                  setHistoryOrigin('performance');
+                  setIsHistoryOpen(true);
+                }}
               >
-                <Plus className="h-4 w-4" />
-                New Evaluation
+                <ClipboardPen className="h-4 w-4" />
+                View Evaluation History
               </button>
             </div>
         </Modal>
@@ -814,25 +957,6 @@ function InternManagement() {
               </button>
             </div>
 
-            <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <h3 className="text-base font-semibold text-slate-800">Performance Rating (Week 1)</h3>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
-                  onClick={handleOpenHistory}
-                >
-                  Evaluation History
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center gap-2 rounded-md bg-slate-700 px-3 py-2 text-xs font-semibold text-white"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  New Evaluation
-                </button>
-              </div>
-            </div>
             <Toast
               type={evaluationFeedback?.type}
               message={evaluationFeedback?.message}
@@ -840,66 +964,70 @@ function InternManagement() {
             />
 
             <div className="mt-4 grid gap-5 lg:grid-cols-[1.5fr_1fr]">
-              <div className="space-y-5 rounded-xl border border-slate-200 p-5 text-sm text-slate-700">
-                <div className="flex flex-wrap items-center gap-4">
-                  <label className="flex items-center gap-2">
-                    Evaluation Period
-                    <select
-                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
-                      value={evaluationForm.values.evaluationPeriod}
-                      onChange={(event) => evaluationForm.handleChange('evaluationPeriod', event.target.value)}
-                      onBlur={() => evaluationForm.handleBlur('evaluationPeriod')}
-                    >
-                      <option>Weekly</option>
-                      <option>Monthly</option>
-                    </select>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    Select Period
-                    <select
-                      className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
-                      value={evaluationForm.values.selectedPeriod}
-                      onChange={(event) => evaluationForm.handleChange('selectedPeriod', event.target.value)}
-                      onBlur={() => evaluationForm.handleBlur('selectedPeriod')}
-                    >
-                      <option>Week 1 - January 2024</option>
-                      <option>Week 2 - January 2024</option>
-                    </select>
-                  </label>
-                </div>
-                {(evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod) && (
-                  <p className="text-xs text-red-500">
-                    {evaluationForm.errors.evaluationPeriod || evaluationForm.errors.selectedPeriod}
-                  </p>
+              <div className="space-y-5 rounded-xl border border-slate-200 p-5 text-slate-700">
+                <h3 className="text-base font-semibold text-slate-800">Weekly Evaluation</h3>
+                <label className="flex items-center gap-2">
+                  <span className="font-semibold text-slate-800">Select Week</span>
+                  <select
+                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm font-semibold text-slate-700"
+                    value={evaluationForm.values.selectedWeek}
+                    onChange={(event) => evaluationForm.handleChange('selectedWeek', event.target.value)}
+                    onBlur={() => evaluationForm.handleBlur('selectedWeek')}
+                  >
+                    {weekOptions.map((week) => (
+                      <option key={week} value={week}>{week}</option>
+                    ))}
+                  </select>
+                </label>
+                {evaluationForm.errors.selectedWeek && (
+                  <p className="text-xs text-red-500">{evaluationForm.errors.selectedWeek}</p>
                 )}
 
-                <div className="space-y-4">
-                  {['Technical Skills', 'Communication', 'Professionalism', 'Technical Skills', 'Technical Skills'].map(
-                    (label, index) => (
-                      <div key={`${label}-${index}`} className="flex items-center justify-between">
-                        <span>{label}</span>
-                        <div className="flex items-center gap-1">
-                          {[1, 2, 3, 4, 5].map((value) => (
-                            <span
-                              key={value}
-                              className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
-                                value <= 4 ? 'bg-slate-800 text-white' : 'border border-slate-300 text-slate-500'
-                              }`}
-                            >
-                              {value}
-                            </span>
-                          ))}
+                {weeklyEvaluationData[evaluationForm.values.selectedWeek] && (() => {
+                  const weekData = weeklyEvaluationData[evaluationForm.values.selectedWeek];
+                  const presentCount = weekData.attendance.filter((d) => d.status === 'Present' || d.status === 'Late').length;
+                  const lateCount = weekData.attendance.filter((d) => d.status === 'Late').length;
+                  const absentCount = weekData.attendance.filter((d) => d.status === 'Absent').length;
+                  const totalDays = weekData.attendance.length;
+                  const submittedCount = weekData.reports.filter((d) => d.status === 'Submitted').length;
+                  const attendanceRate = totalDays > 0 ? (presentCount / totalDays) * 100 : 0;
+                  const submissionRate = totalDays > 0 ? (submittedCount / totalDays) * 100 : 0;
+                  const weeklyScore = Math.round((attendanceRate + submissionRate) / 2);
+                  return (
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800">Attendance Summary</p>
+                        <div className="mt-1.5 space-y-1 text-sm text-slate-600">
+                          <p>Present: <span className="font-semibold text-emerald-700">{presentCount}/{totalDays} days</span></p>
+                          {lateCount > 0 && <p>Late: <span className="font-semibold text-amber-700">{lateCount} occurrence{lateCount > 1 ? 's' : ''}</span></p>}
+                          {absentCount > 0 && <p>Absent: <span className="font-semibold text-rose-700">{absentCount} day{absentCount > 1 ? 's' : ''}</span></p>}
                         </div>
                       </div>
-                    )
-                  )}
-                </div>
+
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800">Daily Report Submission</p>
+                        <div className="mt-1.5 text-sm text-slate-600">
+                          <p>Submitted: <span className="font-semibold text-emerald-700">{submittedCount}/{totalDays} reports</span></p>
+                          {totalDays - submittedCount > 0 && (
+                            <p>Missing: <span className="font-semibold text-rose-700">{totalDays - submittedCount} report{totalDays - submittedCount > 1 ? 's' : ''}</span></p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+                        <p className="text-xs text-slate-500">Weekly Score</p>
+                        <p className="text-2xl font-semibold text-slate-800">{weeklyScore}%</p>
+                        <p className="text-xs text-slate-500">Based on attendance ({Math.round(attendanceRate)}%) and submission ({Math.round(submissionRate)}%)</p>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 <div>
-                  <p className="font-semibold text-slate-800">Admin Comments</p>
+                  <p className="text-sm font-semibold text-slate-800">Admin Comments</p>
                   <textarea
                     rows={3}
-                    className="mt-2 w-full rounded-md border border-slate-300 p-3 text-sm text-slate-700"
+                    className="mt-2 w-full rounded-md border border-slate-300 bg-white p-3 text-sm text-slate-700"
                     placeholder="Add feedback..."
                     value={evaluationForm.values.adminComments}
                     onChange={(event) => evaluationForm.handleChange('adminComments', event.target.value)}
@@ -910,7 +1038,14 @@ function InternManagement() {
                   )}
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                    onClick={handleOpenHistory}
+                  >
+                    Evaluation History
+                  </button>
                   <button
                     type="button"
                     onClick={handleSaveEvaluation}
@@ -924,75 +1059,46 @@ function InternManagement() {
                 </div>
               </div>
 
-              <div className="space-y-5 text-sm text-slate-700">
-                <div className="rounded-xl border border-slate-200 p-5 text-center">
-                  <p className="text-sm font-semibold text-slate-500">Overall Average Rating</p>
-                  <div className="mt-2 text-3xl font-semibold text-slate-800">4.2</div>
-                  <div className="mt-1 flex justify-center text-amber-400">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} className="h-5 w-5" />
-                    ))}
-                  </div>
-                </div>
+              <div className="space-y-5 rounded-xl border border-slate-200 p-5 text-sm text-slate-700">
+                <h3 className="text-base font-semibold text-slate-800">Overall Evaluation <span className="font-normal text-xs text-slate-500">(since start date)</span></h3>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
-                    <p className="text-sm font-semibold text-emerald-700">Days of Present</p>
-                    <p className="mt-1 text-xl font-semibold text-emerald-700">18</p>
-                    <p className="text-xs text-emerald-600">Out of 20 days</p>
+                    <p className="text-sm font-semibold text-emerald-700">Days Present</p>
+                    <p className="mt-1 text-xl font-semibold text-emerald-700">{overallStats.daysPresent}</p>
+                    <p className="text-xs text-emerald-600">Out of {overallStats.totalWorkingDays} days</p>
                   </div>
                   <div className="rounded-xl border border-rose-200 bg-rose-50 p-3">
-                    <p className="text-sm font-semibold text-rose-700">Days of Absence</p>
-                    <p className="mt-1 text-xl font-semibold text-rose-700">2</p>
-                    <p className="text-xs text-rose-600">Out of 20 days</p>
+                    <p className="text-sm font-semibold text-rose-700">Days Absent</p>
+                    <p className="mt-1 text-xl font-semibold text-rose-700">{overallStats.daysAbsent}</p>
+                    <p className="text-xs text-rose-600">Out of {overallStats.totalWorkingDays} days</p>
                   </div>
                   <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
                     <p className="text-sm font-semibold text-amber-700">Tardiness</p>
-                    <p className="mt-1 text-xl font-semibold text-amber-700">3</p>
+                    <p className="mt-1 text-xl font-semibold text-amber-700">{overallStats.tardiness}</p>
                     <p className="text-xs text-amber-600">Late occurrences</p>
                   </div>
                   <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-3">
-                    <p className="text-sm font-semibold text-indigo-700">On-Time Task</p>
-                    <p className="mt-1 text-xl font-semibold text-indigo-700">92%</p>
-                    <p className="text-xs text-indigo-600">On schedule</p>
+                    <p className="text-sm font-semibold text-indigo-700">Report Submission Rate</p>
+                    <p className="mt-1 text-xl font-semibold text-indigo-700">
+                      {Math.round((overallStats.reportsSubmitted / overallStats.totalWorkingDays) * 100)}%
+                    </p>
+                    <p className="text-xs text-indigo-600">{overallStats.reportsSubmitted}/{overallStats.totalWorkingDays} reports</p>
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 p-5 text-sm text-slate-600">
-                  <p className="font-semibold text-slate-700">Task Submission Details</p>
-                  <ul className="mt-2 space-y-2">
-                    <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      On-Time
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-amber-500" />
-                      Late Submission
-                    </li>
-                  </ul>
-                  <div className="mt-3 h-1 rounded-full bg-slate-200">
-                    <div className="h-1 w-3/4 rounded-full bg-emerald-500" />
-                  </div>
-                  <div className="mt-1 h-1 rounded-full bg-slate-200">
-                    <div className="h-1 w-1/4 rounded-full bg-amber-500" />
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 p-5 text-sm text-slate-600">
-                  <p className="font-semibold text-slate-700">Recent Activity</p>
-                  <ul className="mt-2 space-y-2">
-                    <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      Completed task: Frontend Dashboard
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-amber-500" />
-                      Arrived late (15 minutes)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      Submitted API Documentation
-                    </li>
+                <div>
+                  <p className="text-sm font-semibold text-slate-700">Recent Activity</p>
+                  <ul className="mt-3 space-y-3">
+                    {recentActivityItems.map((item, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${item.color}`} />
+                        <div>
+                          <p className="text-sm text-slate-700">{item.label}</p>
+                          <p className="text-xs text-slate-400">{item.timestamp}</p>
+                        </div>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -1005,7 +1111,7 @@ function InternManagement() {
           isOpen={isHistoryOpen}
           overlayClassName="bg-slate-900/60 backdrop-blur-sm"
           containerClassName="px-4 py-6"
-          panelClassName="w-full max-w-5xl rounded-2xl bg-white p-6 shadow-2xl"
+          panelClassName="w-full max-w-6xl rounded-2xl bg-white p-6 shadow-2xl max-h-[85vh] overflow-hidden flex flex-col"
         >
             <div className="flex items-center justify-between border-b border-slate-200 pb-4">
               <h2 className="text-lg font-semibold text-slate-800">Evaluation History</h2>
@@ -1019,49 +1125,29 @@ function InternManagement() {
               </button>
             </div>
 
-            <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200">
-              <div className="grid min-w-[760px] grid-cols-5 gap-2 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500">
+            <div className="mt-4 min-h-0 flex-1 overflow-x-auto rounded-xl border border-slate-200">
+              <div className="sticky top-0 z-10 grid min-w-[760px] grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 bg-slate-100 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <span>Period</span>
-                <span>Type</span>
-                <span>Average Rating</span>
+                <span className="text-center">Attendance</span>
+                <span className="text-center">Report Submission</span>
                 <span>Evaluator</span>
                 <span>Comments</span>
               </div>
-              <div className="max-h-80 divide-y divide-slate-200 overflow-y-auto text-sm text-slate-600">
+              <div className="divide-y divide-slate-200 overflow-y-auto text-sm text-slate-600" style={{ maxHeight: 'calc(85vh - 200px)' }}>
                 {[
-                  { period: 'Week 1 - January 2024', type: 'Weekly' },
-                  { period: 'Week 2 - January 2024', type: 'Weekly' },
-                  { period: 'Week 3 - January 2024', type: 'Weekly' },
-                  { period: 'Week 4 - January 2024', type: 'Weekly' },
-                  { period: 'January 2024', type: 'Monthly' },
-                  { period: 'Week 1 - February 2024', type: 'Weekly' },
-                  { period: 'Week 2 - February 2024', type: 'Weekly' },
+                  { period: 'Jan 6 - Jan 10, 2026', attendance: '4/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Good first week. Missed one daily report but attendance was solid overall.' },
+                  { period: 'Jan 13 - Jan 17, 2026', attendance: '4/5', submission: '3/5', evaluator: 'Juan Delacruz', comments: 'Absent one day and missed two reports. Needs to improve consistency.' },
+                  { period: 'Jan 20 - Jan 24, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Excellent week. Perfect attendance and all reports submitted on time.' },
+                  { period: 'Jan 27 - Jan 31, 2026', attendance: '5/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Arrived late once. One report missing mid-week.' },
+                  { period: 'Feb 3 - Feb 7, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Another perfect week. Keep up the great work.' },
+                  { period: 'Feb 10 - Feb 12, 2026', attendance: '3/3', submission: '2/3', evaluator: 'Juan Delacruz', comments: 'Partial week so far. One report still pending.' },
                 ].map((row) => (
-                  <div key={row.period} className="grid min-w-[760px] grid-cols-5 gap-2 px-4 py-3">
-                    <span>{row.period}</span>
-                    <span>
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          row.type === 'Weekly'
-                            ? 'bg-purple-100 text-purple-600'
-                            : 'bg-sky-100 text-sky-600'
-                        }`}
-                      >
-                        {row.type}
-                      </span>
-                    </span>
-                    <span className="flex items-center gap-1 text-slate-700">
-                      4.2
-                      <span className="flex text-amber-400">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <Star key={index} className="h-4 w-4" />
-                        ))}
-                      </span>
-                    </span>
-                    <span>Juan Delacruz</span>
-                    <button type="button" className="text-sm font-semibold text-indigo-500 hover:underline">
-                      View
-                    </button>
+                  <div key={row.period} className="grid min-w-[760px] grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 px-5 py-3">
+                    <span className="font-medium text-slate-700">{row.period}</span>
+                    <span className="text-center font-semibold text-slate-700">{row.attendance}</span>
+                    <span className="text-center font-semibold text-slate-700">{row.submission}</span>
+                    <span>{row.evaluator}</span>
+                    <span className="text-sm text-slate-500">{row.comments}</span>
                   </div>
                 ))}
               </div>
@@ -1071,7 +1157,11 @@ function InternManagement() {
               <button
                 type="button"
                 onClick={() => {
-                  if (evaluationIntern) {
+                  if (historyOrigin === 'performance' && performanceIntern) {
+                    setIsHistoryOpen(false);
+                    setHistoryOrigin(null);
+                    handleOpenPerformance(performanceIntern);
+                  } else if (historyOrigin === 'evaluation' && evaluationIntern) {
                     handleOpenEvaluation(evaluationIntern);
                   } else {
                     handleCloseHistory();
