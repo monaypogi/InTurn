@@ -1,17 +1,17 @@
 import { useState } from 'react';
+import { authAPI } from '../services/api';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Card from '../components/Card';
 
-// onLogin is provided by App.js for fake auth (admin / intern)
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('admin'); // 'admin' | 'intern'
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); 
 
-  const handleLogin = () => {
-    // Simple front-end-only fake login so both admin and intern devs can work
+  const handleLogin = async () => {
+    setErrors({});
     if (!email || !password) {
       setErrors({
         email: !email ? 'Email is required' : undefined,
@@ -20,10 +20,26 @@ function LoginPage({ onLogin }) {
       return;
     }
 
-    setErrors({});
+    setIsLoading(true); 
 
-    if (onLogin) {
-      onLogin({ email, role });
+    try {
+      const response = await authAPI.login({ email, password });
+      const { token, user } = response.data;
+
+      localStorage.setItem('token', token);
+
+      if (onLogin) {
+        onLogin({ 
+          email: user.email, 
+          role: user.isAdmin ? 'admin' : 'intern', 
+          roleId: user.isAdmin ? user.adminId : user.internId
+        });
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || 'Invalid credentials';
+      setErrors({ auth: message });
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -36,6 +52,12 @@ function LoginPage({ onLogin }) {
         </div>
         
         <h2 className="text-2xl font-semibold mb-6 text-gray-800">Login</h2>
+
+        {errors.auth && (
+          <div className="mb-4 p-2 bg-red-100 text-red-600 text-sm rounded border border-red-200">
+            {errors.auth}
+          </div>
+        )}
         
         <Input 
           label="Email"
@@ -56,38 +78,13 @@ function LoginPage({ onLogin }) {
           error={errors.password}
           required
         />
-
-        <div className="mb-4">
-          <p className="block text-gray-700 font-medium mb-2">Login as</p>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="admin"
-                checked={role === 'admin'}
-                onChange={() => setRole('admin')}
-              />
-              <span>Admin</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="intern"
-                checked={role === 'intern'}
-                onChange={() => setRole('intern')}
-              />
-              <span>Intern</span>
-            </label>
-          </div>
-        </div>
         
         <Button 
-          text="Login" 
+          text={isLoading ? "Logging in..." : "Login"} 
           onClick={handleLogin} 
           type="primary"
           className="w-full mt-2"
+          disabled={isLoading}
         />
         
         <p className="text-center text-gray-600 mt-4">

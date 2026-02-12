@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { authAPI } from './services/api';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import InternDashboard from './pages/InternDashboard';
@@ -16,29 +17,40 @@ function App() {
   // Temporary fake authentication state (frontend-only)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null); // 'admin' | 'intern'
+  const [roleId, setRoleId] = useState(null); // adminId or internId
+  const [loading, setLoading] = useState(true);
 
   // Load fake auth state from localStorage so refresh keeps you "logged in"
   useEffect(() => {
-    const storedAuth = localStorage.getItem('auth');
-    if (storedAuth) {
-      try {
-        const parsed = JSON.parse(storedAuth);
-        if (parsed?.role === 'admin' || parsed?.role === 'intern') {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await authAPI.getUser();
+          const { user } = response.data;
+          
           setIsAuthenticated(true);
-          setUserRole(parsed.role);
+          setUserRole(user.isAdmin ? 'admin' : 'intern');
+          setRoleId(user.isAdmin ? user.adminId : user.internId);
+        } catch (err) {
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+          setUserRole(null);
         }
-      } catch {
-        // ignore bad data
       }
-    }
+      setLoading(false);
+    };
+    checkAuth();
   }, []);
 
-  // Called by LoginPage after a successful fake login
-  const handleFakeLogin = ({ role }) => {
+  // Called by LoginPage after a successful login
+  const handleLogin = (userData) => {
     setIsAuthenticated(true);
-    setUserRole(role);
-    localStorage.setItem('auth', JSON.stringify({ role }));
+    setUserRole(userData.role);
+    setRoleId(userData.roleId);
   };
+
+  if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center">Loading InTurn...</div>;
 
   return (
     <NotificationProvider>
@@ -46,32 +58,32 @@ function App() {
         <AttendanceProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Navigate to="/login" />} />
-
-              <Route
-                path="/login"
-                element={
-                  isAuthenticated && userRole
-                    ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
-                    : <LoginPage onLogin={handleFakeLogin} />
-                }
+              {/* Login Logic */}
+              <Route 
+              path="/login" 
+              element={
+                isAuthenticated
+                ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
+                : <LoginPage onLogin={handleLogin} />
+              }
               />
 
-              {/* Protected routes - Person A will add proper auth later */}
+              {/* Protected Admin Route */}
               <Route
                 path="/admin/*"
                 element={
                   isAuthenticated && userRole === 'admin'
-                    ? <AdminDashboard />
+                    ? <AdminDashboard adminId={roleId} />
                     : <Navigate to="/login" />
                 }
               />
 
+              {/* Protected Intern Routes */}
               <Route
                 path="/intern/*"
                 element={
                   isAuthenticated && userRole === 'intern'
-                    ? <InternLayout />
+                    ? <InternLayout internId={roleId} />
                     : <Navigate to="/login" />
                 }
               >
@@ -84,12 +96,7 @@ function App() {
 
               <Route
                 path="*"
-                element={
-                  isAuthenticated && userRole
-                    ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
-                    : <Navigate to="/login" />
-                }
-              />
+                element={<Navigate to="/login" />}/>
             </Routes>
           </Router>
         </AttendanceProvider>

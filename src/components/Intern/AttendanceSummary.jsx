@@ -2,36 +2,41 @@ import { useAttendance } from "../../context/AttendanceContext";
 
 export default function AttendanceSummary() {
 
-  const { attendance } = useAttendance();
+  const { summary, loading } = useAttendance();
 
-  const present = attendance.filter(a => a.status === "ontime").length;
-  const late = attendance.filter(a => a.status === "late").length;
-  const absent = attendance.filter(a => a.status === "absent").length;
-
-  const totalHours = attendance.reduce((sum, record) => {
-    return sum + (record.hours || 0);
-  }, 0);
+  if (loading || !summary){
+    return(<div className="card attendance-summary-card">
+        <p>Loading attendance summary...</p>
+      </div>
+    );
+  }
+  
+  console.log(summary)
+  // if stats is still empty or undefined
+  if (!summary || typeof summary !== 'object') {
+    return <div className="card">No stats found.</div>;
+  }
 
   return (
     <div className="card attendance-summary-card">
       <div>
         <h4>Present</h4>
-        <p>{present} days</p>
+        <p>{summary.present_days || 0} days</p>
       </div>
 
       <div>
         <h4>Late</h4>
-        <p>{late} day{late !== 1 && "s"}</p>
+        <p>{summary.late_days || 0} day{summary.late !== 1 && "s"}</p>
       </div>
 
       <div>
         <h4>Absent</h4>
-        <p>{absent}</p>
+        <p>{summary.absent_days || 0} days</p>
       </div>
 
       <div>
         <h4>Total Rendered</h4>
-        <p>{totalHours.toFixed(2)} hrs</p>
+        <p>{Number(summary.total_hours || 0).toFixed(2)} hrs</p>
       </div>
     </div>
   );

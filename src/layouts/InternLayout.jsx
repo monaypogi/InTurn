@@ -4,7 +4,7 @@ import Header from "../components/Intern/Header";
 import Sidebar from "../components/Intern/Sidebar";
 import "../styles/layout.css";
 
-export default function InternLayout() {
+export default function InternLayout({ internId }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // default closed is better for mobile
 
@@ -33,7 +33,7 @@ export default function InternLayout() {
 
         <main className="content">
           <div className="page-transition">
-            <Outlet />
+            <Outlet context={{ internId }}/>
           </div>
         </main>
       </div>

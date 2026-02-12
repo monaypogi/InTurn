@@ -1,89 +1,59 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
-const REQUIRED_HOURS = 8;
+import { internAPI } from "../services/api";
 
 const AttendanceContext = createContext();
 
 export const useAttendance = () => useContext(AttendanceContext);
 
 export const AttendanceProvider = ({ children }) => {
+  const [logs, setLogs] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(false);
   
+  const fetchLogs = async () => {
+    try{
+      setLoading(true);
 
-  const [attendance, setAttendance] = useState(() => {
-    const stored = localStorage.getItem("attendance");
-    return stored ? JSON.parse(stored) : [];
-  });
+      //fetch history from interncontroller
+      const historyRes = await internAPI.getMyAttendanceHistory();
+      setLogs(historyRes.data.attendance_records || []);
+      
+      //fetch profile/stats for the summary card from interncontroller
+      const profileRes = await internAPI.getMyProfile();
+      setSummary(profileRes.data.statistics.attendance || null);
 
-  useEffect(() => {
-    localStorage.setItem("attendance", JSON.stringify(attendance));
-  }, [attendance]);
-
-  // ✅ TIME IN
-  const timeIn = () => {
-    const today = new Date().toDateString();
-
-    const alreadyTimedIn = attendance.find(a => a.date === today);
-    if (alreadyTimedIn) return false;
-
-    const now = new Date();
-    const isLate = now.getHours() >= 9;
-
-    const newRecord = {
-      date: today,
-      timeIn: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      timeInRaw: now.toISOString(),
-      timeOut: "----",
-      hours: 0,
-      status: isLate ? "late" : "ontime"
-    };
-
-    setAttendance(prev => [newRecord, ...prev]);
-    return true;
+    } catch (error) {
+      console.error("Error fetching attendance data", error);
+      setLogs([]); // reset to empty array on error to prevent crashes
+    } finally {
+      setLoading(false)
+    }
   };
 
-  // ✅ TIME OUT
-  const timeOut = () => {
-    const today = new Date().toDateString();
-
-    const recordIndex = attendance.findIndex(a => a.date === today);
-    if (recordIndex === -1) return false;
-
-    const record = attendance[recordIndex];
-    if (record.timeOut !== "----") return false;
-
-    const now = new Date();
-
-    const timeInSource = new Date(record.timeInRaw);
-    if (isNaN(timeInSource.getTime())) return false;
-
-
-
-    const diffMs = now - timeInSource;
-
-    const diffHours = diffMs / (1000 * 60 * 60);
-
-    let status = record.status;
-
-    if (diffHours < REQUIRED_HOURS) {
-      status = "undertime";
+  // connect time in to laravel
+  const timeIn = async () => {
+    try {
+      await internAPI.attendanceTimeIn(); // calls Laravel Route
+      await fetchLogs(); // refresh the list after clocking in
+      return { success: true };
+    } catch (error) {
+      return { success: false, message: error.response?.data?.message };
     }
+  };
 
-    const updatedRecord = {
-      ...record,
-      timeOut: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      hours: Number(diffHours.toFixed(2)),
-      status
-    };
-
-    const updatedAttendance = [...attendance];
-    updatedAttendance[recordIndex] = updatedRecord;
-
-    setAttendance(updatedAttendance);
-    return true;
+  // connect timeOut to laravel
+  const timeOut = async () => {
+    try {
+      await internAPI.attendanceTimeOut(); // Calls your Laravel Route
+      await fetchLogs(); // Refresh the list
+      return { success: true };
+    } catch (error) {
+      return { success: false, message: error.response?.data?.message };
+    }
   };
 
   return (
-    <AttendanceContext.Provider value={{ attendance, timeIn, timeOut }}>
+    <AttendanceContext.Provider value={{ timeIn, timeOut, logs, fetchLogs, loading, summary }}>
       {children}
     </AttendanceContext.Provider>
   );

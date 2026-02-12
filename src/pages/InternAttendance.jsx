@@ -2,6 +2,7 @@ import WelcomeCard from "../components/Intern/WelcomeCard";
 import MonthlySummary from "../components/Intern/MonthlySummary";
 import MonthlyOverallSummary from "../components/Intern/MonthlyOverallSummary";
 import { useAttendance } from "../context/AttendanceContext";
+import { useOutletContext } from "react-router-dom";
 
 import { useEffect } from "react";
 import { useState } from "react";
@@ -13,6 +14,8 @@ export default function InternAttendance() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 5;
+  const { internId } = useOutletContext // provide real id access
+
 
   const [toast, setToast] = useState({
     show: false,

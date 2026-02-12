@@ -1,15 +1,15 @@
 import { FaClock } from "react-icons/fa";
 import { useAttendance } from "../../context/AttendanceContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AttendanceTracker() {
 
-  const { attendance, timeIn } = useAttendance();
+  const { timeIn, logs, fetchLogs, loading } = useAttendance();
 
-  const today = new Date().toDateString();
-
-  const todayRecord = attendance.find(
-    record => record.date === today
+  const todayStr = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD to match Laravel
+  
+  const todayRecord = (logs || []).find(
+    record => record.work_date === todayStr
   );
 
  const [toast, setToast] = useState({
@@ -18,13 +18,18 @@ export default function AttendanceTracker() {
   type: "success"
 });
 
-const handleTimeIn = () => {
-  const success = timeIn();
+// Fetch logs on mount to ensure data is fresh
+  useEffect(() => {
+    fetchLogs();
+  }, []);
 
-  if (success) {
+const handleTimeIn = async () => {
+  const result = await timeIn();
+
+  if (result.success) {
     showToast("Time in recorded successfully!", "success");
   } else {
-    showToast("You already timed in today!", "error");
+    showToast("Failed to record time in", "error");
   }
 };
 
@@ -52,7 +57,7 @@ return (
 
             <div className="attendance-row">
               <span className="label">Today:</span>
-              <span>{today}</span>
+              <span>{new Date().toDateString()}</span>
             </div>
 
             <div className="attendance-row">
@@ -68,7 +73,6 @@ return (
           </div>
 
           <div className="attendance-right">
-
             <div className="attendance-metric">
               <FaClock />
               <div>
@@ -82,16 +86,14 @@ return (
             <button
               className="primary-btn full-width"
               onClick={handleTimeIn}
-              disabled={!!todayRecord}
+              // disable if loading or a record already exists for today
+              disabled={loading || !!todayRecord}
             >
-              {todayRecord ? "Timed In" : "Time In"}
+              {loading ? "Processing..." : todayRecord ? "Timed In" : "Time In"}
             </button>
-
           </div>
-
         </div>
       </div>
-
     </div>
 
     {/* Floating Toast */}
