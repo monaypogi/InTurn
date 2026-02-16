@@ -52,6 +52,10 @@ export const AttendanceProvider = ({ children }) => {
     }
   };
 
+  // ensure dashboard is updated without manual refreshes
+  useEffect(() => {
+    fetchLogs();
+  }, []);
   return (
     <AttendanceContext.Provider value={{ timeIn, timeOut, logs, fetchLogs, loading, summary }}>
       {children}

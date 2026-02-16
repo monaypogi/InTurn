@@ -1,12 +1,12 @@
 import { FaFileAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import "../../styles/dashboard.css";
 
 import { useDocuments } from "../../context/DocumentsContext";
 
 export default function SubmissionStatus() {
   const navigate = useNavigate();
-  const { documents } = useDocuments();
+  const { documents, loading } = useDocuments();
 
   const handleViewDetails = (type) => {
     navigate("/intern/reports", {
@@ -19,14 +19,11 @@ export default function SubmissionStatus() {
 
   const latestDaily = documents
     .filter(doc => doc.type === "Daily Report")
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+    .sort((a, b) => new Date(b.date_submitted) - new Date(a.date_submitted))[0];
 
   const latestDocument = documents
     .filter(doc => doc.type === "Document")
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-
-
-
+    .sort((a, b) => new Date(b.date_submitted) - new Date(a.date_submitted))[0];
   return (
     <div className="card submission-card">
       <h3>Submission Status</h3>
@@ -49,7 +46,7 @@ export default function SubmissionStatus() {
             </div>
 
             <div className="submission-right">
-              <span className="submission-time">{latestDaily.date}</span>
+              <span className="submission-time">{new Date(latestDaily.date_submitted).toLocaleDateString()}</span>
               <button
                 className="view-details"
                 onClick={() => handleViewDetails("Daily Report")}
@@ -76,7 +73,7 @@ export default function SubmissionStatus() {
             </div>
 
             <div className="submission-right">
-              <span className="submission-time">{latestDocument.date}</span>
+              <span className="submission-time">{new Date(latestDocument.date_submitted).toLocaleDateString()}</span>
               <button
                 className="view-details"
                 onClick={() => handleViewDetails("Document")}

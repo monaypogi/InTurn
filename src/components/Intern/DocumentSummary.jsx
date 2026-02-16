@@ -6,7 +6,16 @@ import { useDocuments } from "../../context/DocumentsContext";
 
 export default function DocumentsSummary() {
 
-  const { documents } = useDocuments();
+  const { documents, loading } = useDocuments();
+
+  // display loading state to prevent 'filter' errors
+  if (loading || !documents) {
+    return (
+      <div className="card documents-summary-card">
+        <p>Loading document stats...</p>
+      </div>
+    );
+  }
 
   const pending = documents.filter(d => d.status === "Pending").length;
   const approved = documents.filter(d => d.status === "Verified").length;
