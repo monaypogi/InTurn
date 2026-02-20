@@ -1,17 +1,18 @@
 import { useState } from 'react';
+import { Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Card from '../components/Card';
 
-// onLogin is provided by App.js for fake auth (admin / intern)
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('admin'); // 'admin' | 'intern'
+  const [role, setRole] = useState('admin');
   const [errors, setErrors] = useState({});
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogin = () => {
-    // Simple front-end-only fake login so both admin and intern devs can work
     if (!email || !password) {
       setErrors({
         email: !email ? 'Email is required' : undefined,
@@ -28,14 +29,23 @@ function LoginPage({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-900 dark:to-slate-800 relative">
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 rounded-lg bg-white/80 text-slate-600 hover:bg-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 shadow-sm transition-colors"
+        aria-label="Toggle theme"
+      >
+        {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      </button>
+
       <Card className="w-full max-w-md">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-blue-600">InTurn</h1>
-          <p className="text-gray-600 mt-2">Intern Management System</p>
+          <p className="text-gray-600 dark:text-slate-400 mt-2">Intern Management System</p>
         </div>
         
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Login</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-white">Login</h2>
         
         <Input 
           label="Email"
@@ -58,9 +68,9 @@ function LoginPage({ onLogin }) {
         />
 
         <div className="mb-4">
-          <p className="block text-gray-700 font-medium mb-2">Login as</p>
+          <p className="block text-gray-700 dark:text-slate-300 font-medium mb-2">Login as</p>
           <div className="flex gap-4">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-700 dark:text-slate-300">
               <input
                 type="radio"
                 name="role"
@@ -70,7 +80,7 @@ function LoginPage({ onLogin }) {
               />
               <span>Admin</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-gray-700 dark:text-slate-300">
               <input
                 type="radio"
                 name="role"
@@ -90,7 +100,7 @@ function LoginPage({ onLogin }) {
           className="w-full mt-2"
         />
         
-        <p className="text-center text-gray-600 mt-4">
+        <p className="text-center text-gray-600 dark:text-slate-400 mt-4">
           Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
         </p>
       </Card>

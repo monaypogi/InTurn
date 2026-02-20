@@ -2,16 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import { FaBell, FaUserCircle, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "./ProfileModal";
+import { useTheme } from "../../context/ThemeContext";
 import "../../styles/layout.css";
 
 export default function Header({ toggleSidebar }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -22,22 +23,6 @@ export default function Header({ toggleSidebar }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "light" ? false : true;
-  });
-
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.remove("light");
-      document.body.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("dark");
-      document.body.classList.add("light");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
 
   return (
     <>
@@ -84,11 +69,11 @@ export default function Header({ toggleSidebar }) {
 
                 <button
                   onClick={() => {
-                    setDarkMode(prev => !prev);
+                    toggleTheme();
                     setShowDropdown(false);
                   }}
                 >
-                  {darkMode ? "Light Mode" : "Dark Mode"}
+                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </button>
 
                 <button

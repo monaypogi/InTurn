@@ -33,11 +33,11 @@ function Profile() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">My Profile</h1>
-        <p className="text-slate-400">Manage your account settings and preferences</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
+        <p className="text-slate-500 dark:text-slate-400">Manage your account settings and preferences</p>
       </header>
 
-      <div className="flex w-full items-center gap-2 rounded-full bg-slate-800 p-1">
+      <div className="flex w-full items-center gap-2 rounded-full bg-white dark:bg-slate-800 p-1">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
           return (
@@ -46,7 +46,7 @@ function Profile() {
               type="button"
               onClick={() => setActiveTab(tab)}
               className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold text-center transition-colors sm:px-6 ${
-                isActive ? 'bg-slate-100 text-slate-900' : 'text-slate-300 hover:text-white'
+                isActive ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {tab}
@@ -107,10 +107,10 @@ function ProfileGeneral() {
   };
 
   return (
-    <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-6">
+    <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 p-6 space-y-6">
       <header>
-        <h2 className="text-lg font-semibold text-white">Profile Information</h2>
-        <p className="text-sm text-slate-400">Update your personal information and profile picture</p>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Profile Information</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Update your personal information and profile picture</p>
       </header>
       <Toast
         type={feedback?.type}
@@ -120,15 +120,15 @@ function ProfileGeneral() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 text-sm font-semibold text-slate-900 dark:text-white">
             AB
           </div>
           <div>
-            <p className="text-white font-semibold">Anna Bautista</p>
-            <p className="text-xs text-slate-400">Supervisor</p>
+            <p className="text-slate-900 dark:text-white font-semibold">Anna Bautista</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Supervisor</p>
             <div className="mt-1 flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-slate-700 px-2 py-0.5 text-slate-200">Admin</span>
-              <span className="rounded-full bg-slate-700 px-2 py-0.5 text-slate-200">UI/UX Designer</span>
+              <span className="rounded-full bg-gray-100 dark:bg-slate-700 px-2 py-0.5 text-slate-700 dark:text-slate-200">Admin</span>
+              <span className="rounded-full bg-gray-100 dark:bg-slate-700 px-2 py-0.5 text-slate-700 dark:text-slate-200">UI/UX Designer</span>
             </div>
           </div>
         </div>
@@ -182,7 +182,7 @@ function ProfileGeneral() {
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-700"
+            className="rounded-lg border border-gray-200 dark:border-slate-600 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700"
           >
             Cancel
           </button>
@@ -204,14 +204,14 @@ function ProfileGeneral() {
 
 function ProfileField({ label, icon, value, error, isEditable = false, onChange, onBlur }) {
   const fieldClass = isEditable
-    ? 'border-teal-400/70 bg-slate-600/70 ring-1 ring-teal-400/40'
-    : 'border-slate-700 bg-slate-700/70';
+    ? 'border-teal-400/70 bg-gray-200/70 dark:bg-slate-600/70 ring-1 ring-teal-400/40'
+    : 'border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-700/70';
 
   return (
-    <label className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
       {label}
-      <div className={`mt-2 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-slate-100 ${fieldClass}`}>
-        <span className="text-slate-300">{icon}</span>
+      <div className={`mt-2 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-slate-800 dark:text-slate-100 ${fieldClass}`}>
+        <span className="text-slate-600 dark:text-slate-300">{icon}</span>
         <input
           type="text"
           value={value}
@@ -219,7 +219,7 @@ function ProfileField({ label, icon, value, error, isEditable = false, onChange,
           onChange={onChange}
           onBlur={onBlur}
           aria-invalid={!!error}
-          className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
+          className="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
         />
       </div>
       {error && isEditable && <p className="mt-2 text-xs text-red-400">{error}</p>}
@@ -387,10 +387,10 @@ function ProfileSecurity() {
   return (
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-4">
+        <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 p-6 space-y-4">
           <header>
-            <h2 className="text-lg font-semibold text-white">Change Password</h2>
-            <p className="text-sm text-slate-400">Update your password to keep your account secure</p>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Change Password</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Update your password to keep your account secure</p>
           </header>
           <div className="space-y-4">
             <PasswordField
@@ -432,15 +432,15 @@ function ProfileSecurity() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-6">
+        <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 p-6 space-y-6">
           <header>
-            <h2 className="text-lg font-semibold text-white">Security Settings</h2>
-            <p className="text-sm text-slate-400">Additional security options for your account</p>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Security Settings</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Additional security options for your account</p>
           </header>
-          <div className="flex items-center justify-between gap-4 rounded-lg bg-slate-700/60 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 dark:bg-slate-700/60 p-4">
             <div>
-              <p className="text-sm font-semibold text-white">Two-Factor Authentication</p>
-              <p className="text-xs text-slate-300">Add an extra layer of security to your account</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Two-Factor Authentication</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Add an extra layer of security to your account</p>
             </div>
             <button
               type="button"
@@ -450,15 +450,15 @@ function ProfileSecurity() {
               Enable
             </button>
           </div>
-          <div className="flex items-center justify-between gap-4 rounded-lg bg-slate-700/60 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 dark:bg-slate-700/60 p-4">
             <div>
-              <p className="text-sm font-semibold text-white">Active Sessions</p>
-              <p className="text-xs text-slate-300">Manage devices that are currently logged in</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Active Sessions</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Manage devices that are currently logged in</p>
             </div>
             <button
               type="button"
               onClick={() => setIsSessionsOpen(true)}
-              className="rounded-lg bg-slate-600 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-500"
+              className="rounded-lg bg-gray-200 dark:bg-slate-600 px-4 py-2 text-xs font-semibold text-slate-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-500"
             >
               View Sessions
             </button>
@@ -474,7 +474,7 @@ function ProfileSecurity() {
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
-          overlayClassName="bg-slate-900/80"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
           panelClassName="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl"
         >
           <div className="flex items-start justify-between">
@@ -601,7 +601,7 @@ function ProfileSecurity() {
       {isVerifyOpen && (
         <Modal
           isOpen={isVerifyOpen}
-          overlayClassName="bg-slate-900/80"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
           panelClassName="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl"
         >
           <div className="text-center">
@@ -668,7 +668,7 @@ function ProfileSecurity() {
       {isSessionsOpen && (
         <Modal
           isOpen={isSessionsOpen}
-          overlayClassName="bg-slate-900/80"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
           panelClassName="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
         >
           <div className="flex items-start justify-between">
@@ -756,7 +756,7 @@ function ProfileSecurity() {
       {confirmAction && (
         <Modal
           isOpen={!!confirmAction}
-          overlayClassName="bg-slate-900/70"
+          overlayClassName="bg-gray-900/40 dark:bg-slate-900/70"
           containerClassName="px-4 z-[60]"
           panelClassName="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl"
         >
@@ -796,10 +796,10 @@ function PasswordField({ label, placeholder, value, onChange, onBlur, error }) {
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
   return (
-    <label className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
       {label}
-      <div className="mt-2 flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-700/70 px-3 py-2 text-sm text-slate-100">
-        <Lock className="h-4 w-4 text-slate-300" />
+      <div className="mt-2 flex items-center gap-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-700/70 px-3 py-2 text-sm text-slate-800 dark:text-slate-100">
+        <Lock className="h-4 w-4 text-slate-600 dark:text-slate-300" />
         <input
           type={isVisible ? 'text' : 'password'}
           placeholder={placeholder}
@@ -807,7 +807,7 @@ function PasswordField({ label, placeholder, value, onChange, onBlur, error }) {
           onChange={onChange}
           onBlur={onBlur}
           aria-invalid={!!error}
-          className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
+          className="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
         />
         <button
           type="button"

@@ -171,17 +171,17 @@ function ViewDailyReports() {
         <Modal
           isOpen={isVerificationOpen}
           overlayClassName="bg-slate-900/80"
-          panelClassName="w-full max-w-lg rounded-2xl border border-slate-600 bg-slate-800 p-4 shadow-xl sm:p-6"
+          panelClassName="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-4 shadow-xl sm:p-6"
         >
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-white">Daily Report Verification</h3>
-              <p className="text-xs text-slate-400">Review and approve the submitted daily report.</p>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Daily Report Verification</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Review and approve the submitted daily report.</p>
             </div>
             <button
               type="button"
               onClick={closeVerification}
-              className="rounded-full p-1 text-slate-300 hover:bg-slate-700 hover:text-white"
+              className="rounded-full p-1 text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -196,8 +196,8 @@ function ViewDailyReports() {
           <div className="mt-4 flex items-center gap-3">
             <UserCircle className="h-10 w-10 text-amber-400" />
             <div>
-              <p className="font-semibold text-white">{activeRequest.name}</p>
-              <p className="text-xs text-slate-400">{activeRequest.email}</p>
+              <p className="font-semibold text-slate-900 dark:text-white">{activeRequest.name}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{activeRequest.email}</p>
               <p className="text-xs text-amber-300">{activeRequest.status}</p>
             </div>
           </div>
@@ -206,19 +206,19 @@ function ViewDailyReports() {
             {activeRequest.documents.map((doc) => (
               <div
                 key={doc.id}
-                className="flex items-center justify-between rounded-lg border border-slate-600 bg-slate-700/40 px-4 py-3"
+                className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/40 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-slate-200" />
+                  <FileText className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                   <div>
-                    <p className="text-sm text-white">{doc.title}</p>
-                    <p className="text-xs text-slate-400">{doc.file}</p>
-                    {doc.date && <p className="text-xs text-slate-500">{doc.date}</p>}
+                    <p className="text-sm text-slate-900 dark:text-white">{doc.title}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{doc.file}</p>
+                    {doc.date && <p className="text-xs text-slate-400 dark:text-slate-500">{doc.date}</p>}
                   </div>
                 </div>
                 <button
                   type="button"
-                  className="rounded-lg bg-slate-600 px-3 py-1 text-xs font-semibold text-white hover:bg-slate-500"
+                  className="rounded-lg bg-gray-200 dark:bg-slate-600 px-3 py-1 text-xs font-semibold text-slate-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-500"
                 >
                   View
                 </button>
@@ -227,9 +227,9 @@ function ViewDailyReports() {
           </div>
 
           <div className="mt-4">
-            <label className="text-xs uppercase tracking-wide text-slate-400">Message</label>
+            <label className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Message</label>
             <textarea
-              className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
+              className="mt-2 w-full rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/40 p-3 text-sm text-slate-700 dark:text-slate-200"
               rows={2}
               placeholder="message..."
               value={values.message}
@@ -240,9 +240,9 @@ function ViewDailyReports() {
           </div>
 
           <div className="mt-4">
-            <label className="text-xs uppercase tracking-wide text-slate-400">Remarks</label>
+            <label className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Remarks</label>
             <textarea
-              className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-700/40 p-3 text-sm text-slate-200"
+              className="mt-2 w-full rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/40 p-3 text-sm text-slate-700 dark:text-slate-200"
               rows={3}
               value={values.remarks}
               onChange={(event) => handleChange('remarks', event.target.value)}

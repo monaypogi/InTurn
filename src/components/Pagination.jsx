@@ -1,17 +1,17 @@
 const variantStyles = {
   slate: {
-    active: 'bg-slate-600 text-white',
-    inactive: 'bg-slate-800 text-slate-300 hover:bg-slate-700',
-    next: 'bg-slate-700 text-slate-200 hover:bg-slate-600',
+    active: 'bg-slate-200 text-slate-900 dark:bg-slate-600 dark:text-white',
+    inactive: 'bg-gray-100 text-slate-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700',
+    next: 'bg-gray-200 text-slate-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600',
   },
   teal: {
     active: 'bg-teal-500 text-white',
-    inactive: 'bg-slate-700 text-slate-200 hover:bg-slate-600',
+    inactive: 'bg-gray-100 text-slate-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600',
     next: 'bg-teal-500 text-white hover:bg-teal-600',
   },
   amber: {
     active: 'bg-amber-500 text-slate-900',
-    inactive: 'bg-slate-700 text-slate-200 hover:bg-slate-600',
+    inactive: 'bg-gray-100 text-slate-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600',
     next: 'bg-amber-500 text-slate-900 hover:bg-amber-600',
   },
 };
