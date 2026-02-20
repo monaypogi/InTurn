@@ -219,81 +219,82 @@ export default function InternAttendance() {
         {/* HISTORY TAB */}
         {activeTab === "history" && (
           <>
-
-            <table className="attendance-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Time In</th>
-                  <th>Time Out</th>
-                  <th>Hours Worked</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {paginatedAttendance.map((row, i) => (
-                  <tr key={i}>
-                    <td>{row.date}</td>
-                    <td>{row.timeIn}</td>
-                    <td>{row.timeOut}</td>
-                    <td>{row.hours}</td>
-                    <td>
-                      <span className={`state-pill small ${row.status}`}>
-                        {row.status === "ontime" && "On Time"}
-                        {row.status === "late" && "Late"}
-                        {row.status === "absent" && "Absent"}
-                        {row.status === "undertime" && "Undertime"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-
-                {filteredAttendance.length === 0 && (
+            <div className="attendance-table-wrapper">
+              <table className="attendance-table">
+                <thead>
                   <tr>
-                    <td colSpan="5" style={{ textAlign: "center", opacity: 0.6 }}>
-                      No records found
-                    </td>
+                    <th>Date</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Hours Worked</th>
+                    <th>Status</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
 
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(prev => prev - 1)}
-                >
-                  Prev
-                </button>
+                <tbody>
+                  {paginatedAttendance.map((row, i) => (
+                    <tr key={i}>
+                      <td>{row.date}</td>
+                      <td>{row.timeIn}</td>
+                      <td>{row.timeOut}</td>
+                      <td>{row.hours}</td>
+                      <td>
+                        <span className={`state-pill small ${row.status}`}>
+                          {row.status === "ontime" && "On Time"}
+                          {row.status === "late" && "Late"}
+                          {row.status === "absent" && "Absent"}
+                          {row.status === "undertime" && "Undertime"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
 
-                <span>
-                  {currentPage} of {totalPages}
-                </span>
+                  {filteredAttendance.length === 0 && (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", opacity: 0.6 }}>
+                        No records found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
 
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(prev => prev + 1)}
-                >
-                  Next
-                </button>
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                  >
+                    Prev
+                  </button>
+
+                  <span>
+                    {currentPage} of {totalPages}
+                  </span>
+
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
               </div>
-            )}
-          </>
+            </>
         )}
-        {activeTab === "monthly" && <MonthlySummary records={monthlyRecords} />
-        }
+            {activeTab === "monthly" && <MonthlySummary records={monthlyRecords} />
+            }
+
+
+          </div>
+        {toast.show && (
+          <div className={`toast ${toast.type}`}>
+            {toast.message}
+          </div>
+        )}
 
 
       </div>
-      {toast.show && (
-        <div className={`toast ${toast.type}`}>
-          {toast.message}
-        </div>
-      )}
-
-
-    </div>
-  );
+      );
 }

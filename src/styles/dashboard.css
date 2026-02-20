@@ -2,9 +2,18 @@
   padding: 24px;
   width: 100%;
 
-  background: radial-gradient(circle at top left, #0b2a38, #071821);
-  overflow-x: auto;
+  background: #242D35;
+  overflow-x: hidden;
+
+  border-radius: 24px;
 }
+
+.dashboard-grid>* {
+  min-width: 0;
+  
+}
+
+
 
 
 @media (min-width: 1300px) {
@@ -42,10 +51,11 @@
 }
 
 .card {
-  background: linear-gradient(180deg, #163846 0%, #0b222c 100%);
+  background: #0C1823;
   padding: 20px;
   border-radius: 16px;
   width: 100%;
+  max-width: 100%;
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
@@ -54,26 +64,34 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.card h3 {
-  margin: 0 0 16px 0;
-  font-size: 26px;
-  font-weight: 700;
-  color: #F3F4F4;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 10px;
+.dashboard .card {
+  padding: 0;
 }
 
+.dashboard .card h3 {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #EAF4F6;
+
+  background: #1F3A46;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboard .card > *:not(h3):not(.documents-summary-divider) {
+  padding: 20px;
+}
 
 .welcome-card {
   margin-bottom: 20px;
-  padding: 20px 24px;
+  padding: 12px 24px;   /* smaller vertical padding */
   grid-column: 1 / -1;
-
-  background: linear-gradient(90deg, #173f4f, #0b222c);
+  background: #101F27;
   border-radius: 16px;
 }
-
 
 .welcome-card h2 {
   margin: 0;
@@ -95,23 +113,22 @@
 }
 
 .primary-btn {
-  margin-top: 14px;
-  background: linear-gradient(135deg, #5F9598, #3e7a7d);
+  margin-top: 18px;
+  background: #3E7A7D;
   border: none;
-  padding: 10px 22px;
+  padding: 12px 22px;
   border-radius: 10px;
   font-weight: 600;
-  color: #061E29;
+  color: white;
   cursor: pointer;
 
-  box-shadow:
-    0 6px 14px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: 0.2s ease;
 }
 
 
 .primary-btn:hover {
   opacity: 0.9;
+  background: #4F9598;
 }
 
 .status-list {
@@ -186,6 +203,7 @@
   grid-template-columns: 1.4fr 1fr;
   gap: 24px;
   align-items: stretch;
+  min-width: 0;
 }
 
 /* LEFT SIDE */
@@ -211,14 +229,16 @@
 /* RIGHT SIDE */
 
 .attendance-right {
-  background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.02));
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
 
   border-radius: 14px;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
+
 
 
 .attendance-metric {
@@ -233,16 +253,18 @@
 }
 
 .metric-label {
-  margin: 0;
-  font-size: 13px;
-  opacity: 0.7;
+  font-size: 12px;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .metric-value {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  color: #F3F4F4;
 }
+
 
 /* BUTTON */
 
@@ -251,7 +273,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -334,8 +356,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 14px;
+    gap: 16px;
   }
+  
 
   .documents-summary-left {
     align-items: center;
@@ -350,16 +373,13 @@
   .documents-summary-stats {
     width: 100%;
     gap: 0;
-    justify-content: space-between;
+    display: flex;
+    margin-top: -60px;
   }
 
   .documents-summary-stats div {
     flex: 1;
-  }
-
-  /* Add subtle separators between stats */
-  .documents-summary-stats div:not(:last-child) {
-    border-right: 1px solid rgba(243, 244, 244, 0.12);
+    min-width: 0;
   }
 
   .stat-value {
@@ -369,6 +389,18 @@
   .stat-label {
     font-size: 14px;
   }
+
+  .performance-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .performance-stars {
+    flex-wrap: wrap;
+    font-size: 18px;
+  }
+
 }
 
 /* Performance Overview */
@@ -411,7 +443,7 @@
 
 .performance-icon {
   font-size: 26px;
-  color: #000;
+  color: #efe8e8;
 }
 
 .performance-label {
@@ -449,6 +481,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding: 14px 16px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: 0.2s ease;
+}
+
+.submission-item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .submission-left {
@@ -483,13 +527,13 @@
 
 /* Pending: warm, noticeable, not aggressive */
 .status-text.pending {
-  color: #f4c430;
+  color: #E6B94C;
   /* softer gold than pure yellow */
 }
 
 /* Submitted: calm, success-like, cohesive with your palette */
 .status-text.submitted {
-  color: #6fbf9f;
+  color: #74D4AE;
   /* matches your green-teal tones */
 }
 
@@ -656,4 +700,12 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.dashboard .welcome-card {
+  padding: 18px 24px !important;
+}
+
+.dashboard .welcome-card > * {
+  padding: 0 !important;
 }

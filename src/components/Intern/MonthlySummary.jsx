@@ -25,7 +25,6 @@ export default function MonthlySummary({ records }) {
 
   return (
     <div className="monthly-summary">
-      <h3 className="section-title">Monthly Summary</h3>
 
       <div className="monthly-grid">
         {monthlyData.map((month, i) => (

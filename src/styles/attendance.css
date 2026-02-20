@@ -1,7 +1,8 @@
 .attendance-page {
   padding: 24px;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #0b2a38, #071821);
+  background: #242D35;
+  border-radius: 24px;
 }
 
 /* ===== SUMMARY ROW ===== */
@@ -207,7 +208,7 @@
   border: none;
   color: #f3f4f4;
   opacity: 0.6;
-  font-size: 15px;
+  font-size: 22px;
   cursor: pointer;
 }
 
@@ -233,13 +234,27 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  min-width: 720px;
 }
+.attendance-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
 
 .attendance-table th,
 .attendance-table td {
   padding: 12px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   text-align: left;
+}
+
+.attendance-table td{
+  font-size: 16px;
+}
+
+.attendance-table th{
+  font-size: 20px;
 }
 
 .attendance-table tbody tr:hover {
@@ -679,8 +694,15 @@
 .summary-card.undertime {
   background-color: #8a6d3b;
 }
+.attendance-page .card h3 {
+  color: #F3F4F4;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: bold;
+}
 
-@media (max-width: 768px) {
+
+@media (max-width: 1024px) {
 
   /* Page spacing */
   .attendance-page {

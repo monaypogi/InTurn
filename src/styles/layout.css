@@ -3,11 +3,12 @@ body {
   background-color: #08121B;
   color: #F3F4F4;
   font-family: Arial, sans-serif;
+  border-radius: 24px;
 }
 
 .header {
   height: 100px;
-  background-color: #0e2935;
+  background-color: #061E29;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -65,9 +66,7 @@ body {
 .sidebar {
   width: 220px;
 
-  background: linear-gradient(180deg,
-      #163846 0%,
-      #0b222c 100%);
+  background: #242D35;
 
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 
@@ -111,7 +110,7 @@ body {
 }
 
 .sidebar-menu a.active-link {
-  background-color: #5F9598;
+  background-color: #adcdcf;
   color: #061E29;
 }
 
@@ -133,7 +132,7 @@ body {
   top: 110%;
   right: 0;
   min-width: 160px;
-  background-color: #1D546D;
+  background-color: #0a3447;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   overflow: hidden;
