@@ -23,6 +23,22 @@ export default function Header({ toggleSidebar }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "light" ? false : true;
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
   return (
     <>
       <header className="header">
@@ -39,6 +55,8 @@ export default function Header({ toggleSidebar }) {
           />
 
         </div>
+
+
 
 
         <div className="header-right">
@@ -62,6 +80,15 @@ export default function Header({ toggleSidebar }) {
                   }}
                 >
                   Profile
+                </button>
+
+                <button
+                  onClick={() => {
+                    setDarkMode(prev => !prev);
+                    setShowDropdown(false);
+                  }}
+                >
+                  {darkMode ? "Light Mode" : "Dark Mode"}
                 </button>
 
                 <button

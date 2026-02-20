@@ -26,12 +26,13 @@
 
 /* Card */
 .documents-card {
-  background: #0C1823;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  overflow-x: auto;
-  max-width: 100%;
+  background: #1a2630;
+  border-radius: 16px;
+  padding: 0;
+  margin-top: 10px;
+  overflow: hidden;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
 /* Card header */
@@ -39,16 +40,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(243, 244, 244, 0.12);
+
+  padding: 18px 22px;
+  background-color: #2b5563;
+}
+
+.documents-table-wrapper {
+  padding: 0 0 22px 0;
 }
 
 .documents-card-header h3 {
   margin: 0;
-  font-size: 25px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .documents-actions {
@@ -57,54 +61,60 @@
   flex-shrink: 0;
 }
 
-/* Search */
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 6px 10px;
-  border-radius: 8px;
-  max-width: 220px;
-  width: 100%;
-}
-
-.search-box input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #f3f4f4;
-  font-size: 14px;
-}
 
 /* ===== DOCUMENTS TABLE (Same as Reports) ===== */
 
 .documents-table {
   width: 100%;
-  min-width: 720px;
+  min-width: 0;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 14px;
-  margin-top: 14px;
+  margin-top: 0;
 }
 
+/* Table header */
 .documents-table thead {
-  background-color: rgba(255, 255, 255, 0.04);
-  margin: 0;
-  font-size: 18px;
+  background: #101F27;
+}
+
+.documents-table th {
   font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  color: #dce6ec;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
 }
 
 .documents-table th,
 .documents-table td {
-  padding: 12px 16px;
+  padding: 14px 18px;
   text-align: left;
-  border-bottom: 1px solid rgba(243, 244, 244, 0.12);
+  border-bottom: 1px solid rgba(243, 244, 244, 0.08);
   white-space: nowrap;
 }
 
+/* Rows */
+.documents-table tbody tr {
+  background-color: #1a2630;
+  transition: background 0.2s ease;
+}
+
+.documents-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 .documents-table tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: #22313c;
+}
+
+.documents-table td {
+  font-size: 14px;
+  color: #e6eef3;
+}
+
+.documents-table td:first-child {
+  font-weight: 500;
 }
 
 .doc-name {
@@ -230,4 +240,77 @@
   .pagination {
     gap: 10px;
   }
+}
+
+/* =========================
+   LIGHT MODE - DOCUMENTS
+========================= */
+
+body.light .documents-page {
+  background: transparent;
+}
+
+/* Main Card */
+body.light .documents-card {
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+}
+
+/* Card header strip */
+body.light .documents-card-header {
+  background-color: #2b5d73;
+  color: #ffffff;
+}
+
+/* Page header text */
+body.light .documents-header p {
+  opacity: 0.6;
+}
+
+/* Table header */
+body.light .documents-table thead {
+  background: #f3f6f8;
+}
+
+body.light .documents-table th {
+  color: #1f2d36;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Table rows */
+body.light .documents-table tbody tr {
+  background-color: #ffffff;
+}
+
+body.light .documents-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .documents-table tbody tr:hover {
+  background-color: #f5f8fa;
+}
+
+body.light .documents-table td {
+  color: #2c3e47;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Download button */
+body.light .download-btn {
+  background-color: #2b5d73;
+  color: #ffffff;
+}
+
+body.light .download-btn:hover {
+  background-color: #244e61;
+}
+
+/* Pagination */
+body.light .pagination button {
+  background-color: #2b5d73;
+  color: #ffffff;
+}
+
+body.light .pagination button:disabled {
+  opacity: 0.4;
 }

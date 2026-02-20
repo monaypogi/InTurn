@@ -196,11 +196,17 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
+  
 }
 
 .tabs {
   display: flex;
   gap: 18px;
+
+  border: none;
+  border-bottom: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 .tab {
@@ -210,13 +216,12 @@
   opacity: 0.6;
   font-size: 22px;
   cursor: pointer;
+  padding: 0;
 }
 
 .tab.active {
   opacity: 1;
-  font-weight: 600;
-  border-bottom: 2px solid #5f9598;
-  padding-bottom: 4px;
+  font-weight: 700;   /* just bold */
 }
 
 .filter-btn {
@@ -866,4 +871,221 @@
   }
 
 
+}
+
+/* =========================
+   LIGHT MODE - ATTENDANCE
+========================= */
+
+body.light .attendance-page {
+  background: transparent;
+}
+
+/* ===== SUMMARY CARDS ===== */
+
+body.light .time-card,
+body.light .total-hours-card,
+body.light .worked-hours-card,
+body.light .attendance-table-card,
+body.light .monthly-card,
+body.light .summary-card {
+  background: #ffffff;
+  color: #1f2d36;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+}
+
+/* Card headings */
+body.light .attendance-page .card h3,
+body.light .time-card h3,
+body.light .total-hours-card h3 {
+  color: #1f2d36;
+}
+
+/* Subtext success */
+body.light .subtext.success {
+  color: #3fa77a;
+}
+
+/* ===== ACTION BUTTON ===== */
+
+body.light .time-action-btn {
+  background: #2b5d73;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+body.light .time-action-btn:hover {
+  background: #244e61;
+}
+
+/* ===== STATUS PILLS (TOP SUMMARY) ===== */
+
+body.light .state-pill {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+body.light .state-pill.late {
+  background: #f4b183;
+  color: #7a2f2f;
+}
+
+body.light .state-pill.ontime {
+  background: #b7e4d3;
+  color: #1f5f4d;
+}
+
+body.light .state-pill.absent {
+  background: #e9ecef;
+  color: #495057;
+}
+
+body.light .state-pill.undertime {
+  background: #ffe8b3;
+  color: #8a6d3b;
+}
+
+/* ===== TABS ===== */
+
+body.light .tab {
+  color: #1f2d36;
+  opacity: 0.6;
+}
+
+body.light .tab.active {
+  opacity: 1;
+  font-weight: 700;
+  border-bottom: none;   /* explicitly remove */
+}
+
+body.light .tabs {
+  border: none;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+/* ===== FILTER SELECT ===== */
+
+body.light .filter-select,
+body.light .year-select {
+  background-color: #ffffff;
+  color: #1f2d36;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+body.light .filter-select option,
+body.light .year-select option {
+  background-color: #ffffff;
+  color: #1f2d36;
+}
+
+/* ===== TABLE ===== */
+
+body.light .attendance-table th,
+body.light .attendance-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light .attendance-table th {
+  color: #1f2d36;
+}
+
+body.light .attendance-table td {
+  color: #2c3e47;
+}
+
+body.light .attendance-table tbody tr:hover {
+  background-color: #f5f8fa;
+}
+
+/* Status pill inside table */
+body.light .status-pill.ontime {
+  background-color: #b7e4d3;
+  color: #1f5f4d;
+}
+
+/* ===== PAGINATION ===== */
+
+body.light .pagination button {
+  background-color: #2b5d73;
+  color: #ffffff;
+}
+
+body.light .pagination button:disabled {
+  opacity: 0.4;
+}
+
+/* ===== STATUS LEGEND ===== */
+
+body.light .status-legend .late {
+  color: #d97706;
+}
+
+body.light .status-legend .ontime {
+  color: #2e7d57;
+}
+
+body.light .status-legend .absent {
+  color: #c94b4b;
+}
+
+body.light .status-legend .undertime {
+  color: #468faf;
+}
+
+/* ===== MONTHLY SUMMARY CARDS ===== */
+
+body.light .monthly-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .month-stats {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light .progress-circle {
+  background: conic-gradient(
+    #3fa77a 0% 94%,
+    rgba(0, 0, 0, 0.08) 94% 100%
+  );
+  color: #1f2d36;
+}
+
+/* ===== MONTHLY OVERALL SUMMARY ===== */
+
+body.light .summary-card {
+  background: #f4f6f8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+
+body.light .summary-card.late {
+  background-color: #ffe5e5;
+  color: #7a2f2f;
+}
+
+body.light .summary-card.ontime,
+body.light .summary-card.present {
+  background-color: #d8f3e8;
+  color: #1f5f4d;
+}
+
+body.light .summary-card.absent {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+body.light .summary-card.undertime {
+  background-color: #fff4d6;
+  color: #8a6d3b;
+}
+
+/* Download button (monthly overall) */
+body.light .download-btn {
+  background: #2b5d73;
+  color: #ffffff;
+}
+
+body.light .download-btn:hover {
+  background: #244e61;
 }

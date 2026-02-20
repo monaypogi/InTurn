@@ -709,3 +709,148 @@
 .dashboard .welcome-card > * {
   padding: 0 !important;
 }
+
+/* =========================
+   LIGHT MODE - DASHBOARD
+========================= */
+
+body.light .dashboard {
+  background: transparent;
+}
+
+/* Base Card */
+body.light .card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  color: #1f2d36;
+}
+
+/* Card Header */
+body.light .dashboard .card h3 {
+  background: #2b5d73;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Welcome Card */
+body.light .welcome-card {
+  background: linear-gradient(to right, #2b5d73, #3c7a94);
+  color: #ffffff;
+}
+
+body.light .welcome-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Attendance Rows */
+body.light .attendance-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light .attendance-row .label {
+  opacity: 0.6;
+}
+
+/* Attendance Right Panel */
+body.light .attendance-right {
+  background: #f3f6f8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+
+body.light .metric-value {
+  color: #1f2d36;
+}
+
+body.light .attendance-metric svg {
+  color: #2b5d73;
+}
+
+/* Summary Numbers */
+body.light .attendance-summary-card div {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light .attendance-summary-card p {
+  color: #1f2d36;
+}
+
+/* Notifications */
+body.light .notification-list li {
+  opacity: 0.9;
+}
+
+body.light .notification-list span {
+  opacity: 0.6;
+}
+
+/* Performance Items */
+body.light .performance-item {
+  background: #f4f6f8;
+  color: #1f2d36;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .performance-icon {
+  color: #2b5d73;
+}
+
+/* Submission Items */
+body.light .submission-item {
+  background: #f8fafb;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .submission-item:hover {
+  background: #eef3f6;
+}
+
+body.light .submission-icon {
+  color: #2b5d73;
+}
+
+body.light .submission-time {
+  opacity: 0.6;
+}
+
+/* View Details Button */
+body.light .view-details {
+  background-color: #2b5d73;
+}
+
+body.light .view-details:hover {
+  background-color: #244e61;
+  text-decoration: none;
+}
+
+/* Documents Summary */
+body.light .documents-summary-divider {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .stat-value {
+  color: #1f2d36;
+}
+
+/* Status colors (slightly refined for light bg) */
+body.light .stat-label.pending {
+  color: #d4a017;
+}
+
+body.light .stat-label.approved {
+  color: #3fa77a;
+}
+
+body.light .stat-label.rejected {
+  color: #c94b4b;
+}
+
+/* Buttons */
+body.light .primary-btn {
+  background: #2b5d73;
+}
+
+body.light .primary-btn:hover {
+  background: #244e61;
+}
