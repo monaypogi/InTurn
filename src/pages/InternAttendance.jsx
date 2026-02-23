@@ -112,23 +112,34 @@ export default function InternAttendance() {
 
 
       {activeTab === "history" && (
-        <div className="attendance-summary-row">
-          {/* Time In */}
-          <div className="card time-card">
-            <p className="label">Time in:</p>
+        <div className="card attendance-history-prototype">
 
-            <div className="time-center">
-              <h3>{todayRecord?.timeIn || "--"}</h3>
+          {/* TIME IN SECTION */}
+          <div className="history-section time-section">
 
-              <span className="subtext success">Time in recorded!</span>
+            <div className="section-title">Time in:</div>
+
+            <div className="time-content-wrapper">
+              <div className="time-circle">
+                <div className="time-icon">🕒</div>
+                <div className="time-value">
+                  {todayRecord?.timeIn || "--"}
+                </div>
+              </div>
+
+              <div className="section-sub success">
+                {todayRecord ? "Time in recorded!" : ""}
+              </div>
             </div>
+
           </div>
 
-
-          {/* Total Hours */}
-          <div className="card total-hours-card">
-            <p className="label">Total Hours</p>
-            <h3>{totalHours} hours</h3>
+          {/* TOTAL HOURS SECTION */}
+          <div className="history-section total-section">
+            <div className="section-title">Total Hours</div>
+            <div className="section-value">
+              {totalHours} hours
+            </div>
 
             <button
               className="time-action-btn"
@@ -137,39 +148,34 @@ export default function InternAttendance() {
             >
               {todayRecord?.timeOut !== "----" ? "Timed Out" : "Time Out"}
             </button>
-
-
           </div>
 
-          {/* Hours Worked */}
-          <div className="card worked-hours-card">
-            <p className="label">Hours Worked</p>
+          {/* HOURS WORKED SECTION */}
+          <div className="history-section worked-section">
+            <div className="section-title">Hours Worked</div>
 
-            <div className="hours-row">
-              <div className="hours-box">
+            <div className="worked-row">
+              <div className="worked-hours-box">
                 {todayHours}
               </div>
-              <div className={`state-pill ${todayStatus}`}>
+
+              <div className={`worked-status ${todayStatus}`}>
                 {todayStatus === "ontime" && "On Time"}
                 {todayStatus === "late" && "Late"}
                 {todayStatus === "absent" && "Absent"}
                 {todayStatus === "undertime" && "Undertime"}
               </div>
-
             </div>
 
-            {/* legend stays for reference */}
             <div className="status-legend">
               <span className="legend late">Late</span>
               <span className="legend ontime">On Time</span>
               <span className="legend absent">Absent</span>
               <span className="legend undertime">Undertime</span>
             </div>
-
           </div>
 
         </div>
-
       )}
       {activeTab === "monthly" && (
         <MonthlyOverallSummary
@@ -280,21 +286,21 @@ export default function InternAttendance() {
                   </button>
                 </div>
               )}
-              </div>
-            </>
+            </div>
+          </>
         )}
-            {activeTab === "monthly" && <MonthlySummary records={monthlyRecords} />
-            }
-
-
-          </div>
-        {toast.show && (
-          <div className={`toast ${toast.type}`}>
-            {toast.message}
-          </div>
-        )}
+        {activeTab === "monthly" && <MonthlySummary records={monthlyRecords} />
+        }
 
 
       </div>
-      );
+      {toast.show && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
+
+    </div>
+  );
 }

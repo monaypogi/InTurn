@@ -40,9 +40,7 @@ return (
     <div className="card attendance-card">
 
       {/* Card Header */}
-      <div className="card-header">
         <h3>Attendance Tracker</h3>
-      </div>
 
       {/* Card Body */}
       <div className="card-body">

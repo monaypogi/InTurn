@@ -311,26 +311,19 @@ body.light .sidebar-menu a.active-link {
   color: #ffffff;
 }
 
-
-/* Buttons */
-body.light button {
+body.light .primary-btn,
+body.light .view-btn,
+body.light .upload-btn,
+body.light .mark-read-btn {
   background-color: #2b5d73;
   color: #ffffff;
 }
 
-body.light button:hover {
+body.light .primary-btn:hover,
+body.light .view-btn:hover,
+body.light .upload-btn:hover,
+body.light .mark-read-btn:hover {
   background-color: #244e61;
-}
-
-/* Profile dropdown */
-body.light .profile-dropdown {
-  background-color: #ffffff;
-  color: #1f2d36;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-body.light .profile-dropdown button {
-  color: #1f2d36;
 }
 
 body.light .profile-dropdown button:hover {
@@ -351,4 +344,18 @@ body.light .progress-bar {
 
 body.light .progress-bar-fill {
   background-color: #1c8aa3;
+}
+
+body.light .profile-dropdown {
+  background-color: #ffffff;
+  color: #1f2d36;
+}
+
+body.light .profile-dropdown button {
+  background: none;
+  color: #1f2d36;
+}
+
+body.light .profile-dropdown button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
