@@ -33,7 +33,7 @@ export default function Header({ toggleSidebar }) {
             onClick={toggleSidebar}
           />
           <img
-            src="/logo1.png"
+            src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
             alt="Logo"
             className="logo"
             onClick={() => navigate("/intern")}

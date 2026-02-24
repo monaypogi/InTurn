@@ -277,7 +277,14 @@ body {
 ========================= */
 
 body.light {
-  background: linear-gradient(180deg, #f4f6f7 0%, #dbe6ea 100%);
+  background:
+    url("../assets/bg-light.png") bottom center no-repeat,
+    linear-gradient(180deg, #f4f6f7 0%, #dbe6ea 100%);
+
+  background-size: 100% auto, cover;
+  background-attachment: fixed, fixed;
+  background-blend-mode: multiply;
+
   color: #1f2d36;
 }
 

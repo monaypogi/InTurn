@@ -133,7 +133,7 @@
 }
 
 .tag.undertime {
-  background-color: #8a6d3b;
+  background-color: #9089CD;
 }
 
 /* ===== TABLE CARD ===== */
@@ -294,22 +294,22 @@
 
 
 .state-pill.late {
-  background: linear-gradient(135deg, #b65a5a, #7a4b4b);
+  background: linear-gradient(135deg, #f4a261, #e76f51);
   color: #fff1f1;
 }
 
 .state-pill.ontime {
-  background: linear-gradient(135deg, #6fbf9f, #4f7f6e);
+  background: linear-gradient(135deg, #6fbf9f, #3e8e7e);
   color: #ecfff6;
 }
 
 .state-pill.absent {
-  background: linear-gradient(135deg, #777, #555);
+  background: linear-gradient(135deg, #e76f51, #c94b4b);
   color: #ffffff;
 }
 
 .state-pill.undertime {
-  background: linear-gradient(135deg, #c59b52, #8a6d3b);
+  background: linear-gradient(135deg, #9089CD, #6f67b7);
   color: #fff4d6;
 }
 
@@ -346,7 +346,7 @@
 }
 
 .status-legend .undertime {
-  color: #8ecae6;
+  color: #9089CD;
   /* soft blue */
 }
 
@@ -452,12 +452,76 @@
   border-radius: 16px;
   padding: 18px;
   min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 
   box-shadow:
     0 16px 28px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   transition: transform 0.2s ease;
+}
+
+.month-title {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.donut-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center {
+  position: absolute;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.total-hours-pill {
+  background: #3a8f97;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+}
+
+.pill {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.pill.late {
+  background: #f4a261;
+}
+
+.pill.absent {
+  background: #e76f51;
+}
+
+.pill.undertime {
+  background: #9089CD;
+}
+
+.empty-pill {
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .monthly-card:hover {
@@ -800,19 +864,19 @@
 }
 
 .worked-status.late {
-  background: #8f5252;
+  background: #f4a261;
 }
 
 .worked-status.ontime {
-  background: #4f7f6e;
+  background: #6fbf9f;
 }
 
 .worked-status.absent {
-  background: #555;
+  background: #e76f51;
 }
 
 .worked-status.undertime {
-  background: #8a6d3b;
+  background: #9089CD;
 }
 
 
@@ -1019,23 +1083,23 @@ body.light .state-pill {
 }
 
 body.light .state-pill.late {
-  background: #f4b183;
-  color: #7a2f2f;
+  background: linear-gradient(135deg, #f4a261, #e76f51);
+  color: #ffffff;
 }
 
 body.light .state-pill.ontime {
-  background: #b7e4d3;
-  color: #1f5f4d;
+   background: linear-gradient(135deg, #6fbf9f, #3e8e7e);
+  color: #ffffff;
 }
 
 body.light .state-pill.absent {
-  background: #e9ecef;
-  color: #495057;
+  background: linear-gradient(135deg, #e76f51, #c94b4b);
+  color: #ffffff;
 }
 
 body.light .state-pill.undertime {
-  background: #ffe8b3;
-  color: #8a6d3b;
+  background: linear-gradient(135deg, #9089CD, #6f67b7);
+  color: #ffffff;
 }
 
 /* ===== TABS ===== */
@@ -1112,26 +1176,27 @@ body.light .pagination button:disabled {
 /* ===== STATUS LEGEND ===== */
 
 body.light .status-legend .late {
-  color: #d97706;
+  color: #f4a261;
 }
 
 body.light .status-legend .ontime {
-  color: #2e7d57;
+  color: #6fbf9f;
 }
 
 body.light .status-legend .absent {
-  color: #c94b4b;
+  color: #e76f51;
 }
 
 body.light .status-legend .undertime {
-  color: #468faf;
+  color: #9089CD;
 }
 
 /* ===== MONTHLY SUMMARY CARDS ===== */
 
 body.light .monthly-card {
-  background: #ffffff;
+  background: linear-gradient(145deg, #1a2b38, #223746);
   border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #F3F4F4;
 }
 
 body.light .month-stats {
