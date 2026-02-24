@@ -26,6 +26,11 @@
 .attendance-card {
   grid-area: attendance;
 }
+/* Make header truly flush to card edges */
+.attendance-card {
+  padding: 0;            /* remove inner spacing */
+  overflow: hidden;      /* clip header to card radius */
+}
 
 .submission-card {
   grid-area: submission;

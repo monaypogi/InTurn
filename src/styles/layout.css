@@ -277,7 +277,14 @@ body {
 ========================= */
 
 body.light {
-  background: linear-gradient(180deg, #f4f6f7 0%, #dbe6ea 100%);
+  background:
+    url("../assets/bg-light.png") bottom center no-repeat,
+    linear-gradient(180deg, #f4f6f7 0%, #dbe6ea 100%);
+
+  background-size: 100% auto, cover;
+  background-attachment: fixed, fixed;
+  background-blend-mode: multiply;
+
   color: #1f2d36;
 }
 
@@ -311,14 +318,18 @@ body.light .sidebar-menu a.active-link {
   color: #ffffff;
 }
 
-
-/* Buttons */
-body.light button {
+body.light .primary-btn,
+body.light .view-btn,
+body.light .upload-btn,
+body.light .mark-read-btn {
   background-color: #2b5d73;
   color: #ffffff;
 }
 
-body.light button:hover {
+body.light .primary-btn:hover,
+body.light .view-btn:hover,
+body.light .upload-btn:hover,
+body.light .mark-read-btn:hover {
   background-color: #244e61;
 }
 
@@ -489,4 +500,18 @@ body.light .progress-bar {
 
 body.light .progress-bar-fill {
   background-color: #1c8aa3;
+}
+
+body.light .profile-dropdown {
+  background-color: #ffffff;
+  color: #1f2d36;
+}
+
+body.light .profile-dropdown button {
+  background: none;
+  color: #1f2d36;
+}
+
+body.light .profile-dropdown button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }

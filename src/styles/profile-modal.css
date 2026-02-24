@@ -216,3 +216,95 @@ body.light .profile-modal {
   background: #ffffff;
   color: #1f2d36;
 }
+
+/* Light mode Save Changes button */
+body.light .btn-submit.save-mode {
+  background-color: #75B359;
+  color: #ffffff;
+}
+
+body.light .btn-submit.save-mode:hover {
+  background-color: #669e4b;
+}
+
+/* =========================
+   LIGHT MODE - PROFILE MODAL
+========================= */
+
+body.light .modal-overlay {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+body.light .profile-modal {
+  background: #f8f9fa;
+  color: #1f2d36;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Header text */
+body.light .profile-user p {
+  opacity: 0.6;
+  color: #4b5a63;
+}
+
+/* Avatar */
+body.light .avatar {
+  background: #dfe4dd;
+  color: #ffffff;
+}
+
+/* Divider */
+body.light .divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Labels */
+body.light label {
+  color: #3c4b55;
+  opacity: 0.8;
+}
+
+/* Inputs + Textareas */
+body.light .profile-modal input,
+body.light .profile-modal textarea {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #1f2d36;
+}
+
+body.light input:disabled {
+  background: #f1f3f5;
+  color: #495057;
+}
+
+/* Close button */
+body.light .close-btn {
+  color: #1f2d36;
+  opacity: 0.6;
+}
+
+body.light .close-btn:hover {
+  opacity: 1;
+}
+
+/* Edit button */
+body.light .section-title .edit {
+  background: #2b5d73;
+  color: #ffffff;
+}
+
+body.light .section-title .edit:hover {
+  background: #244e61;
+}
+
+/* Edit button */
+/* Save button - Profile Light Mode */
+body.light .profile-modal .save-btn {
+  background-color: #2B5D73;
+  color: #ffffff;
+}
+
+body.light .profile-modal .save-btn:hover {
+  background-color: #244e61;
+}

@@ -43,20 +43,46 @@ export default function InternAttendance() {
     );
   });
 
+  const weekdays = getWeekdaysInMonth(currentYear, currentMonth);
+
+  const recordedDates = monthlyRecords.map(r =>
+    new Date(r.date).toDateString()
+  );
+
+  const monthlyAbsent = weekdays.filter(day =>
+    !recordedDates.includes(day.toDateString())
+  ).length;
+
   const monthlyHours = monthlyRecords.reduce((total, record) => {
     const hours = Number(record.hours) || 0
 
     return total + hours;
   }, 0);
 
-  const monthlyLate = monthlyRecords.filter(r => r.status === "late").length;
-  const monthlyAbsent = monthlyRecords.filter(r => r.status === "absent").length;
-  const monthlyOntime = monthlyRecords.filter(r => r.status === "ontime").length;
+  const monthlyLate =
+    monthlyRecords.filter(r => r.wasLate).length;
+  const monthlyOntime =
+    monthlyRecords.filter(
+      r => !r.wasLate && !r.wasUndertime
+    ).length;
   const monthlyUndertime =
-    monthlyRecords.filter(r => r.status === "undertime").length;
+    monthlyRecords.filter(r => r.wasUndertime).length;
 
 
+  function getWeekdaysInMonth(year, month) {
+    const dates = [];
+    const date = new Date(year, month, 1);
 
+    while (date.getMonth() === month) {
+      const day = date.getDay();
+      if (day !== 0 && day !== 6) { // Exclude Sunday (0) & Saturday (6)
+        dates.push(new Date(date));
+      }
+      date.setDate(date.getDate() + 1);
+    }
+
+    return dates;
+  }
   const totalHours = attendance.reduce((total, record) => {
     const hours = Number(record.hours) || 0
 
@@ -66,12 +92,30 @@ export default function InternAttendance() {
   const todayHours =
     todayRecord ? `${todayRecord.hours} Hours` : "0 Hours";
 
-  const todayStatus = todayRecord?.status || "absent";
+  const todayStatus =
+    todayRecord?.wasUndertime
+      ? "undertime"
+      : todayRecord?.wasLate
+        ? "late"
+        : todayRecord
+          ? "ontime"
+          : "absent";
 
   const filteredAttendance =
     activeFilter === "all"
       ? attendanceData
-      : attendanceData.filter(row => row.status === activeFilter);
+      : attendanceData.filter(row => {
+        if (activeFilter === "ontime") {
+          return !row.wasLate && !row.wasUndertime;
+        }
+        if (activeFilter === "late") {
+          return row.wasLate;
+        }
+        if (activeFilter === "undertime") {
+          return row.wasUndertime;
+        }
+        return false;
+      });
 
   const totalPages = Math.ceil(filteredAttendance.length / ITEMS_PER_PAGE);
 
@@ -112,23 +156,34 @@ export default function InternAttendance() {
 
 
       {activeTab === "history" && (
-        <div className="attendance-summary-row">
-          {/* Time In */}
-          <div className="card time-card">
-            <p className="label">Time in:</p>
+        <div className="card attendance-history-prototype">
 
-            <div className="time-center">
-              <h3>{todayRecord?.timeIn || "--"}</h3>
+          {/* TIME IN SECTION */}
+          <div className="history-section time-section">
 
-              <span className="subtext success">Time in recorded!</span>
+            <div className="section-title">Time in:</div>
+
+            <div className="time-content-wrapper">
+              <div className="time-circle">
+                <div className="time-icon">🕒</div>
+                <div className="time-value">
+                  {todayRecord?.timeIn || "--"}
+                </div>
+              </div>
+
+              <div className="section-sub success">
+                {todayRecord ? "Time in recorded!" : ""}
+              </div>
             </div>
+
           </div>
 
-
-          {/* Total Hours */}
-          <div className="card total-hours-card">
-            <p className="label">Total Hours</p>
-            <h3>{totalHours} hours</h3>
+          {/* TOTAL HOURS SECTION */}
+          <div className="history-section total-section">
+            <div className="section-title">Total Hours</div>
+            <div className="section-value">
+              {totalHours} hours
+            </div>
 
             <button
               className="time-action-btn"
@@ -137,39 +192,34 @@ export default function InternAttendance() {
             >
               {todayRecord?.timeOut !== "----" ? "Timed Out" : "Time Out"}
             </button>
-
-
           </div>
 
-          {/* Hours Worked */}
-          <div className="card worked-hours-card">
-            <p className="label">Hours Worked</p>
+          {/* HOURS WORKED SECTION */}
+          <div className="history-section worked-section">
+            <div className="section-title">Hours Worked</div>
 
-            <div className="hours-row">
-              <div className="hours-box">
+            <div className="worked-row">
+              <div className="worked-hours-box">
                 {todayHours}
               </div>
-              <div className={`state-pill ${todayStatus}`}>
+
+              <div className={`worked-status ${todayStatus}`}>
                 {todayStatus === "ontime" && "On Time"}
                 {todayStatus === "late" && "Late"}
                 {todayStatus === "absent" && "Absent"}
                 {todayStatus === "undertime" && "Undertime"}
               </div>
-
             </div>
 
-            {/* legend stays for reference */}
             <div className="status-legend">
               <span className="legend late">Late</span>
               <span className="legend ontime">On Time</span>
               <span className="legend absent">Absent</span>
               <span className="legend undertime">Undertime</span>
             </div>
-
           </div>
 
         </div>
-
       )}
       {activeTab === "monthly" && (
         <MonthlyOverallSummary
@@ -239,11 +289,19 @@ export default function InternAttendance() {
                       <td>{row.timeOut}</td>
                       <td>{row.hours}</td>
                       <td>
-                        <span className={`state-pill small ${row.status}`}>
-                          {row.status === "ontime" && "On Time"}
-                          {row.status === "late" && "Late"}
-                          {row.status === "absent" && "Absent"}
-                          {row.status === "undertime" && "Undertime"}
+                        <span
+                          className={`state-pill small ${row.wasUndertime
+                            ? "undertime"
+                            : row.wasLate
+                              ? "late"
+                              : "ontime"
+                            }`}
+                        >
+                          {row.wasUndertime
+                            ? "Undertime"
+                            : row.wasLate
+                              ? "Late"
+                              : "On Time"}
                         </span>
                       </td>
                     </tr>
@@ -280,21 +338,21 @@ export default function InternAttendance() {
                   </button>
                 </div>
               )}
-              </div>
-            </>
+            </div>
+          </>
         )}
-            {activeTab === "monthly" && <MonthlySummary records={monthlyRecords} />
-            }
-
-
-          </div>
-        {toast.show && (
-          <div className={`toast ${toast.type}`}>
-            {toast.message}
-          </div>
-        )}
+        {activeTab === "monthly" && <MonthlySummary records={attendance} />
+        }
 
 
       </div>
-      );
+      {toast.show && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
+
+    </div>
+  );
 }
