@@ -3,11 +3,12 @@ import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Briefcase, Calendar, FileText, Bell, User, Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import LogoutButton from './LogoutButton';
-import logo from '../assets/Logo.png';
+import logoLight from '../assets/logo-light.png';
+import logoDark from '../assets/logo-dark.png';
 
-const LogoIcon = () => (
+const LogoIcon = ({ theme }) => (
   <img
-    src={logo}
+    src={theme === 'dark' ? logoDark : logoLight}
     alt="InTurn logo"
     className="h-12 sm:h-16 lg:h-19 w-48 sm:w-56 lg:w-64 object-contain"
   />
@@ -19,16 +20,16 @@ function AdminHeader() {
   const { theme, toggleTheme } = useTheme();
 
   const navLinkClass = ({ isActive }) =>
-    `flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+    `flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
       isActive
-        ? 'bg-slate-200 text-slate-900 dark:bg-slate-600 dark:text-white'
-        : 'text-slate-600 hover:bg-gray-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white'
+        ? 'bg-gray-300 text-slate-900 dark:bg-slate-600 dark:text-white'
+        : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
     }`;
   const iconLinkClass = ({ isActive }) =>
     `flex items-center justify-center p-2 rounded-lg transition-colors ${
       isActive
-        ? 'bg-slate-200 text-amber-600 dark:bg-slate-600 dark:text-amber-400'
-        : 'text-amber-600 hover:bg-gray-100 dark:text-amber-400 dark:hover:bg-slate-700'
+        ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400'
+        : 'text-amber-600 hover:opacity-80 dark:text-amber-400 dark:hover:opacity-80'
     }`;
 
   useEffect(() => {
@@ -60,11 +61,11 @@ function AdminHeader() {
   }, [isMenuOpen]);
 
   return (
-    <header className="bg-white border-b border-gray-200 dark:bg-slate-800 dark:border-slate-700 sticky top-0 z-10">
+    <header className="bg-gray-100 border-b border-gray-300 dark:bg-slate-800 dark:border-slate-500 sticky top-0 z-10">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-3 lg:hidden">
           <div className="text-amber-600 dark:text-amber-400">
-            <LogoIcon />
+            <LogoIcon theme={theme} />
           </div>
 
           <div className="flex items-center gap-2">
@@ -90,7 +91,7 @@ function AdminHeader() {
               </button>
 
               {isMenuOpen && (
-                <div className="absolute right-0 top-full z-20 mt-2 w-72 rounded-xl border border-gray-200 bg-white/95 p-3 shadow-2xl backdrop-blur-sm dark:border-slate-600 dark:bg-slate-800/95">
+                <div className="absolute right-0 top-full z-20 mt-2 w-72 rounded-xl border border-gray-200 bg-white px-2 py-3 shadow-2xl dark:border-slate-600 dark:bg-slate-800">
                   <nav className="flex flex-col gap-1">
                     <NavLink to="/admin" end className={navLinkClass} onClick={() => setIsMenuOpen(false)}>
                       <LayoutDashboard className="w-5 h-5" /> Dashboard
@@ -122,10 +123,10 @@ function AdminHeader() {
 
         <div className="hidden grid-cols-[auto_1fr_auto] items-center gap-6 py-3 lg:grid">
           <div className="text-amber-600 dark:text-amber-400">
-            <LogoIcon />
+            <LogoIcon theme={theme} />
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 rounded-lg px-2 py-2">
             <nav className="flex items-center justify-center gap-1">
               <NavLink to="/admin" end className={navLinkClass}>
                 <LayoutDashboard className="w-5 h-5" /> Dashboard
@@ -143,14 +144,6 @@ function AdminHeader() {
           </div>
 
           <div className="flex items-center justify-end gap-2 sm:gap-4">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
             <NavLink
               to="/admin/notifications"
               className={iconLinkClass}
@@ -165,6 +158,14 @@ function AdminHeader() {
             >
               <User className="w-5 h-5" />
             </NavLink>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
             <LogoutButton />
           </div>
         </div>

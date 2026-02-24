@@ -322,6 +322,144 @@ body.light button:hover {
   background-color: #244e61;
 }
 
+/* Profile page General/Security tabs - override global button, match dark mode effect */
+body.light .profile-tabs .profile-tab {
+  background-color: transparent;
+  color: #475569;
+}
+
+body.light .profile-tabs .profile-tab:hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+body.light .profile-tabs .profile-tab.profile-tab-active {
+  background-color: #277086;
+  color: #ffffff;
+}
+
+body.light .profile-tabs .profile-tab.profile-tab-active:hover {
+  background-color: #277086;
+  color: #ffffff;
+}
+
+/* Profile page inputs - light theme */
+body.light .profile-page input {
+  background-color: transparent;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+body.light .profile-page .profile-password-field {
+  background-color: transparent;
+}
+
+body.light .profile-page .profile-password-toggle {
+  background-color: transparent;
+  color: #0d9488;
+}
+
+body.light .profile-page .profile-password-toggle:hover {
+  background-color: transparent;
+  color: #0f766e;
+}
+
+body.light .profile-page input::placeholder {
+  color: #64748b;
+}
+
+body.light .profile-page input:focus {
+  outline: none;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 1px #0d9488;
+}
+
+/* 2FA modal - light theme: switch modal (light gray) and input (white) */
+body.light .profile-2fa-modal {
+  background-color: #f1f5f9;
+}
+
+body.light .profile-2fa-modal .profile-2fa-option {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+
+body.light .profile-2fa-modal .profile-2fa-option:hover {
+  background-color: #f8fafc;
+}
+
+body.light .profile-2fa-modal .profile-2fa-option.profile-2fa-option-selected {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+body.light .profile-2fa-modal input {
+  background-color: #ffffff;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+body.light .profile-2fa-modal button[aria-label="Close"] {
+  background-color: transparent;
+  color: #64748b;
+}
+
+body.light .profile-2fa-modal button[aria-label="Close"]:hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+body.light .profile-2fa-modal .profile-2fa-cancel {
+  background-color: transparent;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+body.light .profile-2fa-modal .profile-2fa-cancel:hover {
+  background-color: #f1f5f9;
+}
+
+body.light .profile-2fa-modal .profile-2fa-continue {
+  background-color: #0d9488;
+  color: #ffffff;
+}
+
+body.light .profile-2fa-modal .profile-2fa-continue:hover {
+  background-color: #0f766e;
+}
+
+/* Verify code modal - light theme: same as 2FA modal */
+body.light .profile-verify-code-modal {
+  background-color: #f1f5f9;
+}
+
+body.light .profile-verify-code-modal .profile-verify-code-input {
+  background-color: #ffffff;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+body.light .profile-verify-code-modal .profile-verify-back,
+body.light .profile-verify-code-modal .profile-verify-resend {
+  background-color: transparent;
+  color: #334155;
+}
+
+body.light .profile-verify-code-modal .profile-verify-back:hover,
+body.light .profile-verify-code-modal .profile-verify-resend:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+body.light .profile-verify-code-modal .profile-verify-confirm {
+  background-color: #0d9488;
+  color: #ffffff;
+}
+
+body.light .profile-verify-code-modal .profile-verify-confirm:hover {
+  background-color: #0f766e;
+}
+
 /* Profile dropdown */
 body.light .profile-dropdown {
   background-color: #ffffff;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FileText, User, Users, CheckCircle } from 'lucide-react';
 import AdminHeader from '../../components/AdminHeader';
+import bgImage from '../../assets/bg.png';
 import MetricCard from '../../components/MetricCard';
 import Avatar from '../../components/Avatar';
 import InternManagement from './InternManagement';
@@ -59,7 +60,15 @@ function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900 dark:bg-slate-900 dark:text-white">
+    <div
+      className="min-h-screen text-slate-900 dark:text-white"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <AdminHeader />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
         {mainContent}
@@ -113,7 +122,7 @@ function DashboardHome({ currentTime }) {
         <MetricCard icon={<FileText className="w-10 h-10" />} label="Pending Documents" value="9" />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_2fr_1fr]">
         <ManageInternsCard interns={MOCK_INTERNS} />
         <RecentSubmissionsCard submissions={MOCK_SUBMISSIONS} />
         <AttendanceSummaryCard present={42} late={10} absent={7} />
