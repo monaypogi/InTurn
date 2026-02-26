@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { User, Mail, Phone, Briefcase, Hash, Calendar, Lock, ShieldCheck, Eye, EyeOff, X } from 'lucide-react';
+import '../../styles/layout.css';
 import Modal from '../../components/Modal';
 import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
@@ -31,13 +32,13 @@ function Profile() {
   const [activeTab, setActiveTab] = useState('General');
 
   return (
-    <div className="space-y-6">
+    <div className="profile-page space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">My Profile</h1>
-        <p className="text-slate-400">Manage your account settings and preferences</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
+        <p className="text-slate-500 dark:text-slate-400">Manage your account settings and preferences</p>
       </header>
 
-      <div className="flex w-full items-center gap-2 rounded-full bg-slate-800 p-1">
+      <div className="profile-tabs flex w-full items-center gap-2 rounded-full border-2 border-gray-200 bg-gray-50 p-1 dark:border-slate-600 dark:bg-slate-800">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
           return (
@@ -45,8 +46,10 @@ function Profile() {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold text-center transition-colors sm:px-6 ${
-                isActive ? 'bg-slate-100 text-slate-900' : 'text-slate-300 hover:text-white'
+              className={`profile-tab flex-1 rounded-full px-4 py-2 text-sm font-semibold text-center transition-colors sm:px-6 ${
+                isActive
+                  ? 'profile-tab-active dark:bg-slate-700 dark:text-white shadow-md'
+                  : 'dark:bg-transparent dark:text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white'
               }`}
             >
               {tab}
@@ -107,10 +110,10 @@ function ProfileGeneral() {
   };
 
   return (
-    <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-6">
+    <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/70 p-6 space-y-6">
       <header>
-        <h2 className="text-lg font-semibold text-white">Profile Information</h2>
-        <p className="text-sm text-slate-400">Update your personal information and profile picture</p>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Profile Information</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Update your personal information and profile picture</p>
       </header>
       <Toast
         type={feedback?.type}
@@ -120,15 +123,15 @@ function ProfileGeneral() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 text-sm font-semibold text-slate-900 dark:text-white">
             AB
           </div>
           <div>
-            <p className="text-white font-semibold">Anna Bautista</p>
-            <p className="text-xs text-slate-400">Supervisor</p>
+            <p className="text-slate-900 dark:text-white font-semibold">Anna Bautista</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Supervisor</p>
             <div className="mt-1 flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-slate-700 px-2 py-0.5 text-slate-200">Admin</span>
-              <span className="rounded-full bg-slate-700 px-2 py-0.5 text-slate-200">UI/UX Designer</span>
+              <span className="rounded-full bg-gray-100 dark:bg-slate-700 px-2 py-0.5 text-slate-700 dark:text-slate-200">Admin</span>
+              <span className="rounded-full bg-gray-100 dark:bg-slate-700 px-2 py-0.5 text-slate-700 dark:text-slate-200">UI/UX Designer</span>
             </div>
           </div>
         </div>
@@ -182,7 +185,7 @@ function ProfileGeneral() {
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-700"
+            className="rounded-lg border border-gray-200 dark:border-slate-600 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700"
           >
             Cancel
           </button>
@@ -204,14 +207,14 @@ function ProfileGeneral() {
 
 function ProfileField({ label, icon, value, error, isEditable = false, onChange, onBlur }) {
   const fieldClass = isEditable
-    ? 'border-teal-400/70 bg-slate-600/70 ring-1 ring-teal-400/40'
-    : 'border-slate-700 bg-slate-700/70';
+    ? 'border-teal-400/70 bg-gray-200 dark:bg-slate-600/70 ring-1 ring-teal-400/40'
+    : 'border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-700/70';
 
   return (
-    <label className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
       {label}
-      <div className={`mt-2 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-slate-100 ${fieldClass}`}>
-        <span className="text-slate-300">{icon}</span>
+      <div className={`mt-2 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-slate-800 dark:text-slate-100 ${fieldClass}`}>
+        <span className="text-slate-600 dark:text-slate-300">{icon}</span>
         <input
           type="text"
           value={value}
@@ -219,7 +222,7 @@ function ProfileField({ label, icon, value, error, isEditable = false, onChange,
           onChange={onChange}
           onBlur={onBlur}
           aria-invalid={!!error}
-          className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
+          className="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
         />
       </div>
       {error && isEditable && <p className="mt-2 text-xs text-red-400">{error}</p>}
@@ -387,10 +390,10 @@ function ProfileSecurity() {
   return (
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-4">
+        <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/70 p-6 space-y-4">
           <header>
-            <h2 className="text-lg font-semibold text-white">Change Password</h2>
-            <p className="text-sm text-slate-400">Update your password to keep your account secure</p>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Change Password</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Update your password to keep your account secure</p>
           </header>
           <div className="space-y-4">
             <PasswordField
@@ -432,15 +435,15 @@ function ProfileSecurity() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 space-y-6">
+        <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/70 p-6 space-y-6">
           <header>
-            <h2 className="text-lg font-semibold text-white">Security Settings</h2>
-            <p className="text-sm text-slate-400">Additional security options for your account</p>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Security Settings</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Additional security options for your account</p>
           </header>
-          <div className="flex items-center justify-between gap-4 rounded-lg bg-slate-700/60 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-100 dark:bg-slate-700/60 p-4">
             <div>
-              <p className="text-sm font-semibold text-white">Two-Factor Authentication</p>
-              <p className="text-xs text-slate-300">Add an extra layer of security to your account</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Two-Factor Authentication</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Add an extra layer of security to your account</p>
             </div>
             <button
               type="button"
@@ -450,15 +453,15 @@ function ProfileSecurity() {
               Enable
             </button>
           </div>
-          <div className="flex items-center justify-between gap-4 rounded-lg bg-slate-700/60 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-100 dark:bg-slate-700/60 p-4">
             <div>
-              <p className="text-sm font-semibold text-white">Active Sessions</p>
-              <p className="text-xs text-slate-300">Manage devices that are currently logged in</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Active Sessions</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Manage devices that are currently logged in</p>
             </div>
             <button
               type="button"
               onClick={() => setIsSessionsOpen(true)}
-              className="rounded-lg bg-slate-600 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-500"
+              className="rounded-lg bg-gray-200 dark:bg-slate-600 px-4 py-2 text-xs font-semibold text-slate-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-500"
             >
               View Sessions
             </button>
@@ -474,20 +477,20 @@ function ProfileSecurity() {
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
-          overlayClassName="bg-slate-900/80"
-          panelClassName="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
+          panelClassName="profile-2fa-modal w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl dark:bg-slate-800 dark:border-slate-600"
         >
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Two-Factor Authentication</h3>
-              <p className="text-sm text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Two-Factor Authentication</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
                 Choose how you&apos;d like to receive verification codes to secure your account.
               </p>
             </div>
             <button
               type="button"
               onClick={handleCloseModal}
-              className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+              className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -498,26 +501,28 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={() => twoFactorForm.setFieldValue('selectedOption', 'email')}
-              className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
+              className={`profile-2fa-option w-full rounded-xl border px-4 py-3 text-left transition-colors ${
                 twoFactorForm.values.selectedOption === 'email'
-                  ? 'border-teal-400 bg-teal-50'
-                  : 'border-slate-200 bg-white hover:bg-slate-50'
+                  ? 'profile-2fa-option-selected border-teal-400 bg-teal-50 dark:border-teal-400 dark:bg-slate-600 dark:text-white'
+                  : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-300 dark:hover:bg-slate-600 dark:hover:text-white'
               }`}
             >
               <div className="flex items-start gap-3">
                 <span
                   className={`mt-1 flex h-4 w-4 items-center justify-center rounded border ${
-                    twoFactorForm.values.selectedOption === 'email' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
+                    twoFactorForm.values.selectedOption === 'email'
+                      ? 'border-teal-400 bg-teal-500'
+                      : 'border-slate-300 dark:border-slate-500'
                   }`}
                 >
                   {twoFactorForm.values.selectedOption === 'email' && <span className="h-2 w-2 rounded-sm bg-white" />}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-slate-500" />
-                    <p className="text-base font-semibold text-slate-900">Email Address</p>
+                    <Mail className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <p className="text-base font-semibold text-slate-900 dark:text-white">Email Address</p>
                   </div>
-                  <p className="text-sm text-slate-600">Receive verification codes via email.</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">Receive verification codes via email.</p>
                   {twoFactorForm.values.selectedOption === 'email' && (
                     <input
                       type="email"
@@ -525,7 +530,7 @@ function ProfileSecurity() {
                       onChange={(event) => twoFactorForm.handleChange('emailValue', event.target.value)}
                       onBlur={() => twoFactorForm.handleBlur('emailValue')}
                       placeholder="Enter your email address"
-                      className="mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400"
+                      className="profile-2fa-input mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-slate-500 dark:bg-slate-500 dark:text-white placeholder:dark:text-slate-400"
                     />
                   )}
                   {twoFactorForm.errors.emailValue && (
@@ -538,26 +543,28 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={() => twoFactorForm.setFieldValue('selectedOption', 'mobile')}
-              className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
+              className={`profile-2fa-option w-full rounded-xl border px-4 py-3 text-left transition-colors ${
                 twoFactorForm.values.selectedOption === 'mobile'
-                  ? 'border-teal-400 bg-teal-50'
-                  : 'border-slate-200 bg-white hover:bg-slate-50'
+                  ? 'profile-2fa-option-selected border-teal-400 bg-teal-50 dark:border-teal-400 dark:bg-slate-600 dark:text-white'
+                  : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-300 dark:hover:bg-slate-600 dark:hover:text-white'
               }`}
             >
               <div className="flex items-start gap-3">
                 <span
                   className={`mt-1 flex h-4 w-4 items-center justify-center rounded border ${
-                    twoFactorForm.values.selectedOption === 'mobile' ? 'border-teal-400 bg-teal-500' : 'border-slate-300'
+                    twoFactorForm.values.selectedOption === 'mobile'
+                      ? 'border-teal-400 bg-teal-500'
+                      : 'border-slate-300 dark:border-slate-500'
                   }`}
                 >
                   {twoFactorForm.values.selectedOption === 'mobile' && <span className="h-2 w-2 rounded-sm bg-white" />}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-slate-500" />
-                    <p className="text-base font-semibold text-slate-900">Mobile Number</p>
+                    <Phone className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <p className="text-base font-semibold text-slate-900 dark:text-white">Mobile Number</p>
                   </div>
-                  <p className="text-sm text-slate-600">Receive verification codes via SMS.</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">Receive verification codes via SMS.</p>
                   {twoFactorForm.values.selectedOption === 'mobile' && (
                     <input
                       type="tel"
@@ -565,7 +572,7 @@ function ProfileSecurity() {
                       onChange={(event) => twoFactorForm.handleChange('mobileValue', event.target.value)}
                       onBlur={() => twoFactorForm.handleBlur('mobileValue')}
                       placeholder="Enter your mobile number"
-                      className="mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400"
+                      className="profile-2fa-input mt-4 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-slate-500 dark:bg-slate-500 dark:text-white placeholder:dark:text-slate-400"
                     />
                   )}
                   {twoFactorForm.errors.mobileValue && (
@@ -583,14 +590,14 @@ function ProfileSecurity() {
             <button
               type="button"
               onClick={handleCloseModal}
-              className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              className="profile-2fa-cancel rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleContinue}
-              className="rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600"
+              className="profile-2fa-continue rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600"
             >
               Continue
             </button>
@@ -601,18 +608,18 @@ function ProfileSecurity() {
       {isVerifyOpen && (
         <Modal
           isOpen={isVerifyOpen}
-          overlayClassName="bg-slate-900/80"
-          panelClassName="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
+          panelClassName="profile-verify-code-modal w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl dark:bg-slate-800 dark:border-slate-600"
         >
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-slate-900">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
               {twoFactorForm.values.selectedOption === 'mobile'
                 ? 'Check your mobile number for a code'
                 : 'Check your email for a code'}
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               We&apos;ve sent a 6-character code to{' '}
-              <span className="font-semibold text-slate-700">
+              <span className="font-semibold text-slate-700 dark:text-slate-200">
                 {twoFactorForm.values.selectedOption === 'mobile'
                   ? twoFactorForm.values.mobileValue || '+63 917 654 3210'
                   : twoFactorForm.values.emailValue || 'anna.bautista@gmail.com'}
@@ -634,7 +641,7 @@ function ProfileSecurity() {
                 ref={(el) => {
                   codeInputRefs.current[index] = el;
                 }}
-                className="h-11 w-11 rounded-lg border border-slate-300 bg-slate-100 text-center text-base font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400 sm:h-12 sm:w-12"
+                className="profile-verify-code-input h-11 w-11 rounded-lg border border-slate-300 bg-slate-100 text-center text-base font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400 sm:h-12 sm:w-12 dark:border-slate-500 dark:bg-slate-600 dark:text-white"
               />
             ))}
           </div>
@@ -643,17 +650,17 @@ function ProfileSecurity() {
           )}
 
           <div className="mt-8 flex flex-col items-start justify-between gap-4 text-sm text-slate-500 sm:flex-row sm:items-center">
-            <button type="button" onClick={handleBackToSelection} className="font-semibold text-slate-600 hover:text-slate-900">
+            <button type="button" onClick={handleBackToSelection} className="profile-verify-back font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               &larr; Back
             </button>
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-              <button type="button" className="font-semibold text-slate-600 hover:text-slate-900">
+              <button type="button" className="profile-verify-resend font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
                 Resend Code
               </button>
               <button
                 type="button"
                 onClick={handleConfirmCode}
-                className={`rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 ${
+                className={`profile-verify-confirm rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 ${
                   isConfirmingCode ? 'cursor-not-allowed opacity-70' : ''
                 }`}
                 disabled={isConfirmingCode}
@@ -668,7 +675,7 @@ function ProfileSecurity() {
       {isSessionsOpen && (
         <Modal
           isOpen={isSessionsOpen}
-          overlayClassName="bg-slate-900/80"
+          overlayClassName="bg-gray-900/50 dark:bg-slate-900/80"
           panelClassName="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
         >
           <div className="flex items-start justify-between">
@@ -756,7 +763,7 @@ function ProfileSecurity() {
       {confirmAction && (
         <Modal
           isOpen={!!confirmAction}
-          overlayClassName="bg-slate-900/70"
+          overlayClassName="bg-gray-900/40 dark:bg-slate-900/70"
           containerClassName="px-4 z-[60]"
           panelClassName="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl"
         >
@@ -796,10 +803,10 @@ function PasswordField({ label, placeholder, value, onChange, onBlur, error }) {
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
   return (
-    <label className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
       {label}
-      <div className="mt-2 flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-700/70 px-3 py-2 text-sm text-slate-100">
-        <Lock className="h-4 w-4 text-slate-300" />
+      <div className="profile-password-field mt-2 flex items-center gap-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-700/70 px-3 py-2 text-sm text-slate-800 dark:text-slate-100">
+        <Lock className="h-4 w-4 text-slate-600 dark:text-slate-300" />
         <input
           type={isVisible ? 'text' : 'password'}
           placeholder={placeholder}
@@ -807,12 +814,12 @@ function PasswordField({ label, placeholder, value, onChange, onBlur, error }) {
           onChange={onChange}
           onBlur={onBlur}
           aria-invalid={!!error}
-          className="w-full bg-transparent text-slate-100 placeholder-slate-400 focus:outline-none"
+          className="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
         />
         <button
           type="button"
           onClick={toggleVisibility}
-          className="text-teal-300 hover:text-teal-200"
+          className="profile-password-toggle text-teal-600 hover:text-teal-700 dark:text-teal-300 dark:hover:text-teal-200"
           aria-label={isVisible ? 'Hide password' : 'See password'}
         >
           {isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

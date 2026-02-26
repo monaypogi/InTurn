@@ -1,10 +1,10 @@
 const toneStyles = {
-  Active: 'bg-green-500/20 text-green-300 border border-green-500/30',
-  Inactive: 'bg-red-500/20 text-red-300 border border-red-500/30',
-  Pending: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
-  present: 'text-green-400',
-  late: 'text-amber-400',
-  absent: 'text-red-400',
+  Active: 'bg-green-500/20 text-green-700 dark:text-green-300 border border-green-500/30',
+  Inactive: 'bg-red-500/20 text-red-700 dark:text-red-300 border border-red-500/30',
+  Pending: 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30',
+  present: 'text-green-600 dark:text-green-400',
+  late: 'text-amber-600 dark:text-amber-400',
+  absent: 'text-red-600 dark:text-red-400',
 };
 
 const variantStyles = {

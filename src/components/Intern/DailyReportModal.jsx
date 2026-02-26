@@ -178,7 +178,7 @@ export default function DailyReportModal({
 
           {isEditing && documentData && (
             <button
-              className="btn-submit"
+              className="btn-submit save-mode"
               onClick={() =>
                 onSaveChanges({
                   ...documentData,

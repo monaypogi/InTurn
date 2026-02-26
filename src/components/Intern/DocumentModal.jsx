@@ -125,7 +125,7 @@ export default function DocumentModal({
           {/* EDIT MODE */}
           {documentData && isEditing && (
             <button
-              className="btn-submit"
+              className="btn-submit save-mode"
               onClick={() =>
                 onSaveChanges({
                   ...documentData,

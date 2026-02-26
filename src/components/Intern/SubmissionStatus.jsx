@@ -17,14 +17,9 @@ export default function SubmissionStatus() {
     });
   };
 
-  const latestDaily = documents
-    .filter(doc => doc.type === "Daily Report")
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-
-  const latestDocument = documents
-    .filter(doc => doc.type === "Document")
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-
+  const sortedDocuments = documents
+    .slice()
+    .sort((a, b) => b.id - a.id);
 
 
   return (
@@ -33,60 +28,32 @@ export default function SubmissionStatus() {
 
       <div className="submission-list">
 
-        {latestDaily && (
-          <div className="submission-item">
+        {sortedDocuments.slice(0, 2).map((doc) => (
+          <div key={doc.id} className="submission-item">
             <div className="submission-left">
               <FaFileAlt className="submission-icon" />
               <div className="submission-info">
-                <h4>Daily Report</h4>
+                <h4>{doc.type}</h4>
                 <p>
                   Status:
-                  <span className={`status-text ${latestDaily.status.toLowerCase()}`}>
-                    {latestDaily.status}
+                  <span className={`status-text ${doc.status.toLowerCase()}`}>
+                    {doc.status}
                   </span>
                 </p>
               </div>
             </div>
 
             <div className="submission-right">
-              <span className="submission-time">{latestDaily.date}</span>
+              <span className="submission-time">{doc.date}</span>
               <button
                 className="view-details"
-                onClick={() => handleViewDetails("Daily Report")}
+                onClick={() => handleViewDetails(doc.type)}
               >
                 View Details
               </button>
             </div>
           </div>
-        )}
-
-        {latestDocument && (
-          <div className="submission-item">
-            <div className="submission-left">
-              <FaFileAlt className="submission-icon" />
-              <div className="submission-info">
-                <h4>Document</h4>
-                <p>
-                  Status:
-                  <span className={`status-text ${latestDocument.status.toLowerCase()}`}>
-                    {latestDocument.status}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            <div className="submission-right">
-              <span className="submission-time">{latestDocument.date}</span>
-              <button
-                className="view-details"
-                onClick={() => handleViewDetails("Document")}
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-        )}
-
+        ))}
         {documents.length === 0 && (
           <p style={{ opacity: 0.6 }}>No submissions yet</p>
         )}

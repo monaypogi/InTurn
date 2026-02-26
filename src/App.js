@@ -11,6 +11,7 @@ import InternDocuments from './pages/InternDocuments';
 import { AttendanceProvider } from './context/AttendanceContext';
 import { DocumentsProvider } from './context/DocumentsContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   // Temporary fake authentication state (frontend-only)
@@ -41,6 +42,7 @@ function App() {
   };
 
   return (
+    <ThemeProvider>
     <NotificationProvider>
       <DocumentsProvider>
         <AttendanceProvider>
@@ -95,6 +97,7 @@ function App() {
         </AttendanceProvider>
       </DocumentsProvider>
     </NotificationProvider>
+    </ThemeProvider>
   );
 }
 

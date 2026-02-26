@@ -2,16 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import { FaBell, FaUserCircle, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "./ProfileModal";
+import { useTheme } from "../../context/ThemeContext";
 import "../../styles/layout.css";
 
 export default function Header({ toggleSidebar }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -32,13 +33,15 @@ export default function Header({ toggleSidebar }) {
             onClick={toggleSidebar}
           />
           <img
-            src="/logo1.png"
+            src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
             alt="Logo"
             className="logo"
             onClick={() => navigate("/intern")}
           />
 
         </div>
+
+
 
 
         <div className="header-right">
@@ -62,6 +65,15 @@ export default function Header({ toggleSidebar }) {
                   }}
                 >
                   Profile
+                </button>
+
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                    setShowDropdown(false);
+                  }}
+                >
+                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </button>
 
                 <button

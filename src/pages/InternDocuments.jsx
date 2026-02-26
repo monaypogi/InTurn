@@ -14,19 +14,14 @@ export default function InternDocuments() {
     setCurrentPage(1);
   }, [search]);
 
+  // the files does not exist but the download function works
   const documents = [
-    { name: "Non-Disclosure Agreement (NDA)" },
-    { name: "Business Permit" },
-    { name: "Internship Agreement" },
-    { name: "Non-Disclosure Agreement (NDA)" },
-    { name: "Business Permit" },
-    { name: "Internship Agreement" },
-    { name: "Non-Disclosure Agreement (NDA)" },
-    { name: "Business Permit" },
-    { name: "Internship Agreement" },
-    { name: "Non-Disclosure Agreement (NDA)" },
-    { name: "Business Permit" },
-    { name: "Internship Agreement" }
+    { name: "Non-Disclosure Agreement (NDA)", file: "/documents/nda.pdf" },
+    { name: "Business Permit", file: "/documents/business-permit.pdf" },
+    { name: "Internship Agreement", file: "/documents/internship-agreement.pdf" },
+    { name: "Non-Disclosure Agreement (NDA)", file: "/documents/nda.pdf" },
+    { name: "Business Permit", file: "/documents/business-permit.pdf" },
+    { name: "Internship Agreement", file: "/documents/internship-agreement.pdf" },
   ];
 
   const filteredDocuments = documents.filter(doc =>
@@ -39,7 +34,16 @@ export default function InternDocuments() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
+  const handleDownloadAll = () => {
+    filteredDocuments.forEach((doc, index) => {
+      const link = document.createElement("a");
+      link.href = doc.file;
+      link.download = doc.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
   return (
     <div className="documents-page">
 
@@ -74,7 +78,7 @@ export default function InternDocuments() {
             <thead>
               <tr>
                 <th>Document Name</th>
-                <th style={{ textAlign: "right" }}>Action</th>
+                <th className="action-header">Action</th>
               </tr>
             </thead>
 
@@ -90,7 +94,17 @@ export default function InternDocuments() {
                   </td>
 
                   <td style={{ textAlign: "right" }}>
-                    <button className="download-btn">
+                    <button
+                      className="download-btn"
+                      onClick={() => {
+                        const link = document.createElement("a");
+                        link.href = doc.file;
+                        link.download = doc.name;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }}
+                    >
                       <FaDownload /> Download
                     </button>
                   </td>
@@ -132,8 +146,13 @@ export default function InternDocuments() {
           )}
 
         </div>
-
-      </div>
-    </div>
+        <button
+          className="download-all-btn"
+          onClick={handleDownloadAll}
+        >
+          ⬇ Download All
+        </button>
+      </div >
+    </div >
   );
 }

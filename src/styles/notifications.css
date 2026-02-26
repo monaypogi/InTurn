@@ -206,3 +206,53 @@
   }
 }
 
+/* =========================
+   LIGHT MODE - NOTIFICATIONS PAGINATION
+========================= */
+
+body.light .notifications-footer {
+  background: #e9eff2;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #5c6b75;
+  opacity: 1;
+}
+
+/* Page text */
+body.light .notifications-footer span {
+  color: #5c6b75;
+}
+
+/* Page number buttons */
+body.light .notifications-footer button {
+  background: transparent;
+  border: none;
+  color: #5c6b75;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Active page */
+body.light .notifications-footer button.active {
+  background: #2b5d73;
+  color: #ffffff;
+}
+
+/* Hover page numbers */
+body.light .notifications-footer button:not(.active):hover {
+  background: rgba(43, 93, 115, 0.15);
+}
+
+/* Next button */
+body.light .next-btn {
+  background: #2b5d73;
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 4px 12px;
+}
+
+body.light .next-btn:hover {
+  background: #244e61;
+}

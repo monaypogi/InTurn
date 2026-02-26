@@ -26,14 +26,14 @@ function MissingSubmissionsTable({
   }, [rows.length, rowsPerPage]);
 
   return (
-    <div className="rounded-xl border border-slate-600 bg-slate-800 overflow-hidden flex flex-col">
-      <div className="border-b border-slate-700 px-4 py-3 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
+    <div className="rounded-xl border border-gray-200 bg-white dark:border-slate-600 dark:bg-slate-800 overflow-hidden flex flex-col">
+      <div className="border-b border-gray-200 dark:border-slate-700 px-4 py-3 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <h2 className="text-lg font-semibold">{title}</h2>
         {footerActionLabel && (
           <button
             type="button"
             onClick={onFooterAction}
-            className="flex items-center gap-2 rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-slate-600"
+            className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           >
             <Upload className="h-4 w-4" />
             {footerActionLabel}
@@ -41,24 +41,24 @@ function MissingSubmissionsTable({
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-[680px] divide-y divide-slate-700 lg:min-w-full">
-          <thead className="bg-slate-700/60">
-            <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <table className="min-w-[680px] divide-y divide-gray-200 dark:divide-slate-700 lg:min-w-full">
+          <thead className="bg-gray-50 dark:bg-slate-700/60">
+            <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <th className="px-4 py-3">Intern</th>
               <th className="px-4 py-3">{dateLabel}</th>
               {showFiles && <th className="px-4 py-3">Files</th>}
               <th className="px-4 py-3"> </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-slate-700 dark:text-slate-200">
             {paginatedRows.map((row) => (
-              <tr key={row.id} className="hover:bg-slate-700/40">
+              <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/40">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <UserCircle className="h-8 w-8 text-amber-400" />
+                    <UserCircle className="h-8 w-8 text-amber-600 dark:text-amber-400" />
                     <div>
-                      <p className="font-medium text-white">{row.name}</p>
-                      <p className="text-xs text-slate-400">{row.email}</p>
+                      <p className="font-medium">{row.name}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{row.email}</p>
                     </div>
                   </div>
                 </td>
@@ -83,7 +83,7 @@ function MissingSubmissionsTable({
         totalPages={totalPages}
         pages={pageNumbers}
         variant="slate"
-        className="border-t border-slate-700 bg-slate-800 px-4 py-3 text-sm text-slate-400"
+        className="border-t border-gray-200 bg-gray-50 dark:border-slate-700 dark:bg-slate-800 px-4 py-3 text-sm text-slate-500 dark:text-slate-400"
         onPageChange={setCurrentPage}
         onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}

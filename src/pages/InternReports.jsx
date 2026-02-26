@@ -14,7 +14,19 @@ export default function InternReports() {
   const navigate = useNavigate();
 
 
-  const [successMessage, setSuccessMessage] = useState("");
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success"
+  });
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, show: false }));
+    }, 3000);
+  };
   const location = useLocation();
 
   /* =======================
@@ -24,6 +36,7 @@ export default function InternReports() {
   const [activeModal, setActiveModal] = useState(null);
   const [submissionType, setSubmissionType] = useState("");
   const [reportDate, setReportDate] = useState("");
+
 
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -49,6 +62,8 @@ export default function InternReports() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [search, setSearch] = useState("");
+
+
 
   /* =======================
      EFFECTS
@@ -80,18 +95,17 @@ export default function InternReports() {
   }, [location.state, documents, navigate, location.pathname]);
 
 
-
   useEffect(() => {
-    if (!successMessage) return;
+    if (activeModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
 
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [successMessage]);
-
-
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeModal]);
 
   /* =======================
      HELPERS
@@ -129,7 +143,7 @@ export default function InternReports() {
 
     setDocuments(prev => [newDocument, ...prev]);
 
-    setSuccessMessage(
+    showToast(
       isDaily
         ? "Daily report submitted successfully."
         : "Document submitted successfully."
@@ -146,23 +160,24 @@ export default function InternReports() {
       )
     );
 
-    setSuccessMessage("Changes saved successfully.");
+    showToast("Changes saved successfully.");
     handleCloseAll();
   };
 
 
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesStatus =
-      statusFilter === "all" || doc.status === statusFilter;
+  const filteredDocuments = documents
+    .filter(doc => {
+      const matchesStatus =
+        statusFilter === "all" || doc.status === statusFilter;
 
-    const matchesSearch =
-      doc.type.toLowerCase().includes(search.toLowerCase()) ||
-      doc.fileName.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch =
+        doc.type.toLowerCase().includes(search.toLowerCase()) ||
+        doc.fileName.toLowerCase().includes(search.toLowerCase());
 
-    return matchesStatus && matchesSearch;
-  });
-
+      return matchesStatus && matchesSearch;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const totalPages = Math.ceil(filteredDocuments.length / ITEMS_PER_PAGE);
 
@@ -178,13 +193,6 @@ export default function InternReports() {
   return (
     <div className="reports-page">
       <WelcomeCard title="Reports" />
-
-      {successMessage && (
-        <div className="success-banner">
-          {successMessage}
-        </div>
-      )}
-
 
       {/* REPORTS TABLE */}
       <div className="card reports-card">
@@ -360,6 +368,11 @@ export default function InternReports() {
       )}
 
 
+      {toast.show && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
 
     </div>
   );

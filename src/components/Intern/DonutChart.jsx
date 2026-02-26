@@ -9,7 +9,7 @@ export default function DonutChart({ data, size = 120, stroke = 14 }) {
     { value: data.ontime, color: "#6fbf9f" },
     { value: data.late, color: "#f4a261" },
     { value: data.absent, color: "#e76f51" },
-    { value: data.undertime, color: "#8ecae6" }
+    { value: data.undertime, color: "#9089CD" }
   ];
 
   let offset = 0;

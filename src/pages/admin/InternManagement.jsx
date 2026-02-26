@@ -219,7 +219,7 @@ const modalStatusStyles = {
 function FilterSelect({ label, value, options, onChange, onBlur, error }) {
   return (
     <div className="flex flex-col gap-1 text-slate-900">
-      <span className="text-[12px] uppercase tracking-wide text-white font-bold">{label}</span>
+      <span className="text-[12px] uppercase tracking-wide text-slate-900 dark:text-white font-bold">{label}</span>
       <div className="relative">
         <select
           className="w-full appearance-none rounded-lg border border-slate-300 bg-slate-200 py-3 pl-4 pr-10 text-base font-medium text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
@@ -233,7 +233,7 @@ function FilterSelect({ label, value, options, onChange, onBlur, error }) {
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
       </div>
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
@@ -619,7 +619,7 @@ function InternManagement() {
       {isProfileOpen && activeIntern && (
         <Modal
           isOpen={isProfileOpen}
-          overlayClassName="bg-slate-900/60 backdrop-blur-sm"
+          overlayClassName="bg-gray-900/30 dark:bg-slate-900/60 backdrop-blur-sm"
           containerClassName="px-4 py-6"
           panelClassName="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl"
         >
@@ -798,7 +798,7 @@ function InternManagement() {
       {isPerformanceOpen && performanceIntern && (
         <Modal
           isOpen={isPerformanceOpen}
-          overlayClassName="bg-slate-900/60 backdrop-blur-sm"
+          overlayClassName="bg-gray-900/30 dark:bg-slate-900/60 backdrop-blur-sm"
           containerClassName="px-4 py-6"
           panelClassName="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl"
         >
@@ -913,7 +913,7 @@ function InternManagement() {
       {isEvaluationOpen && evaluationIntern && (
         <Modal
           isOpen={isEvaluationOpen}
-          overlayClassName="bg-slate-900/60 backdrop-blur-sm"
+          overlayClassName="bg-gray-900/30 dark:bg-slate-900/60 backdrop-blur-sm"
           containerClassName="px-4 py-6"
           panelClassName="w-full max-w-5xl rounded-2xl bg-white p-6 shadow-2xl min-h-[480px] max-h-[85vh] overflow-y-auto"
         >
@@ -1109,7 +1109,7 @@ function InternManagement() {
       {isHistoryOpen && (
         <Modal
           isOpen={isHistoryOpen}
-          overlayClassName="bg-slate-900/60 backdrop-blur-sm"
+          overlayClassName="bg-gray-900/30 dark:bg-slate-900/60 backdrop-blur-sm"
           containerClassName="px-4 py-6"
           panelClassName="w-full max-w-6xl rounded-2xl bg-white p-6 shadow-2xl max-h-[85vh] overflow-hidden flex flex-col"
         >
@@ -1176,18 +1176,18 @@ function InternManagement() {
       )}
 
       <section>
-        <h1 className="text-xl font-semibold text-white sm:text-2xl">Intern Management</h1>
-        <p className="mt-1 text-slate-400">Add and manage intern profiles</p>
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-white sm:text-2xl">Intern Management</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">Add and manage intern profiles</p>
       </section>
 
-      <div className="rounded-xl border border-slate-600 bg-slate-800 p-6 space-y-4">
+      <div className="rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-6 space-y-4">
         <div className="flex flex-col gap-4 lg:flex-row">
           <div className="flex flex-1 flex-col gap-1">
             <span className="select-none text-[11px] uppercase tracking-wide text-transparent" aria-hidden="true">
               Search
             </span>
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by name or email..."
@@ -1229,16 +1229,16 @@ function InternManagement() {
             totalPages={totalPages}
             pages={pageNumbers}
             variant="amber"
-            className="border-t border-slate-700 bg-slate-800 px-6 py-4 text-sm text-slate-400 md:gap-4"
+            className="border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-6 py-4 text-sm text-slate-500 dark:text-slate-400 md:gap-4"
             onPageChange={setCurrentPage}
             onPrev={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           />
         }
       >
-        <table className="min-w-[980px] divide-y divide-slate-700 lg:min-w-full">
-          <thead className="bg-slate-700/60">
-            <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <table className="min-w-[980px] divide-y divide-gray-200 dark:divide-slate-700 lg:min-w-full">
+          <thead className="bg-gray-50 dark:bg-slate-700/60">
+            <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Email</th>
               <th className="px-6 py-4">Department</th>
@@ -1248,14 +1248,14 @@ function InternManagement() {
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700 text-sm text-slate-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-slate-700 dark:text-slate-200">
             {paginatedInterns.map((intern) => (
-              <tr key={intern.id} className="hover:bg-slate-700/60">
+              <tr key={intern.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/60">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Avatar name={intern.name} size="h-10 w-10" textClassName="text-base font-semibold" />
                     <div>
-                      <p className="font-medium text-white">{intern.name}</p>
+                      <p className="font-medium text-slate-900 dark:text-white">{intern.name}</p>
                     </div>
                   </div>
                 </td>
@@ -1270,7 +1270,7 @@ function InternManagement() {
                   <div className="flex items-center justify-end gap-2">
                     <button
                       type="button"
-                      className="rounded-lg bg-slate-700 p-2 text-slate-200 transition-colors hover:bg-slate-600"
+                      className="rounded-lg bg-gray-100 dark:bg-slate-700 p-2 text-slate-700 dark:text-slate-200 transition-colors hover:bg-gray-200 dark:hover:bg-slate-600"
                       aria-label="View"
                       onClick={() => handleOpenProfile(intern)}
                     >
@@ -1278,7 +1278,7 @@ function InternManagement() {
                     </button>
                     <button
                       type="button"
-                      className="rounded-lg bg-slate-700 p-2 text-slate-200 transition-colors hover:bg-slate-600"
+                      className="rounded-lg bg-gray-100 dark:bg-slate-700 p-2 text-slate-700 dark:text-slate-200 transition-colors hover:bg-gray-200 dark:hover:bg-slate-600"
                       aria-label="Performance"
                       onClick={() => handleOpenPerformance(intern)}
                     >
@@ -1286,7 +1286,7 @@ function InternManagement() {
                     </button>
                     <button
                       type="button"
-                      className="rounded-lg bg-slate-700 p-2 text-slate-200 transition-colors hover:bg-slate-600"
+                      className="rounded-lg bg-gray-100 dark:bg-slate-700 p-2 text-slate-700 dark:text-slate-200 transition-colors hover:bg-gray-200 dark:hover:bg-slate-600"
                       aria-label="Edit"
                       onClick={() => handleOpenEvaluation(intern)}
                     >

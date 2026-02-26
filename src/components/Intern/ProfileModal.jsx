@@ -1,7 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../styles/profile-modal.css";
 
 export default function ProfileModal({ onClose }) {
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState({

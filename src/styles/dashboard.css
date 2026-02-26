@@ -2,9 +2,18 @@
   padding: 24px;
   width: 100%;
 
-  background: radial-gradient(circle at top left, #0b2a38, #071821);
-  overflow-x: auto;
+  background: #242D35;
+  overflow-x: hidden;
+
+  border-radius: 24px;
 }
+
+.dashboard-grid>* {
+  min-width: 0;
+  
+}
+
+
 
 
 @media (min-width: 1300px) {
@@ -16,6 +25,11 @@
 
 .attendance-card {
   grid-area: attendance;
+}
+/* Make header truly flush to card edges */
+.attendance-card {
+  padding: 0;            /* remove inner spacing */
+  overflow: hidden;      /* clip header to card radius */
 }
 
 .submission-card {
@@ -42,10 +56,11 @@
 }
 
 .card {
-  background: linear-gradient(180deg, #163846 0%, #0b222c 100%);
+  background: #0C1823;
   padding: 20px;
   border-radius: 16px;
   width: 100%;
+  max-width: 100%;
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
@@ -54,26 +69,34 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.card h3 {
-  margin: 0 0 16px 0;
-  font-size: 26px;
-  font-weight: 700;
-  color: #F3F4F4;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 10px;
+.dashboard .card {
+  padding: 0;
 }
 
+.dashboard .card h3 {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #EAF4F6;
+
+  background: #1F3A46;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboard .card > *:not(h3):not(.documents-summary-divider) {
+  padding: 20px;
+}
 
 .welcome-card {
   margin-bottom: 20px;
-  padding: 20px 24px;
+  padding: 12px 24px;   /* smaller vertical padding */
   grid-column: 1 / -1;
-
-  background: linear-gradient(90deg, #173f4f, #0b222c);
+  background: #101F27;
   border-radius: 16px;
 }
-
 
 .welcome-card h2 {
   margin: 0;
@@ -95,23 +118,22 @@
 }
 
 .primary-btn {
-  margin-top: 14px;
-  background: linear-gradient(135deg, #5F9598, #3e7a7d);
+  margin-top: 18px;
+  background: #3E7A7D;
   border: none;
-  padding: 10px 22px;
+  padding: 12px 22px;
   border-radius: 10px;
   font-weight: 600;
-  color: #061E29;
+  color: white;
   cursor: pointer;
 
-  box-shadow:
-    0 6px 14px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: 0.2s ease;
 }
 
 
 .primary-btn:hover {
   opacity: 0.9;
+  background: #4F9598;
 }
 
 .status-list {
@@ -186,6 +208,7 @@
   grid-template-columns: 1.4fr 1fr;
   gap: 24px;
   align-items: stretch;
+  min-width: 0;
 }
 
 /* LEFT SIDE */
@@ -211,14 +234,16 @@
 /* RIGHT SIDE */
 
 .attendance-right {
-  background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.02));
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
 
   border-radius: 14px;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
+
 
 
 .attendance-metric {
@@ -233,16 +258,18 @@
 }
 
 .metric-label {
-  margin: 0;
-  font-size: 13px;
-  opacity: 0.7;
+  font-size: 12px;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .metric-value {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  color: #F3F4F4;
 }
+
 
 /* BUTTON */
 
@@ -251,7 +278,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -334,8 +361,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 14px;
+    gap: 16px;
   }
+  
 
   .documents-summary-left {
     align-items: center;
@@ -350,16 +378,13 @@
   .documents-summary-stats {
     width: 100%;
     gap: 0;
-    justify-content: space-between;
+    display: flex;
+    margin-top: -60px;
   }
 
   .documents-summary-stats div {
     flex: 1;
-  }
-
-  /* Add subtle separators between stats */
-  .documents-summary-stats div:not(:last-child) {
-    border-right: 1px solid rgba(243, 244, 244, 0.12);
+    min-width: 0;
   }
 
   .stat-value {
@@ -369,6 +394,18 @@
   .stat-label {
     font-size: 14px;
   }
+
+  .performance-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .performance-stars {
+    flex-wrap: wrap;
+    font-size: 18px;
+  }
+
 }
 
 /* Performance Overview */
@@ -411,7 +448,7 @@
 
 .performance-icon {
   font-size: 26px;
-  color: #000;
+  color: #efe8e8;
 }
 
 .performance-label {
@@ -449,6 +486,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding: 14px 16px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: 0.2s ease;
+}
+
+.submission-item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .submission-left {
@@ -483,13 +532,13 @@
 
 /* Pending: warm, noticeable, not aggressive */
 .status-text.pending {
-  color: #f4c430;
+  color: #E6B94C;
   /* softer gold than pure yellow */
 }
 
 /* Submitted: calm, success-like, cohesive with your palette */
 .status-text.submitted {
-  color: #6fbf9f;
+  color: #74D4AE;
   /* matches your green-teal tones */
 }
 
@@ -656,4 +705,157 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.dashboard .welcome-card {
+  padding: 18px 24px !important;
+}
+
+.dashboard .welcome-card > * {
+  padding: 0 !important;
+}
+
+/* =========================
+   LIGHT MODE - DASHBOARD
+========================= */
+
+body.light .dashboard {
+  background: transparent;
+}
+
+/* Base Card */
+body.light .card {
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  color: #1f2d36;
+}
+
+/* Card Header */
+body.light .dashboard .card h3 {
+  background: #2b5d73;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Welcome Card */
+body.light .welcome-card {
+  background: linear-gradient(to right, #2b5d73, #3c7a94);
+  color: #ffffff;
+}
+
+body.light .welcome-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Attendance Rows */
+body.light .attendance-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light .attendance-row .label {
+  opacity: 0.6;
+}
+
+/* Attendance Right Panel */
+body.light .attendance-right {
+  background: #f3f6f8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+
+body.light .metric-value {
+  color: #1f2d36;
+}
+
+body.light .attendance-metric svg {
+  color: #2b5d73;
+}
+
+/* Summary Numbers */
+body.light .attendance-summary-card div {
+  border-right: none;
+}
+
+body.light .attendance-summary-card p {
+  color: #1f2d36;
+}
+
+/* Notifications */
+body.light .notification-list li {
+  opacity: 0.9;
+}
+
+body.light .notification-list span {
+  opacity: 0.6;
+}
+
+/* Performance Items */
+body.light .performance-item {
+  background: #f4f6f8;
+  color: #1f2d36;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .performance-icon {
+  color: #2b5d73;
+}
+
+/* Submission Items */
+body.light .submission-item {
+  background: #f8fafb;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light .submission-item:hover {
+  background: #eef3f6;
+}
+
+body.light .submission-icon {
+  color: #2b5d73;
+}
+
+body.light .submission-time {
+  opacity: 0.6;
+}
+
+/* View Details Button */
+body.light .view-details {
+  background-color: #2b5d73;
+}
+
+body.light .view-details:hover {
+  background-color: #244e61;
+  text-decoration: none;
+}
+
+/* Documents Summary */
+body.light .documents-summary-divider {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .stat-value {
+  color: #1f2d36;
+}
+
+/* Status colors (slightly refined for light bg) */
+body.light .stat-label.pending {
+  color: #d4a017;
+}
+
+body.light .stat-label.approved {
+  color: #3fa77a;
+}
+
+body.light .stat-label.rejected {
+  color: #c94b4b;
+}
+
+/* Buttons */
+body.light .primary-btn {
+  background: #2b5d73;
+}
+
+body.light .primary-btn:hover {
+  background: #244e61;
 }
