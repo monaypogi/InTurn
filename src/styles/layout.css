@@ -13,6 +13,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  position: relative;
+  z-index: 1001;
 }
 
 .logo {
@@ -178,7 +180,10 @@ body {
 }
 
 
-@media (max-width: 768px) {
+  /* Make sidebar overlay instead of pushing content */
+ @media (max-width: 768px) {
+
+  
   .dashboard {
     padding: 16px;
   }
@@ -187,17 +192,19 @@ body {
     padding: 16px;
   }
 
-  /* Make sidebar overlay instead of pushing content */
   .sidebar {
     position: fixed;
     top: 70px;
     left: 0;
     width: 260px;
     height: calc(100vh - 100px);
-    z-index: 1000;
+    z-index: 1100;
 
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
   }
 
   .sidebar.open {
@@ -302,7 +309,7 @@ body.light .header-icon {
 /* Sidebar */
 body.light .sidebar {
   background: #f7f7f7;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: none;
 }
 
 body.light .sidebar-menu a {

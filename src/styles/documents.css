@@ -80,7 +80,8 @@
 
 .documents-table th.action-header {
   text-align: right;
-  padding-right: 50px; /* match button spacing */
+  padding-right: 50px;
+  /* match button spacing */
 }
 
 .documents-table th {
@@ -192,8 +193,17 @@
 
   /* Card spacing */
   .documents-card {
-    padding: 14px;
-    border-radius: 12px;
+    padding: 0;
+    /* keep it zero */
+    border-radius: 16px;
+    /* keep consistent */
+    overflow: hidden;
+    /* ensure clipping */
+  }
+
+  .documents-card-header {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
   }
 
   /* Card header layout */

@@ -1,8 +1,6 @@
   .reports-page {
     padding: 24px;
-    min-height: 100vh;
     background: #242D35;
-    overflow-x: hidden;
     border-radius: 24px;
   }
 
@@ -202,14 +200,17 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
+
     background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-    padding: 16px;
-    overflow-y: auto;
+
+    z-index: 5000;
+    /* higher than header */
+    padding: 20px;
   }
 
   /* Modal card */
@@ -545,16 +546,16 @@
 
     /* Main reports card — match monthly-card spacing */
     .reports-card {
-      padding: 16px;
-      border-radius: 12px;
+      padding: 0;
+      border-radius: 16px;
+      overflow: hidden;
     }
 
     /* Header layout */
     .reports-header {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 14px;
+      align-items: stretch;
+      gap: 12px;
     }
 
     .reports-header h3 {
@@ -563,24 +564,37 @@
 
     /* Actions stack neatly */
     .reports-actions {
-      width: 100%;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
     }
 
     .search-box {
       width: 100%;
-      max-width: 100%;
+    }
+
+    .filter-wrapper {
+      width: 100%;
+    }
+
+    .filter-btn {
+      width: 100%;
+    }
+
+    .reports-table-wrapper {
+      overflow-x: auto;
+      padding: 0 16px 20px 16px;
     }
 
     /* Table adjustments */
     .reports-table {
-      font-size: 13px;
-      min-width: 620px;
+      min-width: 720px;
+      table-layout: auto;
     }
 
     .reports-table th,
     .reports-table td {
-      white-space: normal;
+      white-space: nowrap;
       /* allow wrapping */
       word-break: break-word;
       /* break long words/files */
@@ -623,6 +637,8 @@
       font-size: 12px;
       font-weight: 500;
     }
+
+
   }
 
   /* =========================

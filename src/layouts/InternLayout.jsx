@@ -16,12 +16,10 @@ export default function InternLayout() {
       />
 
       {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="mobile-overlay show"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <div
+        className={`mobile-overlay ${sidebarOpen ? "show" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
 
       <div
         className={`layout ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"

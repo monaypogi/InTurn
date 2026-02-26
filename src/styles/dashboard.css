@@ -726,7 +726,7 @@ body.light .dashboard {
 /* Base Card */
 body.light .card {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: none;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
   color: #1f2d36;
 }
@@ -774,7 +774,7 @@ body.light .attendance-metric svg {
 
 /* Summary Numbers */
 body.light .attendance-summary-card div {
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: none;
 }
 
 body.light .attendance-summary-card p {
