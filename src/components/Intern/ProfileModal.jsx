@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "../../styles/profile-modal.css";
 
+import { createPortal } from "react-dom";
+
 export default function ProfileModal({ onClose }) {
 
   useEffect(() => {
@@ -163,7 +165,7 @@ Los Angeles, CA 900212`,
     showToast("success", "Profile updated successfully.");
   }
 
-  return (
+  return createPortal (
     <div className="modal-overlay">
       <div className="profile-modal">
 
@@ -303,6 +305,7 @@ Los Angeles, CA 900212`,
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
