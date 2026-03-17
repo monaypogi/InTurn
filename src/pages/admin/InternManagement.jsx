@@ -27,7 +27,7 @@ import Toast from '../../components/Toast';
 import useFormValidation from '../../hooks/useFormValidation';
 import { maxLength, oneOf, required } from '../../utils/validation';
 
-const interns = [
+const initialInterns = [
   {
     id: 1,
     name: 'Emma Wilson',
@@ -445,8 +445,12 @@ function InternManagement() {
   const [isAttendanceExpanded, setIsAttendanceExpanded] = useState(false);
   const [isDocumentsExpanded, setIsDocumentsExpanded] = useState(false);
   const [isDeactivating, setIsDeactivating] = useState(false);
+  const [isAddInternOpen, setIsAddInternOpen] = useState(false);
+  const [isAddingIntern, setIsAddingIntern] = useState(false);
+  const [internList, setInternList] = useState(initialInterns);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
+  const addInternStatusOptions = ['Active', 'Pending', 'Inactive'];
   const filterForm = useFormValidation(
     {
       searchTerm: '',
@@ -479,8 +483,26 @@ function InternManagement() {
       adminComments: [maxLength(1000)],
     }
   );
+  const addInternForm = useFormValidation(
+    {
+      name: '',
+      email: '',
+      department: modalDepartmentOptions[0],
+      supervisor: supervisorOptions[0],
+      status: 'Inactive',
+      startDate: '',
+    },
+    {
+      name: [required(), maxLength(100)],
+      email: [required(), maxLength(120)],
+      department: [required(), oneOf(modalDepartmentOptions)],
+      supervisor: [required(), oneOf(supervisorOptions)],
+      status: [required(), oneOf(addInternStatusOptions)],
+      startDate: [required()],
+    }
+  );
 
-  const filteredInterns = interns.filter((intern) => {
+  const filteredInterns = internList.filter((intern) => {
     const normalizedStatus = filterForm.values.statusFilter.toLowerCase();
     const normalizedDepartment = filterForm.values.departmentFilter.toLowerCase();
     const normalizedSearch = filterForm.values.searchTerm.trim().toLowerCase();
@@ -555,6 +577,43 @@ function InternManagement() {
   const handleCloseHistory = () => {
     setIsHistoryOpen(false);
     setHistoryOrigin(null);
+  };
+  const handleOpenAddIntern = () => {
+    setIsAddInternOpen(true);
+  };
+  const handleCloseAddIntern = () => {
+    setIsAddInternOpen(false);
+    addInternForm.resetForm();
+  };
+  const handleAddIntern = async () => {
+    const nextErrors = addInternForm.validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+    setIsAddingIntern(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const nextId =
+        internList.length > 0 ? Math.max(...internList.map((intern) => Number(intern.id) || 0)) + 1 : 1;
+      const newIntern = {
+        id: nextId,
+        name: addInternForm.values.name.trim(),
+        email: addInternForm.values.email.trim(),
+        department: addInternForm.values.department,
+        supervisor: addInternForm.values.supervisor,
+        status: addInternForm.values.status,
+        startDate: addInternForm.values.startDate,
+      };
+      setInternList((prev) => [newIntern, ...prev]);
+      setCurrentPage(1);
+      setIsAddInternOpen(false);
+      addInternForm.resetForm();
+      setPageFeedback({ type: 'success', message: 'New intern added successfully.' });
+    } catch (error) {
+      setPageFeedback({ type: 'error', message: 'Unable to add intern. Please try again.' });
+    } finally {
+      setIsAddingIntern(false);
+    }
   };
   const handleSaveProfile = async () => {
     const nextErrors = profileForm.validateForm();
@@ -1125,31 +1184,33 @@ function InternManagement() {
               </button>
             </div>
 
-            <div className="mt-4 min-h-0 flex-1 overflow-x-auto rounded-xl border border-slate-200">
-              <div className="sticky top-0 z-10 grid min-w-[760px] grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 bg-slate-100 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                <span>Period</span>
-                <span className="text-center">Attendance</span>
-                <span className="text-center">Report Submission</span>
-                <span>Evaluator</span>
-                <span>Comments</span>
-              </div>
-              <div className="divide-y divide-slate-200 overflow-y-auto text-sm text-slate-600" style={{ maxHeight: 'calc(85vh - 200px)' }}>
-                {[
-                  { period: 'Jan 6 - Jan 10, 2026', attendance: '4/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Good first week. Missed one daily report but attendance was solid overall.' },
-                  { period: 'Jan 13 - Jan 17, 2026', attendance: '4/5', submission: '3/5', evaluator: 'Juan Delacruz', comments: 'Absent one day and missed two reports. Needs to improve consistency.' },
-                  { period: 'Jan 20 - Jan 24, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Excellent week. Perfect attendance and all reports submitted on time.' },
-                  { period: 'Jan 27 - Jan 31, 2026', attendance: '5/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Arrived late once. One report missing mid-week.' },
-                  { period: 'Feb 3 - Feb 7, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Another perfect week. Keep up the great work.' },
-                  { period: 'Feb 10 - Feb 12, 2026', attendance: '3/3', submission: '2/3', evaluator: 'Juan Delacruz', comments: 'Partial week so far. One report still pending.' },
-                ].map((row) => (
-                  <div key={row.period} className="grid min-w-[760px] grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 px-5 py-3">
-                    <span className="font-medium text-slate-700">{row.period}</span>
-                    <span className="text-center font-semibold text-slate-700">{row.attendance}</span>
-                    <span className="text-center font-semibold text-slate-700">{row.submission}</span>
-                    <span>{row.evaluator}</span>
-                    <span className="text-sm text-slate-500">{row.comments}</span>
-                  </div>
-                ))}
+            <div className="mt-4 min-h-0 flex-1 overflow-auto rounded-xl border border-slate-200">
+              <div className="min-w-[760px]">
+                <div className="sticky top-0 z-10 grid grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 bg-slate-100 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <span>Period</span>
+                  <span className="text-center">Attendance</span>
+                  <span className="text-center">Report Submission</span>
+                  <span>Evaluator</span>
+                  <span>Comments</span>
+                </div>
+                <div className="divide-y divide-slate-200 text-sm text-slate-600">
+                  {[
+                    { period: 'Jan 6 - Jan 10, 2026', attendance: '4/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Good first week. Missed one daily report but attendance was solid overall.' },
+                    { period: 'Jan 13 - Jan 17, 2026', attendance: '4/5', submission: '3/5', evaluator: 'Juan Delacruz', comments: 'Absent one day and missed two reports. Needs to improve consistency.' },
+                    { period: 'Jan 20 - Jan 24, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Excellent week. Perfect attendance and all reports submitted on time.' },
+                    { period: 'Jan 27 - Jan 31, 2026', attendance: '5/5', submission: '4/5', evaluator: 'Juan Delacruz', comments: 'Arrived late once. One report missing mid-week.' },
+                    { period: 'Feb 3 - Feb 7, 2026', attendance: '5/5', submission: '5/5', evaluator: 'Juan Delacruz', comments: 'Another perfect week. Keep up the great work.' },
+                    { period: 'Feb 10 - Feb 12, 2026', attendance: '3/3', submission: '2/3', evaluator: 'Juan Delacruz', comments: 'Partial week so far. One report still pending.' },
+                  ].map((row) => (
+                    <div key={row.period} className="grid grid-cols-[1fr_0.6fr_0.8fr_0.8fr_1.5fr] gap-3 px-5 py-3">
+                      <span className="font-medium text-slate-700">{row.period}</span>
+                      <span className="text-center font-semibold text-slate-700">{row.attendance}</span>
+                      <span className="text-center font-semibold text-slate-700">{row.submission}</span>
+                      <span>{row.evaluator}</span>
+                      <span className="text-sm text-slate-500">{row.comments}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -1174,10 +1235,163 @@ function InternManagement() {
             </div>
         </Modal>
       )}
+      {isAddInternOpen && (
+        <Modal
+          isOpen={isAddInternOpen}
+          overlayClassName="bg-gray-900/30 dark:bg-slate-900/60 backdrop-blur-sm"
+          containerClassName="px-4 py-6"
+          panelClassName="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl"
+        >
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <h2 className="text-base font-semibold text-slate-800">Add Intern</h2>
+            <button
+              type="button"
+              onClick={handleCloseAddIntern}
+              className="rounded-md px-2 py-1 text-xs font-medium text-slate-400 hover:bg-slate-100"
+              aria-label="Close add intern modal"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
 
-      <section>
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-white sm:text-2xl">Intern Management</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">Add and manage intern profiles</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label className="text-sm font-semibold text-slate-700">Name</label>
+              <input
+                type="text"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                placeholder="Enter full name"
+                value={addInternForm.values.name}
+                onChange={(event) => addInternForm.handleChange('name', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('name')}
+              />
+              {addInternForm.errors.name && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.name}</p>
+              )}
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="text-sm font-semibold text-slate-700">Email</label>
+              <input
+                type="email"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                placeholder="name@example.com"
+                value={addInternForm.values.email}
+                onChange={(event) => addInternForm.handleChange('email', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('email')}
+              />
+              {addInternForm.errors.email && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Department</label>
+              <select
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                value={addInternForm.values.department}
+                onChange={(event) => addInternForm.handleChange('department', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('department')}
+              >
+                {modalDepartmentOptions.map((department) => (
+                  <option key={department} value={department}>
+                    {department}
+                  </option>
+                ))}
+              </select>
+              {addInternForm.errors.department && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.department}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Supervisor</label>
+              <select
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                value={addInternForm.values.supervisor}
+                onChange={(event) => addInternForm.handleChange('supervisor', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('supervisor')}
+              >
+                {supervisorOptions.map((supervisor) => (
+                  <option key={supervisor} value={supervisor}>
+                    {supervisor}
+                  </option>
+                ))}
+              </select>
+              {addInternForm.errors.supervisor && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.supervisor}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Status</label>
+              <select
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                value={addInternForm.values.status}
+                onChange={(event) => addInternForm.handleChange('status', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('status')}
+              >
+                {addInternStatusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+              {addInternForm.errors.status && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.status}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Start Date</label>
+              <input
+                type="date"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                value={addInternForm.values.startDate}
+                onChange={(event) => addInternForm.handleChange('startDate', event.target.value)}
+                onBlur={() => addInternForm.handleBlur('startDate')}
+              />
+              {addInternForm.errors.startDate && (
+                <p className="mt-1 text-xs text-red-500">{addInternForm.errors.startDate}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-end gap-3">
+            <button
+              type="button"
+              className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              onClick={handleCloseAddIntern}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className={`rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600 ${
+                isAddingIntern ? 'cursor-not-allowed opacity-70' : ''
+              }`}
+              onClick={handleAddIntern}
+              disabled={isAddingIntern}
+            >
+              {isAddingIntern ? 'Adding...' : 'Add Intern'}
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-900 dark:text-white sm:text-2xl">Intern Management</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">Add and manage intern profiles</p>
+        </div>
+        <button
+          type="button"
+          onClick={handleOpenAddIntern}
+          className="inline-flex w-fit items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+        >
+          <Plus className="h-4 w-4" />
+          Add Intern
+        </button>
       </section>
 
       <div className="rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-6 space-y-4">
