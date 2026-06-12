@@ -48,10 +48,10 @@ function App() {
         <AttendanceProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Navigate to="/login" />} />
+              <Route path="/" element={<Navigate to="/loginpage" />} />
 
               <Route
-                path="/login"
+                path="/loginpage"
                 element={
                   isAuthenticated && userRole
                     ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
@@ -65,7 +65,7 @@ function App() {
                 element={
                   isAuthenticated && userRole === 'admin'
                     ? <AdminDashboard />
-                    : <Navigate to="/login" />
+                    : <Navigate to="/loginpage" />
                 }
               />
 
@@ -74,7 +74,7 @@ function App() {
                 element={
                   isAuthenticated && userRole === 'intern'
                     ? <InternLayout />
-                    : <Navigate to="/login" />
+                    : <Navigate to="/loginpage" />
                 }
               >
                 <Route index element={<InternDashboard />} />
@@ -89,7 +89,7 @@ function App() {
                 element={
                   isAuthenticated && userRole
                     ? <Navigate to={userRole === 'admin' ? '/admin' : '/intern'} />
-                    : <Navigate to="/login" />
+                    : <Navigate to="/loginpage" />
                 }
               />
             </Routes>

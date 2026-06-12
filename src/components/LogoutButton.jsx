@@ -4,7 +4,7 @@ function LogoutButton() {
   const handleLogout = () => {
     // Clear fake auth and go back to login
     localStorage.removeItem('auth');
-    window.location.href = '/login';
+    window.location.href = '/loginpage';
   };
 
   return (
